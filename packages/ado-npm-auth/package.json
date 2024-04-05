@@ -1,0 +1,34 @@
+{
+  "name": "ado-npm-auth",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "repository": "",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "./lib/index.js",
+  "bin": {
+    "ado-npm-auth": "./bin/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "bundle": "webpack",
+    "performance-test": "node lib/tests/performance.test.js"
+  },
+  "dependencies": {
+    "@npmcli/config": "^4.0.1",
+    "azureauth": "^0.4.5",
+    "workspace-tools": "^0.26.3"
+  },
+  "devDependencies": {    
+    "@types/node": "^20.5.9",
+    "@types/npmcli__config": "^6.0.0",
+    "eslint": "^8.30.0",
+    "rimraf": "^5.0.1",
+    "terser-webpack-plugin": "^1.4.3",
+    "tslib": "^2.2.0",
+    "typescript": "^5.2.2",
+    "webpack": "^5.64.4",
+    "webpack-cli": "^4.10.0"
+  }
+}
