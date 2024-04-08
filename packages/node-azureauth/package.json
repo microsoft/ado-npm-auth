@@ -6,7 +6,7 @@
     "azureauth": "./cli.js"
   },
   "repository": {
-    "url": "https://github.com/jcreamer898/node-azureauth"
+    "url": "https://github.com/microsoft/ado-npm-auth"
   },
   "main": "lib/index.js",
   "type": "module",
