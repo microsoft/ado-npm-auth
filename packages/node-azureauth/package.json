@@ -1,0 +1,41 @@
+{
+  "name": "azureauth",
+  "version": "0.4.6",
+  "description": "node-azure auth wrapps the AzureAuth CLI wrapper for performing AAD Authentication",
+  "bin": {
+    "azureauth": "./cli.js"
+  },
+  "repository": {
+    "url": "https://github.com/jcreamer898/node-azureauth"
+  },
+  "main": "lib/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write src/**/*.ts && prettier --write ./cli.js",
+    "start": "tsc --watch",
+    "test": "vitest src",
+    "postinstall": "node ./scripts/install.js"
+  },
+  "keywords": [
+    "node",
+    "azureauth",
+    "aad",
+    "azure active directory",
+    "authentication"
+  ],
+  "author": "Jonathan Creamer",
+  "license": "MIT",
+  "dependencies": {
+    "decompress": "^4.2.1",
+    "execa": "^7.2.0",
+    "node-downloader-helper": "^2.1.9"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.0",
+    "prettier": "^3.0.2",
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.1",
+    "vite": "^4.4.9"
+  }
+}
