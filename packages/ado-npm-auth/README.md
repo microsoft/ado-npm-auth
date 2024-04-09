@@ -18,6 +18,6 @@ The main difference between the two is how they function, and where they can run
 
 `ado-npm-auth` uses the `node-azureauth` library, to wrap the [azureauth-cli](https://github.com/AzureAD/microsoft-authentication-cli), which itself is a cross platform MSAL wrapper.
 
-![alt text](image.png)
+![screenshot of tool running](image.png)
 
 Since the `azureauth-cli` is cross-platform, `ado-npm-auth` will also run cross-platform as well.
