@@ -13,6 +13,8 @@
     "dist",
     "lib",
     "bin",
+    "static",
+    "LICENCSE.txt",
     "README.md"
   ],
   "scripts": {

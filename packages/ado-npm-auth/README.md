@@ -18,6 +18,18 @@ The main difference between the two is how they function, and where they can run
 
 `ado-npm-auth` uses the `node-azureauth` library, to wrap the [azureauth-cli](https://github.com/AzureAD/microsoft-authentication-cli), which itself is a cross platform MSAL wrapper.
 
-![screenshot of tool running](image.png)
+![screenshot of tool running](static/image.png)
 
-Since the `azureauth-cli` is cross-platform, `ado-npm-auth` will also run cross-platform as well.
+Since the `azureauth-cli` is cross-platform, `ado-npm-auth` will also run cross-platform as well!
+
+One of the easiest ways to use the tool is to add it to your `"preinstall"` script in your repo like this...
+
+```json
+"scripts": {
+  "preinstall": "npm exec ado-npm-auth"
+},
+```
+
+It will then perform a quick "pre-flight" check to assess if the token is valid, and generate a new one if it has expired.
+
+![screenshot of tool running via preinstall](static/preinstall.png)
