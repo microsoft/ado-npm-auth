@@ -34,7 +34,7 @@ It will then perform a quick "pre-flight" check to assess if the token is valid,
 
 ![screenshot of tool running via preinstall](https://github.com/microsoft/ado-npm-auth/raw/main/packages/ado-npm-auth/static/preinstall.png)
 
-### authenticating a feed for the first time
+## authenticating a feed for the first time
 
 `ado-npm-auth` by default runs on the assumption that a PAT exists on your devidce. 
 If you haven't yet set up a PAT on your device (not authenticated your feed before), run the following command: 
