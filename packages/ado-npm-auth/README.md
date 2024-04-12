@@ -36,7 +36,7 @@ It will then perform a quick "pre-flight" check to assess if the token is valid,
 
 ## authenticating a feed for the first time
 
-`ado-npm-auth` by default runs on the assumption that a PAT exists on your devidce. 
+`ado-npm-auth` by default runs on the assumption that a PAT exists on your device. 
 If you haven't yet set up a PAT on your device (not authenticated your feed before), run the following command: 
 ```bash
 npm exec ado-npm-auth -- --skip-check
