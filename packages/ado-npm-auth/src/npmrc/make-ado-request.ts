@@ -1,4 +1,4 @@
-import { makeRequest } from "./makeRequest.js";
+import { makeRequest } from "../utils/request.js";
 
 /**
  * Check if the user is authenticated to the ADO API.

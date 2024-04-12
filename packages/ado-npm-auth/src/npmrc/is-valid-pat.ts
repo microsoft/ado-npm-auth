@@ -1,5 +1,5 @@
-import { checkADO } from "./checkADO.js";
-import { getOrganizationFromFeedUrl } from "./getOrganizationFromFeedUrl.js";
+import { checkTokens } from "./check-tokens.js";
+import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
 import { homedir, EOL } from "node:os";
 import { join } from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
@@ -12,7 +12,7 @@ export const isValidPat = async (): Promise<boolean> => {
   await removeUserNpmrcRegistries();
 
   const feeds = await getNpmrcFeeds();
-  return await checkADO({ feeds });
+  return await checkTokens({ feeds });
 };
 
 const removeUserNpmrcRegistries = async () => {

@@ -1,6 +1,6 @@
 import { decode } from "./base64.js";
 import { NpmrcOrg } from "./get-repo-npmrc-ado-orgs.js";
-import { getFeedWithoutProtocol } from "./getFeedWithoutProtocol.js";
+import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
 import { readNpmRC } from "./npmrc.js";
 
 /**

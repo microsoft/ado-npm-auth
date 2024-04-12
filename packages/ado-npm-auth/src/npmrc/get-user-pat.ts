@@ -1,10 +1,11 @@
 import { decode } from "./base64.js";
 import { NpmrcOrg } from "./get-repo-npmrc-ado-orgs.js";
-import { getFeedWithoutProtocol } from "./getFeedWithoutProtocol.js";
+import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
 import { readNpmRC } from "./npmrc.js";
 
 /**
- * Get the User's PAT from the .npmrc file
+ * Get the User's PAT(s) from the .npmrc file
+ * They will be scoped to a particular feed and ADO organization
  * @param {Object} options
  * @param {string} options.npmrc Path to the users' .npmrc file
  * @param {Array<NpmrcOrg> } [options.feeds] Feeds to get the PATs for
