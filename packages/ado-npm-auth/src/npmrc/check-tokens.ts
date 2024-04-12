@@ -15,8 +15,9 @@ export const checkTokens = async function ({ feeds }: { feeds: NpmrcOrg[] }) {
   const feedsWithPat = await getUserPat({ npmrc: userNpmRc, feeds });
 
   const missingPats = feedsWithPat.filter((item) => !item.pat);
+
   if (missingPats.length) {
-    throw new Error(`❌ Missing PATs in your user profile .npmrc!`)
+    return false
   }
 
   try {
