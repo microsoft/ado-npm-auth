@@ -33,3 +33,14 @@ One of the easiest ways to use the tool is to add it to your `"preinstall"` scri
 It will then perform a quick "pre-flight" check to assess if the token is valid, and generate a new one if it has expired.
 
 ![screenshot of tool running via preinstall](https://github.com/microsoft/ado-npm-auth/raw/main/packages/ado-npm-auth/static/preinstall.png)
+
+### authenticating a feed for the first time
+
+`ado-npm-auth` by default runs on the assumption that a PAT exists on your devidce. 
+If you haven't yet set up a PAT on your device (not authenticated your feed before), run the following command: 
+```bash
+npm exec ado-npm-auth -- --skip-check
+```
+This will set up a PAT in your root `.npmrc`, after which `npm exec ado-npm-auth` can be used to refresh the PAT when necessary.
+
+> To view your root `.npmrc` run the command `npm config edit`
