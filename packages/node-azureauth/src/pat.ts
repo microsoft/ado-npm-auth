@@ -1,5 +1,5 @@
 import { execa } from "execa";
-import { azureAuthCommand } from "./azureAuthCommand.js";
+import { azureAuthCommand } from "./azure-auth-command.js";
 
 export type AdoPatOptions = {
   promptHint: string;

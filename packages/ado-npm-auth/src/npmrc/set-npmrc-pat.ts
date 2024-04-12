@@ -3,7 +3,7 @@ import { EOL } from "os";
 import { generateNpmrcPat } from "./generate-npmrc-pat.js";
 import { NpmrcOrg, getRepoNpmrcAdoOrganizations } from "./get-repo-npmrc-ado-orgs.js";
 import { getUserNPMRC, readNpmRC } from "./npmrc.js";
-import { getFeedWithoutProtocol } from "./getFeedWithoutProtocol.js";
+import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
 
 // /**
 //  * URL for the user's PAT settings

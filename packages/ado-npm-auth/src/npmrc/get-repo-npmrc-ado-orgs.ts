@@ -1,7 +1,7 @@
 import Config from "@npmcli/config";
 import { getWorkspaceRoot } from "workspace-tools";
 import { join } from "node:path";
-import { getOrganizationFromFeedUrl } from "./getOrganizationFromFeedUrl.js";
+import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
 
 export type NpmrcOrg = {
   feed: string;
