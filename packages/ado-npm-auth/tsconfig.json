@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "Node16",
     "composite": true,
     "target": "ES2019",
     "rootDir": "src",
@@ -13,7 +13,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
