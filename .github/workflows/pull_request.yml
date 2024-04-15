@@ -37,4 +37,5 @@ jobs:
       run: pnpm exec lage build test lint bundle
 
     - name: Check if files updated
-      run: git diff
+      run: git diff --exit-code
+
