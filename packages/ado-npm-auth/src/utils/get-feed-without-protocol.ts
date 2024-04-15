@@ -5,7 +5,8 @@
  */
 export const getFeedWithoutProtocol = (feed: string) => {
   const feedUrl = new URL(feed);
-  const protocol = feedUrl.protocol;
-  const feedWithoutProtocol = feedUrl.toString().slice(protocol.length + 2);
+  const protocol = feedUrl.protocol; // will be something like "http:"
+  const protocolLength = protocol.length + 2; // we want to strip out the protocol, colon, and double slash
+  const feedWithoutProtocol = feedUrl.toString().slice(protocolLength);
   return feedWithoutProtocol;
 };
