@@ -5,6 +5,7 @@
  */
 export const getFeedWithoutProtocol = (feed: string) => {
   const feedUrl = new URL(feed);
-  const feedWithoutProtocol = `${feedUrl.host}${feedUrl.pathname}`;
+  const protocol = feedUrl.protocol;
+  const feedWithoutProtocol = feedUrl.toString().slice(protocol.length + 2);
   return feedWithoutProtocol;
 };
