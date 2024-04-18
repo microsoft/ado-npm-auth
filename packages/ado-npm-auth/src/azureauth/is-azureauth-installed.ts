@@ -9,7 +9,7 @@ let memo: boolean | undefined = undefined;
  */
 export const isAzureAuthInstalled = async (): Promise<boolean> => {
   if (memo === undefined) {
-    const command = `${azureAuthCommand()} --version`;
+    const command = `${azureAuthCommand().join(" ")} --version`;
 
     try {
       const result = await exec(command);
