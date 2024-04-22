@@ -9,7 +9,7 @@ import { getUserNPMRC } from "./npmrc.js";
  * @param { boolean } [options.silent]
  * @param { Array<NpmrcOrg> } [options.feeds]
  */
-export const checkTokens = async function ({ feeds }: { feeds: NpmrcOrg[] }) {
+export const checkTokens = async function ({ feeds }: { feeds: NpmrcOrg[] }): Promise<boolean> {
   const userNpmRc = getUserNPMRC();
   
   const feedsWithPat = await getUserPat({ npmrc: userNpmRc, feeds });
@@ -17,7 +17,7 @@ export const checkTokens = async function ({ feeds }: { feeds: NpmrcOrg[] }) {
   const missingPats = feedsWithPat.filter((item) => !item.pat);
 
   if (missingPats.length) {
-    return false
+    return false;
   }
 
   try {
@@ -26,7 +26,7 @@ export const checkTokens = async function ({ feeds }: { feeds: NpmrcOrg[] }) {
         password: feed.pat ?? "",
         organization: feed.organization,
       })
-    ))
+    ));
     return true;
   } catch (e) {
     return false;
