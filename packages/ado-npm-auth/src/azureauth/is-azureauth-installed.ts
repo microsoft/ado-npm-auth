@@ -3,6 +3,10 @@ import { azureAuthCommand } from "./azureauth-command.js";
 
 let memo: boolean | undefined = undefined;
 
+export const clearMemo = () => {
+  memo = void 0;
+};
+
 /**
  * Determine if a valid version (>=0.8.0.0) is installed
  * @returns { boolean } Whether a valid version of azureauth is installed
