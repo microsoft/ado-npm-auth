@@ -21,17 +21,14 @@ export const checkTokens = async function ({ feeds }: { feeds: NpmrcOrg[] }) {
   }
 
   try {
-    // check each feed for validity
-    for (const feed of feedsWithPat) {
-      await makeADORequest({
-        password: feed.pat || "",
+    await Promise.all(feedsWithPat.map(feed => 
+      makeADORequest({
+        password: feed.pat ?? "",
         organization: feed.organization,
-      });
-    }
-
+      })
+    ))
+    return true;
   } catch (e) {
     return false;
   }
-
-  return true;
 };
