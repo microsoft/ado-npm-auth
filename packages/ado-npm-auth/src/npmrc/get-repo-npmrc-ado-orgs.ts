@@ -11,7 +11,7 @@ export type NpmrcOrg = {
 };
 
 /**
- * Retrieves the path to the default npmrc file created by Rush init from the rush.json configuration file, if available.
+ * If rush.json is present in workspace root, retrieves the path to the default npmrc file created by Rush init
  *
  * @param {string} workspaceRoot - The root directory of the workspace where rush.json should be located.
  * @returns {Promise<string|null>} - The full path to the Rush-managed npmrc file if found, or null if rush.json is not accessible or does not define an npmrc path.
