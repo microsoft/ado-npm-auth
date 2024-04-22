@@ -1,4 +1,4 @@
-import { expect, test, vi, afterEach, beforeEach } from "vitest";
+import { expect, test, vi, beforeEach } from "vitest";
 import { isAzureAuthInstalled, clearMemo } from "./is-azureauth-installed.js";
 import { clearMemo as clearAuthMemo } from "./azureauth-command.js";
 import { exec } from "../utils/exec.js";
