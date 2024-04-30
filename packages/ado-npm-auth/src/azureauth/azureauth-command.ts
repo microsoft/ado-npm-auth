@@ -13,6 +13,7 @@ export const clearMemo = () => {
 export const npxAzureAuthCommand: string[] = [
   "npm",
   "exec",
+  "--silent",
   "--yes",
   "azureauth",
   "--",
