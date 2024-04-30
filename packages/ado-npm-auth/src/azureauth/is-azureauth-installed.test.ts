@@ -24,17 +24,17 @@ beforeEach(() => {
 });
 
 test("when azure auth is not installed", async () => {
-    vi.mocked(exec).mockReturnValue(Promise.resolve({
-      stdout: "",
-      stderr: "",
-    }) as any);
-    vi.mocked(utils.isWsl).mockReturnValue(false);
+  vi.mocked(exec).mockReturnValue(Promise.resolve({
+    stdout: "",
+    stderr: "",
+  }) as any);
+  vi.mocked(utils.isWsl).mockReturnValue(false);
 
-    const azureAuthInstalled = await isAzureAuthInstalled();
+  const azureAuthInstalled = await isAzureAuthInstalled();
 
-    expect(vi.mocked(exec)).toBeCalled();
+  expect(vi.mocked(exec)).toBeCalled();
 
-    expect(azureAuthInstalled).toBe(false);
+  expect(azureAuthInstalled).toBe(false);
 });
 
 test("when azure auth is installed", async () => {
@@ -44,7 +44,7 @@ test("when azure auth is installed", async () => {
   }) as any);
   vi.mocked(utils.isWsl).mockReturnValue(false);
 
-  const azureAuthInstalled = await isAzureAuthInstalled();  
+  const azureAuthInstalled = await isAzureAuthInstalled();
 
   expect(vi.mocked(exec)).toBeCalled();
 
@@ -58,10 +58,38 @@ test("when azure auth is installed on windows", async () => {
   }) as any);
   vi.mocked(utils.isWsl).mockReturnValue(true);
 
-  const azureAuthInstalled = await isAzureAuthInstalled();  
+  const azureAuthInstalled = await isAzureAuthInstalled();
 
   expect(vi.mocked(exec)).toBeCalled();
   expect(vi.mocked(exec)).toBeCalledWith("azureauth.exe --version");
 
   expect(azureAuthInstalled).toBe(true);
+});
+
+test("when azure auth is installed and output is complex", async () => {
+  vi.mocked(exec).mockReturnValue(Promise.resolve({
+    stdout: "\n> project@1.0.0 npx\n> azureauth --version\n\n0.8.5.0\r\n",
+    stderr: "",
+  }) as any);
+  vi.mocked(utils.isWsl).mockReturnValue(false);
+
+  const azureAuthInstalled = await isAzureAuthInstalled();
+
+  expect(vi.mocked(exec)).toBeCalled();
+
+  expect(azureAuthInstalled).toBe(true);
+});
+
+test("when azure auth is installed and output is complex and invalid", async () => {
+  vi.mocked(exec).mockReturnValue(Promise.resolve({
+    stdout: "\n  > project@1.0.0 npx\n> azureauth --version\n",
+    stderr: "",
+  }) as any);
+  vi.mocked(utils.isWsl).mockReturnValue(false);
+
+  const azureAuthInstalled = await isAzureAuthInstalled();
+
+  expect(vi.mocked(exec)).toBeCalled();
+
+  expect(azureAuthInstalled).toBe(false);
 });

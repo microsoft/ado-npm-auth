@@ -17,9 +17,23 @@ export const isAzureAuthInstalled = async (): Promise<boolean> => {
 
     try {
       const result = await exec(command);
-      // version must be >=0.8.0.0
-      const [, minor] = result.stdout.split(".");
-      memo = parseInt(minor) >= 8;
+      const lines = result.stdout.split('\n');
+      let resultLine = null;
+      for (let line of lines) {
+        line = line.trim();
+        if (line.length > 0 && line[0] !== '>') {
+          resultLine = line;
+          break;
+        }
+      }
+
+      if (resultLine) {
+        // version must be >=0.8.0.0
+        const [, minor] = resultLine.split(".");
+        memo = parseInt(minor) >= 8;
+      } else {
+        memo = false;
+      }
     } catch (error) {
       // azureauth not installed
       memo = false;
