@@ -1,6 +1,7 @@
 import Config from "@npmcli/config";
 import { getWorkspaceRoot } from "workspace-tools";
 import { join } from "node:path";
+import fs from "node:fs/promises"
 import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
 
 export type NpmrcOrg = {
@@ -19,17 +20,27 @@ export const getRepoNpmrcAdoOrganizations = async (): Promise<
 > => {
   const workspaceRoot = getWorkspaceRoot(process.cwd()) || "";
   let config!: Config;
-  // TODO: check for workspaces npmrc
+  const npmrcPath = join(workspaceRoot, ".npmrc")
+
+  try {
+    await fs.access(npmrcPath)
+  } catch(error) {
+    throw new Error("No project .npmrc file found")
+  }
+
   try {
     config = new Config({
-      npmPath: join(workspaceRoot, ".npmrc"),
+      npmPath: npmrcPath,
       shorthands: {},
       definitions: {} as any, // needed so we can access random feed names
     });
 
     await config.load();
   } catch (error) {
-    throw new Error("No project .npmrc file found");
+    if (error instanceof TypeError && error.message.includes("Invalid URL")) { 
+      throw new Error("Registry URL missing or invalid")
+    }
+    throw new Error("Error loading .npmrc")
   }
 
   // @npmcli/config does not have a normal way to display all keys
