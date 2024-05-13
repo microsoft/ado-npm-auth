@@ -70,7 +70,7 @@ test("it should spawn azureauth", async () => {
 test("it should spawnSync azureauth on wsl", async () => {
   vi.mocked(spawnSync).mockReturnValue({
     stdout: '{ "token": "foobarabc123" }',
-  });
+  } as any);
   vi.mocked(utils.isWsl).mockReturnValue(true);
 
   const results = (await adoPat({
