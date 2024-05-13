@@ -95,7 +95,11 @@ export const adoPat = async (
     }
 
     if (options.output === "json") {
-      return JSON.parse(result.stdout) as AdoPatResponse;
+      try {
+        return JSON.parse(result.stdout) as AdoPatResponse;
+      } catch (error: any) {
+        throw new Error(`Failed to parse JSON output: ${result.stdout}`);
+      }
     }
 
     return result.stdout;
