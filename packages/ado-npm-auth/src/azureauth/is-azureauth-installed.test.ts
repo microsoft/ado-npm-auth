@@ -3,7 +3,6 @@ import { isAzureAuthInstalled, clearMemo } from "./is-azureauth-installed.js";
 import { clearMemo as clearAuthMemo } from "./azureauth-command.js";
 import { exec } from "../utils/exec.js";
 import * as utils from "../utils/is-wsl.js";
-import { } from "node:test";
 
 vi.mock("../utils/is-wsl.js", async () => {
   return {

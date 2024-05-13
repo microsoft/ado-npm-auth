@@ -5,6 +5,7 @@ import { azureAuthCommand } from "./azureauth-command.js";
 import { isWsl } from "../utils/is-wsl.js";
 import { spawnSync } from "child_process";
 import { isAzureAuthInstalled } from "./is-azureauth-installed.js";
+
 export type AdoPatOptions = {
   promptHint: string;
   organization: string;
@@ -71,6 +72,7 @@ export const adoPat = async (
     if (isWsl()) {
       try {
         result = spawnSync(command[0], command.slice(1), { encoding: "utf-8" });
+
         if (result.error) {
           throw new Error(result.error.message);
         }
@@ -87,9 +89,13 @@ export const adoPat = async (
             npm_config_registry: "https://registry.npmjs.org",
           },
         });
+
+        if (result.stderr) {
+          throw new Error(result.stderr);
+        }
       } catch (error: any) {
         throw new Error(
-          `Failed to get Ado Pat from npx AzureAuth: ${error.message}. Adding the --skip-auth flag may fix this issue.`
+          `Failed to get Ado Pat from npx AzureAuth: ${error.message}`
         );
       }
     }
@@ -109,6 +115,7 @@ export const adoPat = async (
         `AzureAuth is not installed.`
       );
     }
+
     throw new Error(error.message);
   }
 };
