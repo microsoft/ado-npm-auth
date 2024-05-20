@@ -12,6 +12,12 @@ You can run the binary `"ado-npm-auth"` via `yarn ado-npm-auth` or `npm exec ado
 
 It will then shell out to the `azureauth` package on [npm](https://www.npmjs.com/package/azureauth), retrieve a token, and update your `~/.npmrc`.
 
+## Project level `.npmrc` Resolution
+
+We first check your git repo's root folder for a `.npmrc` file. 
+
+If that file does not exist, we will then check if your project is using [Rush](https://github.com/microsoft/rushstack), and attempt to discover the default rush path of `common/config/rush/.npmrc`.
+
 ## Beware the chicken and egg problem
 
 You may need to set the registry to the public NPM feed when running `npm exec` or `npx`. 
