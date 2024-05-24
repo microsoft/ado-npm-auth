@@ -3,7 +3,10 @@
   "private": "true",
   "workspaces": ["packages/*"],
   "scripts": {
-    
+    "build": "lage build",
+    "bundle": "lage bundle",
+    "lint": "lage lint",
+    "test": "lage test"
   },
   "devDependencies": {
     "lage": "^2.7.12",

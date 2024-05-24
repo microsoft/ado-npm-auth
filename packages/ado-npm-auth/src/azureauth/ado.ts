@@ -41,8 +41,10 @@ export const adoPat = async (
     );
   }
 
+  const { command: authCommand, env } = azureAuthCommand();
+
   const command = [
-    ...azureAuthCommand(),
+    ...authCommand,
     `ado`,
     `pat`,
     `--prompt-hint ${isWsl() ? options.promptHint : `"${options.promptHint}"`}`, // We only use spawn for WSL. spawn does not does not require prompt hint to be wrapped in quotes. exec does.
@@ -83,12 +85,7 @@ export const adoPat = async (
       }
     } else {
       try {
-        result = await exec(command.join(" "), {
-          env: {
-            ...process.env,
-            npm_config_registry: "https://registry.npmjs.org",
-          },
-        });
+        result = await exec(command.join(" "), { env });
 
         if (result.stderr) {
           throw new Error(result.stderr);
