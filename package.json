@@ -9,7 +9,7 @@
     "test": "lage test"
   },
   "devDependencies": {
-    "lage": "^2.7.12",
+    "lage": "^2.7.16",
     "typescript": "^5.4.2",
     "prettier": "^3.2.5"
   }

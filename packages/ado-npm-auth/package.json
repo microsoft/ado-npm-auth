@@ -21,7 +21,7 @@
     "build": "tsc",
     "bundle": "webpack",
     "performance-test": "node lib/tests/performance.test.js",
-    "test": "vitest src"
+    "test": "vitest run src"
   },
   "dependencies": {
     "@npmcli/config": "^4.0.1",
