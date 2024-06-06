@@ -18,6 +18,7 @@ vi.mock('../utils/exec.js', async () => {
 });
 
 beforeEach(() => {
+  vi.clearAllMocks();
   clearAuthMemo();
   clearMemo();
 });
@@ -60,7 +61,7 @@ test("when azure auth is installed on windows", async () => {
   const azureAuthInstalled = await isAzureAuthInstalled();  
 
   expect(vi.mocked(exec)).toBeCalled();
-  expect(vi.mocked(exec)).toBeCalledWith("azureauth.exe --version");
+  expect(vi.mocked(exec)).toBeCalledWith("azureauth.exe --version", { env: expect.any(Object) });
 
   expect(azureAuthInstalled).toBe(true);
 });

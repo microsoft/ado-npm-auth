@@ -36,7 +36,7 @@ test("adoPat args", () => {
     `--prompt-hint "test"`,
     `--organization "test"`,
     `--display-name "test"`,
-    `--scope "test"`,
+    `--scope test`,
     `--output json`,
   ]);
 });
