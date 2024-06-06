@@ -6,11 +6,7 @@ export const clearMemo = () => {
   memo = void 0;
 };
 
-/**
- * Get the executable path of azureauth command
- * @returns { string } the string of the executable command to run azureauth
- */
-export const npxAzureAuthCommand: string[] = [
+const npxAzureAuthCommand: string[] = [
   "npm",
   "exec",
   "--silent",
@@ -18,11 +14,24 @@ export const npxAzureAuthCommand: string[] = [
   "azureauth",
   "--",
 ];
+const npxEnv = {
+  ...process.env,
+  // Use the version from the public registry to avoid a cycle
+  npm_config_registry: "https://registry.npmjs.org",
+};
 
-export const azureAuthCommand = () => {
+/**
+ * Get the executable path of azureauth command
+ * @returns the string of the executable command to run azureauth, and any
+ * necessary environment variables if using npx
+ */
+export const azureAuthCommand = (): {
+  command: string[];
+  env: Record<string, string>;
+} => {
   if (!memo) {
     memo = isWsl() ? ["azureauth.exe"] : npxAzureAuthCommand;
   }
 
-  return memo;
+  return { command: memo, env: npxEnv };
 };
