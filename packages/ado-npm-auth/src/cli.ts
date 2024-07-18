@@ -2,32 +2,87 @@ import { isSupportedPlatformAndArchitecture } from "./azureauth/is-supported-pla
 import { isCodespaces } from "./utils/is-codespaces.js";
 import { logTelemetry } from "./telemetry/index.js";
 import { arch, platform } from "os";
-import { isValidPat } from "./npmrc/is-valid-pat.js";
-import { setNpmrcPat } from "./npmrc/set-npmrc-pat.js";
+import { Args, parseArgs } from "./args.js";
+import { NpmrcFileProvider } from "./npmrc/npmrcFileProvider.js";
+import { defaultEmail, defaultUser, ValidatedFeed } from "./fileProvider.js";
+import { generateNpmrcPat } from "./npmrc/generate-npmrc-pat.js";
+import { partition } from "./utils/partition.js";
+import { YarnRcFileProvider } from "./yarnrc/yarnrcFileProvider.js";
 
-export const run = async (): Promise<null | boolean> => {
-  const doValidCheck = !process.argv.includes("--skip-check");
-  const skipAuth = process.argv.includes("--skip-auth");
+const fileProviders = [new NpmrcFileProvider(), new YarnRcFileProvider()]
+
+export const run = async (args: Args): Promise<null | boolean> => {
   
-  if (doValidCheck && (await isValidPat())) {
+  let validatedFeeds: ValidatedFeed[] = [];
+  if (args.doValidCheck || args.skipAuth) {
+    for (const fileProvider of fileProviders) {
+      if (await fileProvider.isSupportedInRepo()) {
+        validatedFeeds.push(...await fileProvider.validateAllUsedFeeds());
+      }
+    }
+  }
+  
+  const invalidFeeds = validatedFeeds.filter(feed => !feed.isValid);
+  const invalidFeedCount = invalidFeeds.length;
+
+  if (args.doValidCheck && invalidFeedCount == 0) {
     return null;
   }
 
-  if (skipAuth && !(await isValidPat())) {
+  if (args.skipAuth && invalidFeedCount != 0) {
     logTelemetry(
-      { success: false, automaticSuccess: false, error: "invalid token" },
+      { success: false, automaticSuccess: false, error: "invalid token(s)" },
       true
     );
     console.log(
-      "❌ Your token is invalid."
+      invalidFeedCount == 1 
+        ? "❌ Your token is invalid."
+        : `❌ ${invalidFeedCount} tokens are invalid.`
     );
     return false;
   }
 
   try {
     console.log("🔑 Authenticating to package feed...")
-    await setNpmrcPat();
+    
+    const adoOrgs = new Set<string>();
+    for (var adoOrg of await invalidFeeds.map(feed => feed.feed.adoOrganization))
+    {
+      adoOrgs.add(adoOrg);
+    }
+
+    // get a token for each feed
+    const organizationPatMap: Record<string, string> = {};
+    for (const adoOrg of adoOrgs) {
+      organizationPatMap[adoOrg] = await generateNpmrcPat(adoOrg, false);
+    }
+
+    // Update the pat in the invalid feeds.
+    for (var invalidFeed of invalidFeeds) {
+      const feed = invalidFeed.feed;
+
+      const authToken = organizationPatMap[feed.adoOrganization];
+      if (!authToken) {
+        console.log(`❌ Failed to obtain pat for ${feed.registry} via ${invalidFeed.fileProvider.id}`);
+        return false;
+      }
+      feed.authToken = authToken;
+      if (!feed.email) {
+        feed.email = defaultEmail;
+      }
+      if (!feed.userName) {
+        feed.userName = defaultUser;
+      }
+    }
+
+
+    const invalidFeedsByProvider = partition(invalidFeeds, feed => feed.fileProvider);
+    for (const [fileProvider, updatedFeeds] of invalidFeedsByProvider) {
+      await fileProvider.writeWorspaceRegistries(updatedFeeds.map(updatedFeed => updatedFeed.feed));
+    }
+      
     return true;
+  
   } catch (error) {
     logTelemetry(
       {
@@ -54,7 +109,9 @@ if (!isSupportedPlatformAndArchitecture()) {
   process.exit(0);
 }
 
-const result = await run();
+const args = parseArgs(process.argv)
+
+const result = await run(args);
 
 if (result === null) {
   // current auth is valid, do nothing

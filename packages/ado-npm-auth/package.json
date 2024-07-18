@@ -26,9 +26,11 @@
   "dependencies": {
     "@npmcli/config": "^4.0.1",
     "azureauth": "^0.4.5",
-    "workspace-tools": "^0.26.3"
+    "workspace-tools": "^0.26.3",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {    
+    "@types/js-yaml": "4.0.9",
     "@types/node": "^20.5.9",
     "@types/npmcli__config": "^6.0.0",
     "eslint": "^8.30.0",
