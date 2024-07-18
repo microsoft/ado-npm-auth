@@ -14,7 +14,7 @@
     "build": "tsc",
     "format": "prettier --write src/**/*.ts && prettier --write ./cli.js",
     "start": "tsc --watch",
-    "test": "vitest src",
+    "test": "vitest run src",
     "postinstall": "node ./scripts/install.js"
   },
   "keywords": [

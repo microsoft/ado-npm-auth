@@ -13,10 +13,11 @@ export const clearMemo = () => {
  */
 export const isAzureAuthInstalled = async (): Promise<boolean> => {
   if (memo === undefined) {
-    const command = `${azureAuthCommand().join(" ")} --version`;
+    const { command: authCommand, env } = azureAuthCommand();
+    const command = `${authCommand.join(" ")} --version`;
 
     try {
-      const result = await exec(command);
+      const result = await exec(command, { env });
       // version must be >=0.8.0.0
       const [, minor] = result.stdout.split(".");
       memo = parseInt(minor) >= 8;

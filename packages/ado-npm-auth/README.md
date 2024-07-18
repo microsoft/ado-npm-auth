@@ -12,14 +12,6 @@ You can run the binary `"ado-npm-auth"` via `yarn ado-npm-auth` or `npm exec ado
 
 It will then shell out to the `azureauth` package on [npm](https://www.npmjs.com/package/azureauth), retrieve a token, and update your `~/.npmrc`.
 
-## Beware the chicken and egg problem
-
-You may need to set the registry to the public NPM feed when running `npm exec` or `npx`. 
-
-If that's the case, set the environment variable `npm_config_registry=https://registry.npmjs.org`. 
-
-That will ensure that `npx` or `npm exec` grabs from the public NPM feed, bypassing the soon-to-be authenticated ADO feed. 
-
 ## ado-npm-auth vs vsts-npm-auth
 
 The main difference between the two is how they function, and where they can run. The `vsts-npm-auth` tool is Windows only, and uses MSAL authentication.
@@ -41,3 +33,17 @@ One of the easiest ways to use the tool is to add it to your `"preinstall"` scri
 It will then perform a quick "pre-flight" check to assess if the token is valid, and generate a new one if it has expired.
 
 ![screenshot of tool running via preinstall](https://github.com/microsoft/ado-npm-auth/raw/main/packages/ado-npm-auth/static/preinstall.png)
+
+### Beware the chicken and egg problem
+
+You may need to set the registry to the public NPM feed when running `npm exec` or `npx`. 
+
+If that's the case, set the environment variable `npm_config_registry=https://registry.npmjs.org`. 
+
+That will ensure that `npx` or `npm exec` grabs from the public NPM feed, bypassing the soon-to-be authenticated ADO feed. 
+
+```json
+"scripts": {
+  "preinstall": "npm_config_registry=https://registry.npmjs.org npm exec ado-npm-auth"
+},
+```
