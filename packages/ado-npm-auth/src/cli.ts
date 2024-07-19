@@ -13,7 +13,7 @@ const fileProviders = [new NpmrcFileProvider(), new YarnRcFileProvider()]
 
 export const run = async (args: Args): Promise<null | boolean> => {
   
-  let validatedFeeds: ValidatedFeed[] = [];
+  const validatedFeeds: ValidatedFeed[] = [];
   if (args.doValidCheck || args.skipAuth) {
     for (const fileProvider of fileProviders) {
       if (await fileProvider.isSupportedInRepo()) {
@@ -46,7 +46,7 @@ export const run = async (args: Args): Promise<null | boolean> => {
     console.log("🔑 Authenticating to package feed...")
     
     const adoOrgs = new Set<string>();
-    for (var adoOrg of await invalidFeeds.map(feed => feed.feed.adoOrganization))
+    for (const adoOrg of invalidFeeds.map(feed => feed.feed.adoOrganization))
     {
       adoOrgs.add(adoOrg);
     }
@@ -58,7 +58,7 @@ export const run = async (args: Args): Promise<null | boolean> => {
     }
 
     // Update the pat in the invalid feeds.
-    for (var invalidFeed of invalidFeeds) {
+    for (const invalidFeed of invalidFeeds) {
       const feed = invalidFeed.feed;
 
       const authToken = organizationPatMap[feed.adoOrganization];
