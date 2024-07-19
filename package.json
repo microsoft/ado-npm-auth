@@ -6,7 +6,8 @@
     "build": "lage build",
     "bundle": "lage bundle",
     "lint": "lage lint",
-    "test": "lage test"
+    "test": "lage test",
+    "ci": "lage build test lint bundle"
   },
   "devDependencies": {
     "lage": "^2.7.16",
