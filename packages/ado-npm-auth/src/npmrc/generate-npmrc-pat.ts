@@ -1,5 +1,6 @@
 import { hostname } from "os";
 import { AdoPatResponse, adoPat } from "../azureauth/ado.js";
+import { toBase64 } from "../utils/encoding.js";
 
 /**
  * Generates a valid ADO PAT, scoped for vso.packaging in the given ado organization, 30 minute timeout
@@ -22,8 +23,7 @@ export const generateNpmrcPat = async (
   const rawToken = (pat as AdoPatResponse).token;
 
   if (encode) {
-    // base64 encode the token
-    return Buffer.from(rawToken).toString("base64");
+    return toBase64(rawToken);
   }
 
   return rawToken;

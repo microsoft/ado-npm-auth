@@ -23,6 +23,9 @@
  */
 const extractAdoDetails = (url: string) => {
   try {
+    if (!url.startsWith("https://")) {
+      url = "https://" + url;
+    }
     const parsedUrl = new URL(url);
     const hostname = parsedUrl.hostname;
     const pathname = parsedUrl.pathname;

@@ -34,7 +34,7 @@ export const logTelemetry = (
   );
   outputProperties.set(
     "error",
-    inputProperties.error ? inputProperties.error : ""
+    inputProperties.error || ""
   );
   outputProperties.set("platform", isWsl() ? "wsl" : platform());
   outputProperties.set("arch", arch());

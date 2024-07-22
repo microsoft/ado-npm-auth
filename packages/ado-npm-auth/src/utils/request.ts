@@ -1,4 +1,10 @@
 import https, { RequestOptions } from "https";
+
+const defaultOptions: RequestOptions = {
+  port: 443,
+  method: "GET",
+}
+
 /**
  *
  * @param {import("http").RequestOptions} options
@@ -6,7 +12,11 @@ import https, { RequestOptions } from "https";
  */
 export const makeRequest = async (options: RequestOptions) => {
   return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
+    const mergedOptions = {
+      ...defaultOptions,
+      ...options};
+
+    const req = https.request(mergedOptions, (res) => {
       let data = "";
       let dataJson = {};
       let ok = res.statusCode === 200;
@@ -16,7 +26,7 @@ export const makeRequest = async (options: RequestOptions) => {
       });
 
       res.on("end", () => {
-        if (data && options?.headers?.Accept === "application/json") {
+        if (data && mergedOptions?.headers?.Accept === "application/json") {
           dataJson = JSON.parse(data.toString().trim());
         }
 

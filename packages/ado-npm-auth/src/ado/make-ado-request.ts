@@ -1,3 +1,4 @@
+import { toBase64 } from "../utils/encoding.js";
 import { makeRequest } from "../utils/request.js";
 
 /**
@@ -14,7 +15,7 @@ export const makeADORequest = async ({ password, organization }: {
   password: string;
   organization: string;
 }) => {
-  const auth = `Basic ${Buffer.from(`.:${password}`).toString("base64")}`;
+  const auth = `Basic ${toBase64(`.:${password}`)}`;
 
   const options = {
     hostname: "feeds.dev.azure.com",
