@@ -33,11 +33,11 @@ export type AdoPatResponse = {
  * @returns ADO PAT details
  */
 export const adoPat = async (
-  options: AdoPatOptions
+  options: AdoPatOptions,
 ): Promise<AdoPatResponse | string> => {
   if (!isSupportedPlatformAndArchitecture()) {
     throw new Error(
-      `AzureAuth is not supported for platform ${platform()} and architecture ${arch()}`
+      `AzureAuth is not supported for platform ${platform()} and architecture ${arch()}`,
     );
   }
 
@@ -80,7 +80,7 @@ export const adoPat = async (
         }
       } catch (error: any) {
         throw new Error(
-          `Failed to get Ado Pat from system AzureAuth: ${error.message}`
+          `Failed to get Ado Pat from system AzureAuth: ${error.message}`,
         );
       }
     } else {
@@ -92,7 +92,7 @@ export const adoPat = async (
         }
       } catch (error: any) {
         throw new Error(
-          `Failed to get Ado Pat from npx AzureAuth: ${error.message}`
+          `Failed to get Ado Pat from npx AzureAuth: ${error.message}`,
         );
       }
     }
@@ -108,9 +108,7 @@ export const adoPat = async (
     return result.stdout;
   } catch (error: any) {
     if (!(await isAzureAuthInstalled())) {
-      throw new Error(
-        `AzureAuth is not installed.`
-      );
+      throw new Error(`AzureAuth is not installed.`);
     }
 
     throw new Error(error.message);

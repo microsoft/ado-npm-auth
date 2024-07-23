@@ -7,16 +7,16 @@
  * @returns {Object} An object containing the `organization` and `project` extracted from the URL.
  * @throws {Error} Throws an error if the URL is invalid, not in the expected format,
  *                 or does not contain the necessary information for extraction.
- * 
+ *
  * @example
  * // New style URL
  * extractAdoDetails("https://dev.azure.com/contoso/WebsiteRedesign");
  * // returns { organization: "contoso", project: "WebsiteRedesign" }
- * 
+ *
  * // Old style URL
  * extractAdoDetails("https://contoso.visualstudio.com/WebsiteRedesign");
  * // returns { organization: "contoso", project: "WebsiteRedesign" }
- * 
+ *
  * // Invalid URL
  * extractAdoDetails("https://invalid.url.com");
  * // throws Error
@@ -32,33 +32,39 @@ const extractAdoDetails = (url: string) => {
 
     // Check for new style URLs (dev.azure.com)
     if (hostname.endsWith("dev.azure.com")) {
-      const pathSegments = pathname.split('/').filter(Boolean); // Remove empty strings from the split result
+      const pathSegments = pathname.split("/").filter(Boolean); // Remove empty strings from the split result
       if (pathSegments.length >= 2) {
         return {
           organization: pathSegments[0],
-          project: pathSegments[1]
+          project: pathSegments[1],
         };
       } else {
-        throw new Error("Not enough segments in path for a valid organization and project extraction.");
+        throw new Error(
+          "Not enough segments in path for a valid organization and project extraction.",
+        );
       }
     }
 
     // Check for old style URLs (visualstudio.com)
     if (hostname.endsWith("visualstudio.com")) {
-      const subdomain = hostname.split('.')[0];
-      const pathSegments = pathname.split('/').filter(Boolean);
+      const subdomain = hostname.split(".")[0];
+      const pathSegments = pathname.split("/").filter(Boolean);
       if (subdomain && pathSegments.length >= 1) {
         return {
           organization: subdomain,
-          project: pathSegments[0]
+          project: pathSegments[0],
         };
       } else {
-        throw new Error("Not enough segments in path or missing subdomain for a valid organization and project extraction.");
+        throw new Error(
+          "Not enough segments in path or missing subdomain for a valid organization and project extraction.",
+        );
       }
     }
 
     // If the URL does not match expected formats
-    throw new Error("URL format not recognized or does not contain enough information.");
+    throw new Error(
+      "URL format not recognized or does not contain enough information.",
+    );
   } catch (error) {
     throw new Error("Invalid URL or unsupported format");
   }
@@ -70,10 +76,13 @@ const extractAdoDetails = (url: string) => {
  * @param {string} [defaultOrg] Backup org in case it cannot be determined from the feed url
  * @returns ADO Organization for the feed
  */
-export const getOrganizationFromFeedUrl = (feedUrl: string, defaultOrg = "") => {
+export const getOrganizationFromFeedUrl = (
+  feedUrl: string,
+  defaultOrg = "",
+) => {
   try {
-    const { organization } = extractAdoDetails(feedUrl)
-    return organization
+    const { organization } = extractAdoDetails(feedUrl);
+    return organization;
   } catch (error) {
     return defaultOrg;
   }

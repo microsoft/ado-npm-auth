@@ -9,20 +9,19 @@ import { generateNpmrcPat } from "./npmrc/generate-npmrc-pat.js";
 import { partition } from "./utils/partition.js";
 import { YarnRcFileProvider } from "./yarnrc/yarnrcFileProvider.js";
 
-const fileProviders = [new NpmrcFileProvider(), new YarnRcFileProvider()]
+const fileProviders = [new NpmrcFileProvider(), new YarnRcFileProvider()];
 
 export const run = async (args: Args): Promise<null | boolean> => {
-  
   const validatedFeeds: ValidatedFeed[] = [];
   if (args.doValidCheck || args.skipAuth) {
     for (const fileProvider of fileProviders) {
       if (await fileProvider.isSupportedInRepo()) {
-        validatedFeeds.push(...await fileProvider.validateAllUsedFeeds());
+        validatedFeeds.push(...(await fileProvider.validateAllUsedFeeds()));
       }
     }
   }
-  
-  const invalidFeeds = validatedFeeds.filter(feed => !feed.isValid);
+
+  const invalidFeeds = validatedFeeds.filter((feed) => !feed.isValid);
   const invalidFeedCount = invalidFeeds.length;
 
   if (args.doValidCheck && invalidFeedCount == 0) {
@@ -32,22 +31,23 @@ export const run = async (args: Args): Promise<null | boolean> => {
   if (args.skipAuth && invalidFeedCount != 0) {
     logTelemetry(
       { success: false, automaticSuccess: false, error: "invalid token(s)" },
-      true
+      true,
     );
     console.log(
-      invalidFeedCount == 1 
+      invalidFeedCount == 1
         ? "❌ Your token is invalid."
-        : `❌ ${invalidFeedCount} tokens are invalid.`
+        : `❌ ${invalidFeedCount} tokens are invalid.`,
     );
     return false;
   }
 
   try {
-    console.log("🔑 Authenticating to package feed...")
-    
+    console.log("🔑 Authenticating to package feed...");
+
     const adoOrgs = new Set<string>();
-    for (const adoOrg of invalidFeeds.map(feed => feed.feed.adoOrganization))
-    {
+    for (const adoOrg of invalidFeeds.map(
+      (feed) => feed.feed.adoOrganization,
+    )) {
       adoOrgs.add(adoOrg);
     }
 
@@ -63,7 +63,9 @@ export const run = async (args: Args): Promise<null | boolean> => {
 
       const authToken = organizationPatMap[feed.adoOrganization];
       if (!authToken) {
-        console.log(`❌ Failed to obtain pat for ${feed.registry} via ${invalidFeed.fileProvider.id}`);
+        console.log(
+          `❌ Failed to obtain pat for ${feed.registry} via ${invalidFeed.fileProvider.id}`,
+        );
         return false;
       }
       feed.authToken = authToken;
@@ -75,14 +77,17 @@ export const run = async (args: Args): Promise<null | boolean> => {
       }
     }
 
-
-    const invalidFeedsByProvider = partition(invalidFeeds, feed => feed.fileProvider);
+    const invalidFeedsByProvider = partition(
+      invalidFeeds,
+      (feed) => feed.fileProvider,
+    );
     for (const [fileProvider, updatedFeeds] of invalidFeedsByProvider) {
-      await fileProvider.writeWorspaceRegistries(updatedFeeds.map(updatedFeed => updatedFeed.feed));
+      await fileProvider.writeWorspaceRegistries(
+        updatedFeeds.map((updatedFeed) => updatedFeed.feed),
+      );
     }
-      
+
     return true;
-  
   } catch (error) {
     logTelemetry(
       {
@@ -90,7 +95,7 @@ export const run = async (args: Args): Promise<null | boolean> => {
         automaticSuccess: false,
         error: (error as Error).message,
       },
-      true
+      true,
     );
     console.log("Encountered error while performing auth", error);
     return false;
@@ -109,7 +114,7 @@ if (!isSupportedPlatformAndArchitecture()) {
   process.exit(0);
 }
 
-const args = parseArgs(process.argv)
+const args = parseArgs(process.argv);
 
 const result = await run(args);
 
@@ -125,9 +130,7 @@ if (result === null) {
 } else {
   // automatic auth failed (for some reason)
   // advertise failure and link wiki to fix
-  console.log(
-    "❌ Authentication to package feed failed."
-  );
+  console.log("❌ Authentication to package feed failed.");
 
   process.exitCode = 1;
 }

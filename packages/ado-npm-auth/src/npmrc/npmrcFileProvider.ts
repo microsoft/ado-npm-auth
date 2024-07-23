@@ -1,5 +1,10 @@
 import Config from "@npmcli/config";
-import { defaultEmail, defaultUser, Feed, FileProvider } from "../fileProvider.js";
+import {
+  defaultEmail,
+  defaultUser,
+  Feed,
+  FileProvider,
+} from "../fileProvider.js";
 import fs from "node:fs/promises";
 import { EOL } from "node:os";
 import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
@@ -57,8 +62,8 @@ export class NpmrcFileProvider extends FileProvider {
     );
 
     return registries
-      .map<string>(registry => config.get(registry, "project") as string)
-      .map(feed => getFeedWithoutProtocol(feed));
+      .map<string>((registry) => config.get(registry, "project") as string)
+      .map((feed) => getFeedWithoutProtocol(feed));
   }
 
   override async getUserFeeds(): Promise<Map<string, Feed>> {
@@ -93,28 +98,30 @@ export class NpmrcFileProvider extends FileProvider {
   }
 
   async patchUserNpmRcFile(
-    newLinesByRegistryAndField: Map<string, string>
+    newLinesByRegistryAndField: Map<string, string>,
   ): Promise<string[]> {
-    const linesToAdd = new Set<string>(newLinesByRegistryAndField.values())
-  
-      const npmrcLines = await this.processNpmRcFile(
-        this.userFilePath,
-        (line, registry, field, _value) => {
-          const newLine = newLinesByRegistryAndField.get(this.toRegistryAndFunctionKey(registry, field));
-          if (newLine !== undefined) {
-            linesToAdd.delete(newLine);
-            return newLine;
-          }
+    const linesToAdd = new Set<string>(newLinesByRegistryAndField.values());
 
-          return line;
-        },
-        (line) => line
-      );
-  
+    const npmrcLines = await this.processNpmRcFile(
+      this.userFilePath,
+      (line, registry, field, _value) => {
+        const newLine = newLinesByRegistryAndField.get(
+          this.toRegistryAndFunctionKey(registry, field),
+        );
+        if (newLine !== undefined) {
+          linesToAdd.delete(newLine);
+          return newLine;
+        }
+
+        return line;
+      },
+      (line) => line,
+    );
+
     for (const lineToAdd of linesToAdd) {
-        npmrcLines.push(lineToAdd);
+      npmrcLines.push(lineToAdd);
     }
-  
+
     return npmrcLines;
   }
 
@@ -122,23 +129,36 @@ export class NpmrcFileProvider extends FileProvider {
     return `//${registry}:${field}=`;
   }
 
-  override async writeWorspaceRegistries(feedsToPatch: Iterable<Feed>): Promise<void> {
+  override async writeWorspaceRegistries(
+    feedsToPatch: Iterable<Feed>,
+  ): Promise<void> {
     const newLinesByRegistryAndField = new Map<string, string>();
 
     // Build a map with registry and feed with the updated line for value.
     for (var feedToPatch of feedsToPatch) {
-      newLinesByRegistryAndField.set(this.toRegistryAndFunctionKey(feedToPatch.registry, "username"), `//${feedToPatch.registry}:username=${feedToPatch.userName || defaultUser}`);
-      newLinesByRegistryAndField.set(this.toRegistryAndFunctionKey(feedToPatch.registry, "email"), `//${feedToPatch.registry}:email=${feedToPatch.email || defaultEmail}`);
-      newLinesByRegistryAndField.set(this.toRegistryAndFunctionKey(feedToPatch.registry, "_password"), `//${feedToPatch.registry}:_password=${toBase64(feedToPatch.authToken)}`);
+      newLinesByRegistryAndField.set(
+        this.toRegistryAndFunctionKey(feedToPatch.registry, "username"),
+        `//${feedToPatch.registry}:username=${feedToPatch.userName || defaultUser}`,
+      );
+      newLinesByRegistryAndField.set(
+        this.toRegistryAndFunctionKey(feedToPatch.registry, "email"),
+        `//${feedToPatch.registry}:email=${feedToPatch.email || defaultEmail}`,
+      );
+      newLinesByRegistryAndField.set(
+        this.toRegistryAndFunctionKey(feedToPatch.registry, "_password"),
+        `//${feedToPatch.registry}:_password=${toBase64(feedToPatch.authToken)}`,
+      );
     }
 
-    const npmrcLines = await this.patchUserNpmRcFile(newLinesByRegistryAndField);
+    const npmrcLines = await this.patchUserNpmRcFile(
+      newLinesByRegistryAndField,
+    );
 
     await fs.writeFile(this.userFilePath, npmrcLines.join(EOL), {
       encoding: "utf-8",
     });
   }
-  
+
   async processNpmRcFile(
     npmrcFilePath: string,
     handleFeedConfig: (
@@ -153,7 +173,7 @@ export class NpmrcFileProvider extends FileProvider {
       encoding: "utf8",
     });
     const npmrcLines = npmrc.split("\n").map((line: string) => line.trim());
-  
+
     const resultLines: string[] = [];
     for (const line of npmrcLines) {
       const slashColonIndex = line.indexOf("/:");
@@ -162,7 +182,7 @@ export class NpmrcFileProvider extends FileProvider {
         const remainder = line.substring(slashColonIndex + 2);
         const field = remainder.substring(0, remainder.indexOf("="));
         const value = remainder.substring(remainder.indexOf("=") + 1);
-  
+
         const newLine = handleFeedConfig(line, registry, field, value);
         if (newLine) {
           resultLines.push(newLine);
@@ -174,7 +194,7 @@ export class NpmrcFileProvider extends FileProvider {
         }
       }
     }
-  
+
     return resultLines;
   }
 }
