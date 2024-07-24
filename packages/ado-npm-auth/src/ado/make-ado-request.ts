@@ -11,7 +11,10 @@ import { makeRequest } from "../utils/request.js";
  * @param {string} options.organization The organization to check against
  * @returns
  */
-export const makeADORequest = async ({ password, organization }: {
+export const makeADORequest = async ({
+  password,
+  organization,
+}: {
   password: string;
   organization: string;
 }) => {

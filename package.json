@@ -7,6 +7,7 @@
     "bundle": "lage bundle",
     "lint": "lage lint",
     "test": "lage test",
+    "format": "lage --no-cache lint --write",
     "ci": "lage build test lint bundle"
   },
   "devDependencies": {

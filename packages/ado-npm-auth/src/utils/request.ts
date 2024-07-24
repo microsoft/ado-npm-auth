@@ -3,7 +3,7 @@ import https, { RequestOptions } from "https";
 const defaultOptions: RequestOptions = {
   port: 443,
   method: "GET",
-}
+};
 
 /**
  *
@@ -14,7 +14,8 @@ export const makeRequest = async (options: RequestOptions) => {
   return new Promise((resolve, reject) => {
     const mergedOptions = {
       ...defaultOptions,
-      ...options};
+      ...options,
+    };
 
     const req = https.request(mergedOptions, (res) => {
       let data = "";
@@ -37,7 +38,7 @@ export const makeRequest = async (options: RequestOptions) => {
             dataJson = { ...dataJson, statusCode: res.statusCode };
           }
           reject(
-            dataJson || data || new Error(`Error code: ${res.statusCode}.`)
+            dataJson || data || new Error(`Error code: ${res.statusCode}.`),
           );
         }
       });

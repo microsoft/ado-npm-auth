@@ -45,6 +45,9 @@ importers:
       eslint:
         specifier: ^8.30.0
         version: 8.57.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.3.3
       rimraf:
         specifier: ^5.0.1
         version: 5.0.9

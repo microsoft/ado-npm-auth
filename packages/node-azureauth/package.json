@@ -12,7 +12,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write src/**/*.ts && prettier --write ./cli.js",
+    "lint": "prettier --check src/**/*.ts ./cli.js",
     "start": "tsc --watch",
     "test": "vitest run src",
     "postinstall": "node ./scripts/install.js"

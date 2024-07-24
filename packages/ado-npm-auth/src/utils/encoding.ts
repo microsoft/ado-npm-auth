@@ -3,9 +3,9 @@
  * @param {string} input
  * @returns {string}
  */
-export function toBase64(input: string | undefined) : string {
+export function toBase64(input: string | undefined): string {
   return Buffer.from(input || "").toString("base64");
-};
+}
 
 /**
  * Decode a base64 encoded string
@@ -13,5 +13,4 @@ export function toBase64(input: string | undefined) : string {
  * @returns
  */
 export const fromBase64 = (base64string: string) =>
-    Buffer.from(base64string, "base64").toString("utf8");
-  
+  Buffer.from(base64string, "base64").toString("utf8");

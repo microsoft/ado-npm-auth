@@ -5,7 +5,6 @@ import { homedir } from "node:os";
 import { getOrganizationFromFeedUrl } from "./utils/get-organization-from-feed-url.js";
 import { makeADORequest } from "./ado/make-ado-request.js";
 
-
 /**
  * Default user to be used in the .npmrc
  */
@@ -24,7 +23,11 @@ export interface Feed {
   authToken?: string;
 }
 
-export type ValidatedFeed = { feed: Feed; isValid: boolean, fileProvider: FileProvider }
+export type ValidatedFeed = {
+  feed: Feed;
+  isValid: boolean;
+  fileProvider: FileProvider;
+};
 
 export abstract class FileProvider {
   public workspaceFilePath: string;
@@ -32,7 +35,10 @@ export abstract class FileProvider {
 
   public feeds: Map<string, Feed>;
 
-  constructor(public id: string, public workspaceFileName: string) {
+  constructor(
+    public id: string,
+    public workspaceFileName: string,
+  ) {
     const workspaceRoot = getWorkspaceRoot(process.cwd()) || "";
     this.workspaceFilePath = join(workspaceRoot, this.workspaceFileName);
 

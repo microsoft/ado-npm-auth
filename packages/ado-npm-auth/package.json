@@ -20,6 +20,7 @@
   "scripts": {
     "build": "tsc",
     "bundle": "webpack",
+    "lint": "prettier --check src/**/*.ts",
     "performance-test": "node lib/tests/performance.test.js",
     "test": "vitest run src"
   },
@@ -34,6 +35,7 @@
     "@types/node": "^20.5.9",
     "@types/npmcli__config": "^6.0.0",
     "eslint": "^8.30.0",
+    "prettier": "^3.2.5",
     "rimraf": "^5.0.1",
     "terser-webpack-plugin": "^1.4.3",
     "tslib": "^2.2.0",

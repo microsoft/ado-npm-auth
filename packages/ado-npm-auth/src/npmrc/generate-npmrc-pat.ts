@@ -8,7 +8,7 @@ import { toBase64 } from "../utils/encoding.js";
  */
 export const generateNpmrcPat = async (
   organization: string,
-  encode = false
+  encode = false,
 ): Promise<string> => {
   const name = `${hostname()}-${organization}`;
   const pat = await adoPat({
