@@ -9,9 +9,12 @@ import { generateNpmrcPat } from "./npmrc/generate-npmrc-pat.js";
 import { partition } from "./utils/partition.js";
 import { YarnRcFileProvider } from "./yarnrc/yarnrcFileProvider.js";
 
-const fileProviders = [new NpmrcFileProvider(), new YarnRcFileProvider()];
-
 export const run = async (args: Args): Promise<null | boolean> => {
+  const fileProviders = [
+    new NpmrcFileProvider(args.configFile),
+    new YarnRcFileProvider(args.configFile),
+  ];
+
   const validatedFeeds: ValidatedFeed[] = [];
   if (args.doValidCheck || args.skipAuth) {
     for (const fileProvider of fileProviders) {

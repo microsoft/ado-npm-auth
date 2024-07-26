@@ -1,3 +1,6 @@
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
 export interface Args {
   doValidCheck: boolean;
   skipAuth: boolean;
@@ -5,11 +8,28 @@ export interface Args {
 }
 
 export function parseArgs(args: string[]): Args {
-  const doValidCheck = !args.includes("--skip-check");
-  const skipAuth = args.includes("--skip-auth");
+  const argv = yargs(hideBin(args))
+    .option({
+      skipCheck: {
+        type: "boolean",
+        description: "Skip checking the validity of the feeds",
+      },
+      skipAuth: {
+        type: "boolean",
+        description: "Skip authenticating the feeds",
+      },
+      configFile: {
+        alias: "c",
+        type: "string",
+        description: "Skip checking the validity of the feeds",
+      },
+    })
+    .help()
+    .parseSync();
 
   return {
-    doValidCheck,
-    skipAuth,
+    skipAuth: argv.skipAuth || false,
+    doValidCheck: !argv.skipCheck,
+    configFile: argv.configFile,
   };
 }
