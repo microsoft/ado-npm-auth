@@ -1,6 +1,7 @@
 import { getWorkspaceRoot } from "workspace-tools";
 import { join } from "node:path";
 import fs from "node:fs/promises";
+import path from "node:path";
 import { homedir } from "node:os";
 import { getOrganizationFromFeedUrl } from "./utils/get-organization-from-feed-url.js";
 import { makeADORequest } from "./ado/make-ado-request.js";
@@ -38,9 +39,16 @@ export abstract class FileProvider {
   constructor(
     public id: string,
     public workspaceFileName: string,
+    configFile?: string,
   ) {
-    const workspaceRoot = getWorkspaceRoot(process.cwd()) || "";
-    this.workspaceFilePath = join(workspaceRoot, this.workspaceFileName);
+    let workspaceFilePath = undefined;
+    if (configFile && path.basename(configFile) === this.workspaceFileName) {
+        workspaceFilePath = path.resolve(configFile);
+    } else {
+      const workspaceRoot = getWorkspaceRoot(process.cwd()) || "";
+      workspaceFilePath = join(workspaceRoot, this.workspaceFileName);
+    }
+    this.workspaceFilePath = workspaceFilePath;
 
     const userHome =
       process.env["HOME"] || process.env["USERPROFILE"] || homedir() || "";
