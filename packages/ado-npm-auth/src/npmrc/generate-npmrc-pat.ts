@@ -9,8 +9,10 @@ import { toBase64 } from "../utils/encoding.js";
 export const generateNpmrcPat = async (
   organization: string,
   encode = false,
+  devicecode = false,
 ): Promise<string> => {
   const name = `${hostname()}-${organization}`;
+  const mode = devicecode ? "devicecode" : "";
   const pat = await adoPat({
     promptHint: `${name} .npmrc PAT`,
     organization,
@@ -18,6 +20,7 @@ export const generateNpmrcPat = async (
     scope: ["vso.packaging"],
     timeout: "30",
     output: "json",
+    mode,
   });
 
   const rawToken = (pat as AdoPatResponse).token;

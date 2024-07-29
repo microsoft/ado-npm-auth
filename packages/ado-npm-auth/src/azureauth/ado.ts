@@ -1,5 +1,5 @@
 import { arch, platform } from "os";
-import { exec } from "../utils/exec.js";
+import { spawn } from "../utils/exec.js";
 import { isSupportedPlatformAndArchitecture } from "./is-supported-platform-and-architecture.js";
 import { azureAuthCommand } from "./azureauth-command.js";
 import { isWsl } from "../utils/is-wsl.js";
@@ -47,7 +47,7 @@ export const adoPat = async (
     ...authCommand,
     `ado`,
     `pat`,
-    `--prompt-hint ${isWsl() ? options.promptHint : `"${options.promptHint}"`}`, // We only use spawn for WSL. spawn does not does not require prompt hint to be wrapped in quotes. exec does.
+    `--prompt-hint ${isWsl() ? options.promptHint : `"${options.promptHint}"`}`, // Prompt hint may contain spaces so wrap in quotes.
     `--organization ${options.organization}`,
     `--display-name ${options.displayName}`,
     ...options.scope.map((scope) => `--scope ${scope}`),
@@ -85,11 +85,11 @@ export const adoPat = async (
       }
     } else {
       try {
-        result = await exec(command.join(" "), { env });
-
-        if (result.stderr) {
-          throw new Error(result.stderr);
-        }
+        result = await spawn(command[0], command.slice(1), {
+          shell: false,
+          env,
+          stdio: ["ignore", "pipe", "inherit"],
+        });
       } catch (error: any) {
         throw new Error(
           `Failed to get Ado Pat from npx AzureAuth: ${error.message}`,
