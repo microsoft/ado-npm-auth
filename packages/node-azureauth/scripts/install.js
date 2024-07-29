@@ -3,6 +3,9 @@ import fs from "fs";
 import { DownloaderHelper } from "node-downloader-helper";
 import decompress from "decompress";
 import { fileURLToPath } from "url";
+import { promisify } from "node:util";
+import { execFile as _execFile } from "node:child_process";
+const execFile = promisify(_execFile);
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const AZURE_AUTH_VERSION = "0.8.4";
@@ -38,7 +41,7 @@ const AZUREAUTH_INFO = {
 const AZUREAUTH_NAME_MAP = {
   def: "azureauth",
   win32: "azureauth.exe",
-  linux: "azureauth.exe",
+  linux: "azureauth",
 };
 
 export const AZUREAUTH_NAME =
@@ -75,10 +78,10 @@ export const install = async () => {
       arm64: `azureauth-${AZUREAUTH_INFO.version}-osx-arm64.tar.gz`,
     },
     // TODO: support linux when the binaries are available
-    // linux: {
-    //   def: "azureauth.exe",
-    //   x64: "azureauth-${AZUREAUTH_INFO.version}-win10-x64.zip",
-    // },
+    linux: {
+       x64: `azureauth-${AZUREAUTH_INFO.version}-linux-x64.deb`,
+       arm64: `azureauth-${AZUREAUTH_INFO.version}-linux-arm64.deb`,
+    },
   };
   if (platform in DOWNLOAD_MAP) {
     // download the executable
@@ -107,7 +110,17 @@ export const install = async () => {
 
     const binaryPath = path.join(distPath, AZUREAUTH_NAME);
 
-    await decompress(archivePath, distPath);
+    if (platform == "linux") {
+      try {
+        await execFile("dpkg-deb", ["--extract", archivePath, distPath])
+      } catch (err) {
+        fs.unlinkSync(archivePath);
+        throw err;
+      }
+      fs.symlinkSync("usr/lib/azureauth/azureauth", binaryPath)
+    } else {
+      await decompress(archivePath, distPath);
+    }
 
     if (fileExist(binaryPath)) {
       fs.chmodSync(binaryPath, fs.constants.S_IXUSR || 0o100);
