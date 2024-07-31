@@ -2,7 +2,7 @@ import { isSupportedPlatformAndArchitecture } from "./azureauth/is-supported-pla
 import { isCodespaces } from "./utils/is-codespaces.js";
 import { logTelemetry } from "./telemetry/index.js";
 import { arch, platform } from "os";
-import { Args, parseArgs } from "./args.js";
+import { Args, parseArgs, printHelp } from "./args.js";
 import { NpmrcFileProvider } from "./npmrc/npmrcFileProvider.js";
 import { defaultEmail, defaultUser, ValidatedFeed } from "./fileProvider.js";
 import { generateNpmrcPat } from "./npmrc/generate-npmrc-pat.js";
@@ -54,7 +54,7 @@ export const run = async (args: Args): Promise<null | boolean> => {
     // get a token for each feed
     const organizationPatMap: Record<string, string> = {};
     for (const adoOrg of adoOrgs) {
-      organizationPatMap[adoOrg] = await generateNpmrcPat(adoOrg, false);
+      organizationPatMap[adoOrg] = await generateNpmrcPat(adoOrg, false, args.deviceCode);
     }
 
     // Update the pat in the invalid feeds.
@@ -115,6 +115,10 @@ if (!isSupportedPlatformAndArchitecture()) {
 }
 
 const args = parseArgs(process.argv);
+if (args.help) {
+  printHelp();
+  process.exit(0)
+}
 
 const result = await run(args);
 

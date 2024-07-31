@@ -8,6 +8,7 @@ import { isWsl } from "../utils/is-wsl.js";
 export const isSupportedPlatformAndArchitecture = (): boolean => {
   const supportedPlatformsAndArchitectures: Record<string, string[]> = {
     win32: ["x64"],
+    linux: ["x64", "arm64"],
     darwin: ["x64", "arm64"],
   };
 
