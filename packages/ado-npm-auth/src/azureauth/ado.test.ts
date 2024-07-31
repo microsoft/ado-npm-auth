@@ -1,6 +1,6 @@
 import { expect, test, vi, beforeEach } from "vitest";
 import { AdoPatResponse, adoPat } from "./ado.js";
-import { exec } from "../utils/exec.js";
+import { spawn } from "../utils/exec.js";
 import { spawnSync } from "child_process";
 import * as utils from "../utils/is-wsl.js";
 
@@ -21,7 +21,7 @@ vi.mock("./is-azureauth-installed.js", async () => {
 
 vi.mock("../utils/exec.js", async () => {
   return {
-    exec: vi.fn(),
+    spawn: vi.fn(),
   };
 });
 
@@ -43,7 +43,7 @@ beforeEach(() => {
 
 test("it should spawn azureauth", async () => {
   vi.mocked(utils.isWsl).mockReturnValue(false);
-  vi.mocked(exec).mockReturnValue(
+  vi.mocked(spawn).mockReturnValue(
     Promise.resolve({
       stdout: '{ "token": "foobarabc123" }',
       stderr: "",
@@ -60,8 +60,24 @@ test("it should spawn azureauth", async () => {
     timeout: "200",
   })) as AdoPatResponse;
 
-  expect(exec).toHaveBeenCalledWith(
-    'npm exec --silent --yes azureauth -- ado pat --prompt-hint "hint" --organization org --display-name test display --scope foobar --output json --domain baz.com --timeout 200',
+  expect(spawn).toHaveBeenCalledWith(
+    "npm",
+    [
+      "exec",
+      "--silent",
+      "--yes",
+      "azureauth",
+      "--",
+      "ado",
+      "pat",
+      '--prompt-hint "hint"',
+      "--organization org",
+      "--display-name test display",
+      "--scope foobar",
+      "--output json",
+      "--domain baz.com",
+      "--timeout 200",
+    ],
     expect.anything(),
   );
   expect(results.token).toBe("foobarabc123");
@@ -108,7 +124,7 @@ test("it should spawnSync azureauth on wsl", async () => {
 
 test("it should handle json errors", async () => {
   vi.mocked(utils.isWsl).mockReturnValue(false);
-  vi.mocked(exec).mockReturnValue(
+  vi.mocked(spawn).mockReturnValue(
     Promise.resolve({
       stdout: "an error",
       stderr: "",
@@ -130,12 +146,7 @@ test("it should handle json errors", async () => {
 
 test("it should handle errors from azureauth-cli", async () => {
   vi.mocked(utils.isWsl).mockReturnValue(false);
-  vi.mocked(exec).mockReturnValue(
-    Promise.resolve({
-      stdout: "",
-      stderr: "an error",
-    }) as any,
-  );
+  vi.mocked(spawn).mockReturnValue(Promise.reject(new Error("an error")));
 
   await expect(
     adoPat({
