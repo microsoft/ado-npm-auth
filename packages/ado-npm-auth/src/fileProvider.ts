@@ -43,7 +43,7 @@ export abstract class FileProvider {
   ) {
     let workspaceFilePath = undefined;
     if (configFile && path.basename(configFile) === this.workspaceFileName) {
-        workspaceFilePath = path.resolve(configFile);
+      workspaceFilePath = path.resolve(configFile);
     } else {
       const workspaceRoot = getWorkspaceRoot(process.cwd()) || "";
       workspaceFilePath = join(workspaceRoot, this.workspaceFileName);
