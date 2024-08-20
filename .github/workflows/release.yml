@@ -58,8 +58,8 @@ jobs:
 
       - name: Set git user
         run: |
-          git config user.email "kchau@microsoft.com"
-          git config user.name "Ken Chau"
+          git config user.email "jcreamer@microsoft.com"
+          git config user.name "Jonathan Creamer"
 
       - name: Release
         run: |
