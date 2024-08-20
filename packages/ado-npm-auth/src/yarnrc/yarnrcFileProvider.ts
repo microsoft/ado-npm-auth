@@ -6,8 +6,8 @@ import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-
 import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
 
 export class YarnRcFileProvider extends FileProvider {
-  constructor() {
-    super("YarnRc", ".yarnrc.yml");
+  constructor(configFile?: string) {
+    super("YarnRc", ".yarnrc.yml", configFile);
   }
 
   override async prepUserFile(): Promise<void> {

@@ -10,10 +10,11 @@ import { EOL } from "node:os";
 import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
 import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
 import { fromBase64, toBase64 } from "../utils/encoding.js";
+import path from "node:path";
 
 export class NpmrcFileProvider extends FileProvider {
-  constructor() {
-    super("NpmRc", ".npmrc");
+  constructor(configFile?: string) {
+    super("NpmRc", ".npmrc", configFile);
   }
 
   override async prepUserFile(): Promise<void> {
@@ -38,10 +39,20 @@ export class NpmrcFileProvider extends FileProvider {
     try {
       config = new Config({
         npmPath: this.workspaceFilePath,
+        argv: [
+          "<dummy_node>", // pnpm code always slices the first two arv arguments
+          "<dummy_pnpm_js>", // pnpm code always slices the first two arv arguments
+
+          // This is to ensure that the parser picks up the selected .npmrc file
+          // as the built-in logic for finding the .npmrc file is not resiliant
+          // for repo's that are of mixed languages i.e. js + cpp + C# etc.
+          // The assumption is that the .npmrc file is next to a node_modules or package.json
+          // file which in large mono-repo's at is not always the case.
+          `--prefix=${path.dirname(this.workspaceFilePath)}`,
+        ],
         shorthands: {},
         definitions: {} as any, // needed so we can access random feed names
       });
-
       await config.load();
     } catch (error) {
       if (error instanceof TypeError && error.message.includes("Invalid URL")) {
