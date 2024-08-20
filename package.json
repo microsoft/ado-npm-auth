@@ -10,7 +10,10 @@
     "lint": "lage lint",
     "test": "lage test",
     "format": "lage --no-cache lint --write",
-    "ci": "lage build test lint bundle"
+    "change": "beachball change -b origin/main",
+    "checkchange": "beachball check -b origin/main",    
+    "ci": "lage build test lint bundle",
+    "release": "beachball publish -b origin/main"
   },
   "devDependencies": {
     "lage": "^2.7.16",

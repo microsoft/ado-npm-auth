@@ -34,7 +34,7 @@ jobs:
       run: pnpm install
 
     - name: Check for change files
-      run: pnpm exec beachball check -b origin/main
+      run: pnpm run checkchange
 
     - name: Build, test & lint
       run: pnpm exec lage build test lint bundle
