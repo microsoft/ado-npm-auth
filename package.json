@@ -1,22 +1,30 @@
 {
   "name": "root",
   "private": "true",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "lage build",
     "bundle": "lage bundle",
     "lint": "lage lint",
     "test": "lage test",
     "format": "lage --no-cache lint --write",
-    "ci": "lage build test lint bundle"
+    "change": "beachball change -b origin/main",
+    "checkchange": "beachball check -b origin/main",    
+    "ci": "lage build test lint bundle",
+    "release": "beachball publish -b origin/main"
   },
   "devDependencies": {
     "lage": "^2.7.16",
-    "typescript": "^5.4.2",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.2"
   },
   "engines": {
     "node": ">=16",
     "pnpm": "8"
+  },
+  "dependencies": {
+    "beachball": "^2.43.1"
   }
 }
