@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    # This environment contains secrets needed for publishing
+    environment: release
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Don't save creds in the git config (so it's easier to override later)
+          persist-credentials: false
+
+      # This repo is inactive, so the tokens for publishing have been removed.
+      # To release, you must generate fine-grained npm and GitHub tokens (with write access for ONLY
+      # this repo and npm package/scope) and save them as secrets under Settings => Environments => release.
+      - name: Check tokens
+        uses: actions/github-script@v7
+        env:
+          NPM_AUTHTOKEN: ${{ secrets.NPM_AUTHTOKEN }}
+          REPO_PAT: ${{ secrets.REPO_PAT }}
+        with:
+          script: |
+            const fs = require('fs');
+            if (!process.env.NPM_AUTHTOKEN || !process.env.REPO_PAT) {
+              const releaseMessage = 'Secrets required for release are missing. See release.yml for instructions.';
+              if (fs.existsSync('change')) {
+                core.setFailed(releaseMessage);
+              } else {
+                core.warning(releaseMessage);
+              }
+            }
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: yarn
+
+      - run: yarn build
+
+      - run: yarn test
+
+      - name: Set git user
+        run: |
+          git config user.email "kchau@microsoft.com"
+          git config user.name "Ken Chau"
+
+      - name: Release
+        run: |
+          # Get the existing remote URL without creds, and use a trap (like try/finally)
+          # to restore it after this step finishes
+          trap "git remote set-url origin '$(git remote get-url origin)'" EXIT
+
+          # Add a token to the remote URL for auth during release
+          git remote set-url origin "https://$REPO_PAT@github.com/$GITHUB_REPOSITORY"
+
+          yarn release -y -n "$NPM_AUTHTOKEN"
+        env:
+          NPM_AUTHTOKEN: ${{ secrets.NPM_AUTHTOKEN }}
+          REPO_PAT: ${{ secrets.REPO_PAT }}
