@@ -50,11 +50,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: yarn
+      - run: pnpm install
 
-      - run: yarn build
+      - run: pnpm run build
 
-      - run: yarn test
+      - run: pnpm run test
 
       - name: Set git user
         run: |
@@ -70,7 +70,7 @@ jobs:
           # Add a token to the remote URL for auth during release
           git remote set-url origin "https://$REPO_PAT@github.com/$GITHUB_REPOSITORY"
 
-          yarn release -y -n "$NPM_AUTHTOKEN"
+          pnpm run release -y -n "$NPM_AUTHTOKEN"
         env:
           NPM_AUTHTOKEN: ${{ secrets.NPM_AUTHTOKEN }}
           REPO_PAT: ${{ secrets.REPO_PAT }}
