@@ -18,22 +18,102 @@ variables:
   - name: tags
     value: production,externalfacing
 
+parameters:
+  - name: pools
+    type: object
+    default:
+      - name: Azure-Pipelines-1ESPT-ExDShared
+        image: windows-latest
+        os: windows
+      - name: Azure-Pipelines-1ESPT-ExDShared
+        image: ubuntu-latest
+        os: linux
+      - name: Azure Pipelines
+        vmImage: macos-13
+        os: macOS        
+  - name: nodeVersions
+    type: object
+    default:
+      #- 16.x Pnpm v8 using corepack does not work on linux nor macos with node 16.x
+      - 18.x
+      - 20.x
+
 extends:
   template: v1/Office.Official.PipelineTemplate.yml@OfficePipelineTemplates
   parameters:
     pool:
       name: Azure-Pipelines-1ESPT-ExDShared
-      image: ubuntu-latest
-      os: linux
+      image: windows-latest
+      os: windows
 
     sdl:
       codeql:
         compiled:
           enabled: true
         runSourceLanguagesInSourceAnalysis: true
+      eslint:
+        configuration: "recommended"
+        parser: "@typescript-eslint/parser"
+        parserOptions: ""
 
     stages:
-    - stage: main
+    - stage: build
       jobs:
-      - script: echo "Hello, world!"
-        displayName: "Dummy script"
+        - ${{ each pool in parameters.pools }}:
+          - ${{ each nodeVersion in parameters.nodeVersions }}:
+            - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+              displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
+              pool: ${{ pool }}
+              templateContext:
+                outputs:
+                  # declare the outputs for compliance.
+                  - output: pipelineArtifact
+                    targetPath: $(System.DefaultWorkingDirectory)
+                    artifactName: publish-${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+              steps:
+                - template: /.ado/prep-node.yml@self
+                  parameters:
+                    nodeVersion: ${{ nodeVersion }}
+
+                - script: pnpm install
+                  displayName: Install dependencies (pnpm)
+
+                - script: npx lage build test lint bundle --reporter=azureDevops
+                  displayName: Build all
+
+    - stage: publish
+      dependsOn: build # Make sure we build and pass tests on all platforms and node versions before publishing
+      jobs:
+        - job: Publish
+          pool:
+            name: Azure-Pipelines-1ESPT-ExDShared
+            image: ubuntu-latest
+            os: linux
+          steps:
+            - template: /.ado/prep-node.yml@self
+              parameters:
+                nodeVersion: 20.x
+
+            - script: pnpm install
+              displayName: Install dependencies (pnpm)
+
+            - script: npx lage build bundle --reporter=azureDevops
+              displayName: Build & Bundle
+
+            - task: AzureKeyVault@2
+              inputs:
+                azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
+                KeyVaultName: rnw-keyvault
+                SecretsFilter: 'githubAuthToken,npmAuthToken' # string. Required. Secrets filter. Default: *.  
+              displayName: Obtaining secrets for publish
+
+            - task: CmdLine@2
+              displayName: Configure git auth for publishing to github
+              inputs:
+                script: |
+                  git config --global user.email "53619745+rnbot@users.noreply.github.com"
+                  git config --global user.name "React-Native Bot"
+                  git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
+
+            - script: npm run release -- -n $(npmAuthToken)
+              displayName: Release

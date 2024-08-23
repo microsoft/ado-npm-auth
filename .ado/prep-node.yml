@@ -1,0 +1,28 @@
+parameters:
+  name: nodeVersion
+  type: string
+  default: 20
+
+steps:
+  - task: UseNode@1
+    displayName: Install Node ${{ parameters.nodeVersion }}
+    inputs:
+      version: ${{ parameters.nodeVersion }}
+
+
+  - bash: |
+      mv publish.npmrc .npmrc
+    displayName: "Configure .npmrc to use CFS"
+
+  - task: npmAuthenticate@0
+    inputs:
+      workingFile: '.npmrc'
+
+  - script: |
+      npm install -g yarn
+    displayName: "Setup yarn"
+
+  - script: |
+      corepack enable pnpm
+      corepack use pnpm@latest-8
+    displayName: "Setup pnpm"

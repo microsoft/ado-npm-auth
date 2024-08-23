@@ -4,6 +4,5 @@ module.exports = {
     "bundle": ["build"],
     "test": [],
     "lint": [],
-  },
-  npmClient: "yarn",
+  }
 }
