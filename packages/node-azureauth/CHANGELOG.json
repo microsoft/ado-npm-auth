@@ -1,0 +1,20 @@
+{
+  "name": "azureauth",
+  "entries": [
+    {
+      "date": "Fri, 06 Sep 2024 22:56:42 GMT",
+      "version": "0.4.7",
+      "tag": "azureauth_v0.4.7",
+      "comments": {
+        "patch": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "azureauth",
+            "commit": "bb5431e37d0b40ace73c9f06e736219c5412f32c",
+            "comment": "Initial official release"
+          }
+        ]
+      }
+    }
+  ]
+}
