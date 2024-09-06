@@ -109,12 +109,12 @@ extends:
               displayName: Build & Bundle
 
             - script: |
-                echo ##vso[task.setvariable variable=SkipNpmPublishArgs]--no-publish
+                echo "##vso[task.setvariable variable=SkipNpmPublishArgs]--no-publish"
               displayName: Enable No-Publish (npm)
               condition: ${{ parameters.skipNpmPublish }}
 
             - script: |
-                echo ##vso[task.setvariable variable=SkipGitPushPublishArgs]--no-push
+                echo "##vso[task.setvariable variable=SkipGitPushPublishArgs]--no-push"
               displayName: Enable No-Publish (git)
               condition: ${{ parameters.skipGitPush }}
 
@@ -133,5 +133,6 @@ extends:
                   git config --global user.name "React-Native Bot"
                   git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
 
-            - script: npm run publish:beachball -- $(SkipNpmPublishArgs) $(SkipGitPushPublishArgs) --access public --token $(npmAuthToken) -y
+            - script: |
+                npm run publish:beachball -- $(SkipNpmPublishArgs) $(SkipGitPushPublishArgs) --access public --token $(npmAuthToken) -y
               displayName: Beachball Publish
