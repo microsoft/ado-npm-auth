@@ -37,6 +37,14 @@ parameters:
       #- 16.x Pnpm v8 using corepack does not work on linux nor macos with node 16.x
       - 18.x
       - 20.x
+  - name: skipNpmPublish
+    displayName: Skip Npm Publish
+    type: boolean
+    default: false
+  - name: skipGitPush
+    displayName: Skip Git Push
+    type: boolean
+    default: false
 
 extends:
   template: v1/Office.Official.PipelineTemplate.yml@OfficePipelineTemplates
@@ -100,6 +108,16 @@ extends:
             - script: npx lage build bundle --reporter=azureDevops
               displayName: Build & Bundle
 
+            - script: |
+                echo ##vso[task.setvariable variable=SkipNpmPublishArgs]--no-publish
+              displayName: Enable No-Publish (npm)
+              condition: ${{ parameters.skipNpmPublish }}
+
+            - script: |
+                echo ##vso[task.setvariable variable=SkipGitPushPublishArgs]--no-push
+              displayName: Enable No-Publish (git)
+              condition: ${{ parameters.skipGitPush }}
+
             - task: AzureKeyVault@2
               inputs:
                 azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
@@ -115,5 +133,5 @@ extends:
                   git config --global user.name "React-Native Bot"
                   git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
 
-            - script: npm run release -- -n $(npmAuthToken)
-              displayName: Release
+            - script: npm run publish:beachball -- $(SkipNpmPublishArgs) $(SkipGitPushPublishArgs) --access public --token $(npmAuthToken) -y
+              displayName: Beachball Publish

@@ -13,7 +13,7 @@
     "change": "beachball change -b origin/main",
     "checkchange": "beachball check -b origin/main",
     "ci": "lage build test lint bundle",
-    "release": "beachball publish -b origin/main"
+    "publish:beachball": "beachball publish --bump-deps -m\"📦 applying package updates ***NO_CI***\"  --verbose"
   },
   "devDependencies": {
     "lage": "^2.7.16",
