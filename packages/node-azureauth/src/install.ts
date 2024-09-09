@@ -1,13 +1,12 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
+
 import { DownloaderHelper } from "node-downloader-helper";
 import decompress from "decompress";
-import { fileURLToPath } from "url";
 
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const AZURE_AUTH_VERSION = "0.8.4";
 
-async function download(url, saveDirectory) {
+async function download(url: string, saveDirectory: string): Promise<void> {
   const downloader = new DownloaderHelper(url, saveDirectory);
   return new Promise((resolve, reject) => {
     downloader.on("end", () => resolve());
@@ -35,7 +34,7 @@ const AZUREAUTH_INFO = {
   version: AZURE_AUTH_VERSION,
 };
 
-const AZUREAUTH_NAME_MAP = {
+const AZUREAUTH_NAME_MAP: any = {
   def: "azureauth",
   win32: "azureauth.exe",
   linux: "azureauth.exe",
@@ -48,9 +47,9 @@ export const AZUREAUTH_NAME =
 
 export const install = async () => {
   const OUTPUT_DIR = path.join(__dirname, "..", "bin");
-  const fileExist = (path) => {
+  const fileExist = (pathToCheck: string) => {
     try {
-      return fs.existsSync(path);
+      return fs.existsSync(pathToCheck);
     } catch (err) {
       return false;
     }
@@ -66,7 +65,7 @@ export const install = async () => {
     return;
   }
   // if platform is missing, download source instead of executable
-  const DOWNLOAD_MAP = {
+  const DOWNLOAD_MAP: any = {
     win32: {
       x64: `azureauth-${AZUREAUTH_INFO.version}-win10-x64.zip`,
     },
@@ -95,7 +94,7 @@ export const install = async () => {
     console.log(`Downloading azureauth from ${url}`);
     try {
       await download(url, OUTPUT_DIR);
-    } catch (err) {
+    } catch (err: any) {
       throw new Error(`Download failed: ${err.message}`);
     }
     console.log(`Downloaded in ${OUTPUT_DIR}`);
@@ -121,15 +120,22 @@ export const install = async () => {
   }
 };
 
-const MAX_RETRIES = 3;
-for (let i = 0; i < MAX_RETRIES; i++) {
-  try {
-    await install();
-    break; // success, so exit the loop
-  } catch (err) {
-    console.log(`Install failed: ${err.message}`);
-  }
-  if (i === MAX_RETRIES - 1) {
-    throw new Error(`Install failed after ${MAX_RETRIES} attempts`);
+async function retryLoop() {
+  const MAX_RETRIES = 3;
+  for (let i = 0; i < MAX_RETRIES; i++) {
+    try {
+      await install();
+      break; // success, so exit the loop
+    } catch (err: any) {
+      console.log(`Install failed: ${err.message}`);
+    }
+    if (i === MAX_RETRIES - 1) {
+      throw new Error(`Install failed after ${MAX_RETRIES} attempts`);
+    }
   }
 }
+
+retryLoop().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
