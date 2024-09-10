@@ -13,9 +13,9 @@
   "scripts": {
     "build": "tsc",
     "bundle": "npm run bundleInstall && npm run bundleCli && npm run bundleIndex",
-    "bundleInstall": "esbuild --sourcemap --bundle --platform=node --outfile=dist/install.cjs src/install.ts ",
-    "bundleCli": "esbuild --sourcemap --bundle --platform=node cli.js --outfile=dist/cli.cjs",
-    "bundleIndex": "esbuild --sourcemap --bundle --platform=node --format=esm src/index.ts --outfile=dist/index.js",
+    "bundleInstall": "esbuild --sourcemap --bundle --minify --platform=node --outfile=dist/install.cjs src/install.ts",
+    "bundleCli": "esbuild --sourcemap --bundle --minify --platform=node cli.js --outfile=dist/cli.cjs",
+    "bundleIndex": "esbuild --sourcemap --bundle --minify --platform=node --format=esm src/index.ts --outfile=dist/index.js",
     "lint": "prettier --check src/**/*.ts ./cli.js ",
     "start": "tsc --watch",
     "test": "vitest run src",

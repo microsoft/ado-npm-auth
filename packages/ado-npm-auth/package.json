@@ -5,13 +5,13 @@
   "repository": "https://github.com/microsoft/ado-npm-auth",
   "license": "MIT",
   "type": "module",
-  "main": "./lib/index.js",
+  "main": "./dist/index.js",
   "bin": {
     "ado-npm-auth": "./bin/index.js"
   },
   "files": [
-    "dist",
-    "lib",
+    "dist/index.js",
+    "dist/ado-npm-auth.cjs",
     "bin",
     "static",
     "LICENCSE.txt",
@@ -19,24 +19,23 @@
   ],
   "scripts": {
     "build": "tsc",
-    "bundle": "webpack",
+    "bundle": "npm run bundleBin && npm run bundleIndex",
+    "bundleBin": "esbuild --sourcemap --bundle --minify --platform=node src/cli.ts --outfile=dist/ado-npm-auth.cjs",
+    "bundleIndex": "esbuild --sourcemap --bundle --minify --platform=node --format=esm src/index.ts --outfile=dist/index.js",
     "lint": "prettier --check src/**/*.ts",
     "performance-test": "node lib/tests/performance.test.js",
     "test": "vitest run src"
   },
-  "dependencies": {
-    "@npmcli/config": "^4.0.1",
-    "azureauth": "^0.4.7",
-    "js-yaml": "^4.1.0",
-    "workspace-tools": "^0.26.3",
-    "yargs": "^17.7.2"
-  },
   "devDependencies": {
+    "@npmcli/config": "^4.0.1",
     "@types/js-yaml": "4.0.9",
     "@types/node": "^20.5.9",
     "@types/npmcli__config": "^6.0.0",
     "@types/yargs": "^17.0.32",
+    "azureauth": "^0.4.7",
+    "esbuild": "^0.23.1",
     "eslint": "^8.30.0",
+    "js-yaml": "^4.1.0",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.1",
     "terser-webpack-plugin": "^1.4.3",
@@ -44,7 +43,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.2.8",
     "vitest": "^2.0.5",
-    "webpack-cli": "^4.10.0",
-    "webpack": "^5.64.4"
+    "workspace-tools": "^0.26.3",
+    "yargs": "^17.7.2"
   }
 }
