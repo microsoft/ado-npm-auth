@@ -119,21 +119,30 @@ if (!isSupportedPlatformAndArchitecture()) {
 
 const args = parseArgs(process.argv);
 
-const result = await run(args);
+run(args)
+  .then((result) => {
+    if (result === null) {
+      // current auth is valid, do nothing
+      logTelemetry({ success: true });
+      console.log("✅ Current authentication is valid");
+    } else if (result) {
+      // automatic auth was performed
+      // advertise success
+      logTelemetry({ success: true, automaticSuccess: true });
+      console.log("✅ Automatic authentication successful");
+    } else {
+      // automatic auth failed (for some reason)
+      // advertise failure and link wiki to fix
+      console.log("❌ Authentication to package feed failed.");
+    
+      process.exitCode = 1;
+    }
+  })
+  .catch((error) => {
+      console.error(error);
+      console.log("❌ Authentication to package feed failed.");
+    
+      process.exitCode = 1;
+  })
 
-if (result === null) {
-  // current auth is valid, do nothing
-  logTelemetry({ success: true });
-  console.log("✅ Current authentication is valid");
-} else if (result) {
-  // automatic auth was performed
-  // advertise success
-  logTelemetry({ success: true, automaticSuccess: true });
-  console.log("✅ Automatic authentication successful");
-} else {
-  // automatic auth failed (for some reason)
-  // advertise failure and link wiki to fix
-  console.log("❌ Authentication to package feed failed.");
 
-  process.exitCode = 1;
-}

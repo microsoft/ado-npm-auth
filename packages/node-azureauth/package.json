@@ -3,20 +3,29 @@
   "version": "0.4.7",
   "description": "node-azure auth wrapps the AzureAuth CLI wrapper for performing AAD Authentication",
   "bin": {
-    "azureauth": "./cli.js"
+    "azureauth": "./bin/cli.js"
   },
   "repository": {
     "url": "https://github.com/microsoft/ado-npm-auth"
   },
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "lint": "prettier --check src/**/*.ts ./cli.js",
+    "bundle": "npm run bundleInstall && npm run bundleCli && npm run bundleIndex",
+    "bundleInstall": "esbuild --sourcemap --bundle --minify --platform=node --outfile=dist/install.cjs src/install.ts",
+    "bundleCli": "esbuild --sourcemap --bundle --minify --platform=node cli.js --outfile=dist/cli.cjs",
+    "bundleIndex": "esbuild --sourcemap --bundle --minify --platform=node --format=esm src/index.ts --outfile=dist/index.js",
+    "lint": "prettier --check src/**/*.ts ./cli.js ",
     "start": "tsc --watch",
     "test": "vitest run src",
-    "postinstall": "node ./scripts/install.js"
+    "postinstall": "node ./scripts/install.cjs"
   },
+  "files": [
+    "dist/install.cjs",
+    "dist/cli.js",
+    "dist/index.js"
+  ],
   "keywords": [
     "node",
     "azureauth",
@@ -26,13 +35,13 @@
   ],
   "author": "Jonathan Creamer",
   "license": "MIT",
-  "dependencies": {
-    "decompress": "^4.2.1",
-    "execa": "^7.2.0",
-    "node-downloader-helper": "^2.1.9"
-  },
   "devDependencies": {
     "@types/node": "^20.12.7",
+    "@types/decompress": "^4.2.7",
+    "decompress": "^4.2.1",
+    "esbuild": "^0.23.1",
+    "execa": "^7.2.0",
+    "node-downloader-helper": "^2.1.9",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5",
     "vitest": "^2.0.5",
