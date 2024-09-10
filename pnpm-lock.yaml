@@ -23,6 +23,10 @@ importers:
         version: 5.5.3
 
   packages/ado-npm-auth:
+    dependencies:
+      azureauth:
+        specifier: ^0.4.7
+        version: link:../node-azureauth
     devDependencies:
       '@npmcli/config':
         specifier: ^4.0.1
@@ -39,9 +43,6 @@ importers:
       '@types/yargs':
         specifier: ^17.0.32
         version: 17.0.32
-      azureauth:
-        specifier: ^0.4.7
-        version: link:../node-azureauth
       esbuild:
         specifier: ^0.23.1
         version: 0.23.1
