@@ -26,13 +26,15 @@
     "performance-test": "node lib/tests/performance.test.js",
     "test": "vitest run src"
   },
+  "dependencies": {
+    "azureauth": "^0.4.7"
+  },
   "devDependencies": {
     "@npmcli/config": "^4.0.1",
     "@types/js-yaml": "4.0.9",
     "@types/node": "^20.5.9",
     "@types/npmcli__config": "^6.0.0",
     "@types/yargs": "^17.0.32",
-    "azureauth": "^0.4.7",
     "esbuild": "^0.23.1",
     "eslint": "^8.30.0",
     "js-yaml": "^4.1.0",
