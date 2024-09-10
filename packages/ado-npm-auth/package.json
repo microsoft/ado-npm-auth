@@ -40,7 +40,6 @@
     "js-yaml": "^4.1.0",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.1",
-    "terser-webpack-plugin": "^1.4.3",
     "tslib": "^2.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.8",
