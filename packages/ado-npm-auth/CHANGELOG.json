@@ -2,6 +2,27 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Wed, 11 Sep 2024 20:04:18 GMT",
+      "version": "0.1.5",
+      "tag": "ado-npm-auth_v0.1.5",
+      "comments": {
+        "patch": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "bc3533c7489857c75a8deec785397943990fec6f",
+            "comment": "Linting fixes"
+          },
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.5.1",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 11 Sep 2024 16:57:41 GMT",
       "version": "0.1.4",
       "tag": "ado-npm-auth_v0.1.4",
