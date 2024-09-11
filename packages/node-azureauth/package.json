@@ -24,7 +24,8 @@
   "files": [
     "dist/install.cjs",
     "dist/cli.js",
-    "dist/index.js"
+    "dist/index.js",
+    "scripts/install.cjs"
   ],
   "keywords": [
     "node",

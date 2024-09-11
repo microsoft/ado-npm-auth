@@ -134,15 +134,13 @@ run(args)
       // automatic auth failed (for some reason)
       // advertise failure and link wiki to fix
       console.log("❌ Authentication to package feed failed.");
-    
+
       process.exitCode = 1;
     }
   })
   .catch((error) => {
-      console.error(error);
-      console.log("❌ Authentication to package feed failed.");
-    
-      process.exitCode = 1;
-  })
+    console.error(error);
+    console.log("❌ Authentication to package feed failed.");
 
-
+    process.exitCode = 1;
+  });
