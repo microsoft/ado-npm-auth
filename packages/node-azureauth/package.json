@@ -25,6 +25,7 @@
     "dist/install.cjs",
     "dist/cli.js",
     "dist/index.js",
+    "scripts/azureauth.js",
     "scripts/install.cjs"
   ],
   "keywords": [
