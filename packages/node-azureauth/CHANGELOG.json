@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Fri, 13 Sep 2024 18:59:07 GMT",
+      "version": "0.10.0",
+      "tag": "azureauth_v0.10.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "azureauth",
+            "commit": "6c64e0b603f618d5604b5ade6fe4ad6802e63219",
+            "comment": "files section lacked updated .cjs extension"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 13 Sep 2024 18:42:55 GMT",
       "version": "0.9.0",
       "tag": "azureauth_v0.9.0",

@@ -2,6 +2,21 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Fri, 13 Sep 2024 18:59:07 GMT",
+      "version": "0.1.10",
+      "tag": "ado-npm-auth_v0.1.10",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.10.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 13 Sep 2024 18:42:55 GMT",
       "version": "0.1.9",
       "tag": "ado-npm-auth_v0.1.9",

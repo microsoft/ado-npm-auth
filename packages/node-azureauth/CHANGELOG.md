@@ -1,8 +1,16 @@
 # Change Log - azureauth
 
-This log was last generated on Fri, 13 Sep 2024 18:42:55 GMT and should not be manually modified.
+This log was last generated on Fri, 13 Sep 2024 18:59:07 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.10.0
+
+Fri, 13 Sep 2024 18:59:07 GMT
+
+### Minor changes
+
+- files section lacked updated .cjs extension (dannyvv@microsoft.com)
 
 ## 0.9.0
 
