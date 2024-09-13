@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Migrate bin script to cjs",
+      "packageName": "azureauth",
+      "email": "dannyvv@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
