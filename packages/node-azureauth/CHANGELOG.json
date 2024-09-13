@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Fri, 13 Sep 2024 17:50:14 GMT",
+      "version": "0.7.0",
+      "tag": "azureauth_v0.7.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "azureauth",
+            "commit": "cab5dd80067b6add44ee5cb0ca33685ecbb6ee9b",
+            "comment": "fix bin section"
+          }
+        ]
+      }
+    },
+    {
       "date": "Thu, 12 Sep 2024 21:56:08 GMT",
       "version": "0.6.0",
       "tag": "azureauth_v0.6.0",
