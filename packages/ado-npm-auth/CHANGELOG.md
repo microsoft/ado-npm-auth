@@ -1,8 +1,16 @@
 # Change Log - ado-npm-auth
 
-This log was last generated on Fri, 13 Sep 2024 18:59:07 GMT and should not be manually modified.
+This log was last generated on Fri, 13 Sep 2024 19:47:53 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.1.11
+
+Fri, 13 Sep 2024 19:47:53 GMT
+
+### Patches
+
+- Bump azureauth to v0.11.0
 
 ## 0.1.10
 
