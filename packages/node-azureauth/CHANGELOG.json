@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Fri, 13 Sep 2024 18:42:55 GMT",
+      "version": "0.9.0",
+      "tag": "azureauth_v0.9.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "azureauth",
+            "commit": "bc9d2cda630f75971b8c7679ef9030ce097daad6",
+            "comment": "Migrate bin script to cjs"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 13 Sep 2024 18:15:05 GMT",
       "version": "0.8.0",
       "tag": "azureauth_v0.8.0",
