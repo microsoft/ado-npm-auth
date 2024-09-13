@@ -3,7 +3,7 @@
   "version": "0.8.0",
   "description": "node-azure auth wrapps the AzureAuth CLI wrapper for performing AAD Authentication",
   "bin": {
-    "azureauth": "./scripts/azureauth.js"
+    "azureauth": "./scripts/azureauth.cjs"
   },
   "repository": {
     "url": "https://github.com/microsoft/ado-npm-auth"
@@ -25,7 +25,7 @@
     "dist/install.cjs",
     "dist/cli.js",
     "dist/index.js",
-    "scripts/azureauth.js",
+    "scripts/azureauth.cjs",
     "scripts/install.cjs"
   ],
   "keywords": [
