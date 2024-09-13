@@ -1,8 +1,16 @@
 # Change Log - azureauth
 
-This log was last generated on Fri, 13 Sep 2024 17:50:14 GMT and should not be manually modified.
+This log was last generated on Fri, 13 Sep 2024 18:15:05 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.8.0
+
+Fri, 13 Sep 2024 18:15:05 GMT
+
+### Minor changes
+
+- Make bin script work form shell (dannyvv@microsoft.com)
 
 ## 0.7.0
 

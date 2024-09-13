@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Fri, 13 Sep 2024 18:15:05 GMT",
+      "version": "0.8.0",
+      "tag": "azureauth_v0.8.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "azureauth",
+            "commit": "e02ce4f37bd48a1bf01979c4a9c3b59dff5991ae",
+            "comment": "Make bin script work form shell"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 13 Sep 2024 17:50:14 GMT",
       "version": "0.7.0",
       "tag": "azureauth_v0.7.0",
