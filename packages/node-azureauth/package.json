@@ -23,7 +23,7 @@
   },
   "files": [
     "dist/install.cjs",
-    "dist/cli.js",
+    "dist/cli.cjs",
     "dist/index.js",
     "scripts/azureauth.cjs",
     "scripts/install.cjs"
