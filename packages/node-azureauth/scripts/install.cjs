@@ -1,7 +1,7 @@
 const path = require("node:path");
 const fs = require("node:fs");
 
-const installScript = path.join(__dirname, "dist", "install.js");
+const installScript = path.join(__dirname, "..", "dist", "install.cjs");
 if (fs.existsSync(installScript)) {
   require(installScript);
 } else {
