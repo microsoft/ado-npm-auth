@@ -13,8 +13,8 @@ import { fromBase64, toBase64 } from "../utils/encoding.js";
 import path from "node:path";
 
 export class NpmrcFileProvider extends FileProvider {
-  constructor(configFile?: string) {
-    super("NpmRc", ".npmrc", configFile);
+  constructor(configFile?: string, userConfigFile?: string) {
+    super("NpmRc", ".npmrc", configFile, userConfigFile);
   }
 
   override async prepUserFile(): Promise<void> {
