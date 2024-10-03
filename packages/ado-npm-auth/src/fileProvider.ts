@@ -55,7 +55,7 @@ export abstract class FileProvider {
       this.userFilePath = userConfigFile;
     } else {
       const userHome =
-        process.env["HOME"] || process.env["USERPROFILE"] || homedir() || "";
+        process.env["ADO_NPM_AUTH_USER_CONFIG"] || process.env["HOME"] || process.env["USERPROFILE"] || homedir() || "";
       this.userFilePath = join(userHome, workspaceFileName);
     }
     this.feeds = new Map<string, Feed>();
