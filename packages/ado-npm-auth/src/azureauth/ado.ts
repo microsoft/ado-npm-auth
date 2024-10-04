@@ -96,7 +96,7 @@ export const adoPat = async (
         result = await exec(command.join(" "), { env });
 
         if (result.stderr && !result.stdout) {
-          throw new Error(`Azure Auth failed: ${result.stderr}`);
+          throw new Error(result.stderr);
         }
       } catch (error: any) {
         throw new Error(
