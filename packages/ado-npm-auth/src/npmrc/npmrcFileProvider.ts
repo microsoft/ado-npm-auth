@@ -140,7 +140,7 @@ export class NpmrcFileProvider extends FileProvider {
     return `//${registry}:${field}=`;
   }
 
-  override async writeWorspaceRegistries(
+  override async writeWorkspaceRegistries(
     feedsToPatch: Iterable<Feed>,
   ): Promise<void> {
     const newLinesByRegistryAndField = new Map<string, string>();

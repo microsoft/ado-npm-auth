@@ -6,12 +6,14 @@
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
+  "typings": "./lib/index.d.ts",
   "bin": {
     "ado-npm-auth": "./bin/index.js"
   },
   "files": [
     "dist/index.js",
     "dist/ado-npm-auth.cjs",
+    "lib/*.d.ts",
     "bin",
     "static",
     "LICENCSE.txt",

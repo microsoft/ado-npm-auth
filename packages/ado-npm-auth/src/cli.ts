@@ -85,7 +85,7 @@ export const run = async (args: Args): Promise<null | boolean> => {
       (feed) => feed.fileProvider,
     );
     for (const [fileProvider, updatedFeeds] of invalidFeedsByProvider) {
-      await fileProvider.writeWorspaceRegistries(
+      await fileProvider.writeWorkspaceRegistries(
         updatedFeeds.map((updatedFeed) => updatedFeed.feed),
       );
     }
