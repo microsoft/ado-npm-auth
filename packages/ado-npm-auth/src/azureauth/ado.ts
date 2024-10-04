@@ -45,7 +45,7 @@ export const adoPat = async (
   const { command: authCommand, env } = azureAuthLocation
     ? {
         command: [azureAuthLocation],
-        env: process.env
+        env: process.env,
       }
     : azureAuthCommand();
 
@@ -82,7 +82,9 @@ export const adoPat = async (
         result = spawnSync(command[0], command.slice(1), { encoding: "utf-8" });
 
         if (result.status === 0 || (result.stderr && !result.stdout)) {
-          throw new Error(`Azure Auth failed with exit code ${result.status}: ${result.stderr}`);
+          throw new Error(
+            `Azure Auth failed with exit code ${result.status}: ${result.stderr}`,
+          );
         }
       } catch (error: any) {
         throw new Error(
@@ -92,7 +94,7 @@ export const adoPat = async (
     } else {
       try {
         result = await exec(command.join(" "), { env });
-        
+
         if (result.stderr && !result.stdout) {
           throw new Error(`Azure Auth failed: ${result.stderr}`);
         }
@@ -114,7 +116,7 @@ export const adoPat = async (
     return result.stdout;
   } catch (error: any) {
     if (!(await isAzureAuthInstalled())) {
-      throw new Error(`AzureAuth is not installed.` + JSON.stringify(error));
+      throw new Error(`AzureAuth is not installed: ${error}`);
     }
 
     throw new Error(error.message);
