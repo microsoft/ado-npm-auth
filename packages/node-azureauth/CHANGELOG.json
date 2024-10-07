@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Mon, 07 Oct 2024 17:28:12 GMT",
+      "version": "0.12.0",
+      "tag": "azureauth_v0.12.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "azureauth",
+            "commit": "1731be2186e3f48b58dd6d114fc607a2686f40c0",
+            "comment": "Expose functionality as a library"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 13 Sep 2024 19:47:53 GMT",
       "version": "0.11.0",
       "tag": "azureauth_v0.11.0",

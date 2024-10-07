@@ -2,6 +2,27 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Mon, 07 Oct 2024 17:28:12 GMT",
+      "version": "0.2.0",
+      "tag": "ado-npm-auth_v0.2.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "1731be2186e3f48b58dd6d114fc607a2686f40c0",
+            "comment": "Expose functionality as a library"
+          },
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.12.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 13 Sep 2024 19:47:53 GMT",
       "version": "0.1.11",
       "tag": "ado-npm-auth_v0.1.11",
