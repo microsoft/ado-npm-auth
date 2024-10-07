@@ -9,16 +9,20 @@ import { toBase64 } from "../utils/encoding.js";
 export const generateNpmrcPat = async (
   organization: string,
   encode = false,
+  azureAuthLocation?: string,
 ): Promise<string> => {
   const name = `${hostname()}-${organization}`;
-  const pat = await adoPat({
-    promptHint: `${name} .npmrc PAT`,
-    organization,
-    displayName: `${name}-npmrc-pat`,
-    scope: ["vso.packaging"],
-    timeout: "30",
-    output: "json",
-  });
+  const pat = await adoPat(
+    {
+      promptHint: `${name} .npmrc PAT`,
+      organization,
+      displayName: `${name}-npmrc-pat`,
+      scope: ["vso.packaging"],
+      timeout: "30",
+      output: "json",
+    },
+    azureAuthLocation,
+  );
 
   const rawToken = (pat as AdoPatResponse).token;
 

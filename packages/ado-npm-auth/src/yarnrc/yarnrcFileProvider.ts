@@ -66,7 +66,7 @@ export class YarnRcFileProvider extends FileProvider {
     return registries;
   }
 
-  override async writeWorspaceRegistries(
+  override async writeWorkspaceRegistries(
     feedsToPatch: Iterable<Feed>,
   ): Promise<void> {
     const yarnrc = (await this.paseYarnRc(this.userFilePath)) || {};

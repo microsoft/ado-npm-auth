@@ -108,5 +108,7 @@ export abstract class FileProvider {
   abstract prepUserFile(): Promise<void>;
   abstract getUserFeeds(): Promise<Map<string, Feed>>;
   abstract getWorkspaceRegistries(): Promise<string[]>;
-  abstract writeWorspaceRegistries(feedsToPatch: Iterable<Feed>): Promise<void>;
+  abstract writeWorkspaceRegistries(
+    feedsToPatch: Iterable<Feed>,
+  ): Promise<void>;
 }
