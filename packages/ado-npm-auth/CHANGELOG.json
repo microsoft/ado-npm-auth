@@ -2,6 +2,21 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Tue, 08 Oct 2024 17:07:15 GMT",
+      "version": "0.3.0",
+      "tag": "ado-npm-auth_v0.3.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "1375d8cc4db409405ca3016232e40879e3642cfe",
+            "comment": "Ensure all types are included in the package"
+          }
+        ]
+      }
+    },
+    {
       "date": "Mon, 07 Oct 2024 17:28:12 GMT",
       "version": "0.2.0",
       "tag": "ado-npm-auth_v0.2.0",
