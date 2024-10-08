@@ -13,7 +13,7 @@
   "files": [
     "dist/index.js",
     "dist/ado-npm-auth.cjs",
-    "lib/*.d.ts",
+    "lib/**/*.d.ts",
     "bin",
     "static",
     "LICENCSE.txt",
