@@ -5,6 +5,7 @@ export interface Args {
   doValidCheck: boolean;
   skipAuth: boolean;
   configFile?: string;
+  userConfigFile?: string;
 }
 
 export function parseArgs(args: string[]): Args {
@@ -21,8 +22,13 @@ export function parseArgs(args: string[]): Args {
       configFile: {
         alias: "c",
         type: "string",
-        description: "Skip checking the validity of the feeds",
+        description: "Custom workspace config file path",
       },
+      userConfigFile: {
+        alias: "u",
+        type: "string",
+        description: "Custom user config file path",
+      }
     })
     .help()
     .parseSync();
@@ -31,5 +37,6 @@ export function parseArgs(args: string[]): Args {
     skipAuth: argv.skipAuth || false,
     doValidCheck: !argv.skipCheck,
     configFile: argv.configFile,
+    userConfigFile: argv.userConfigFile
   };
 }

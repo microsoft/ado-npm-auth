@@ -11,8 +11,8 @@ import { YarnRcFileProvider } from "./yarnrc/yarnrcFileProvider.js";
 
 export const run = async (args: Args): Promise<null | boolean> => {
   const fileProviders = [
-    new NpmrcFileProvider(args.configFile),
-    new YarnRcFileProvider(args.configFile),
+    new NpmrcFileProvider(args.configFile, args.userConfigFile),
+    new YarnRcFileProvider(args.configFile, args.userConfigFile),
   ];
 
   const validatedFeeds: ValidatedFeed[] = [];
