@@ -1,0 +1,18 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Bump vite from 5.3.4 to 5.3.6",
+      "packageName": "ado-npm-auth",
+      "email": "jcreamer@microsoft.com",
+      "dependentChangeType": "patch"
+    },
+    {
+      "type": "patch",
+      "comment": "Bump vite from 5.3.4 to 5.3.6",
+      "packageName": "azureauth",
+      "email": "jcreamer@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
