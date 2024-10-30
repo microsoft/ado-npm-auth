@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Wed, 30 Oct 2024 20:31:48 GMT",
+      "version": "0.12.1",
+      "tag": "azureauth_v0.12.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "jcreamer@microsoft.com",
+            "package": "azureauth",
+            "commit": "04b908d952dc8bdc95713c1009b54cfefa9cf6aa",
+            "comment": "fix the types for node-azureauth"
+          }
+        ]
+      }
+    },
+    {
       "date": "Mon, 07 Oct 2024 17:28:12 GMT",
       "version": "0.12.0",
       "tag": "azureauth_v0.12.0",

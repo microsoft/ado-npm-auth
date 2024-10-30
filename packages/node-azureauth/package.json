@@ -1,6 +1,6 @@
 {
   "name": "azureauth",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "node-azure auth wrapps the AzureAuth CLI wrapper for performing AAD Authentication",
   "bin": {
     "azureauth": "./scripts/azureauth.cjs"

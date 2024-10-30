@@ -1,8 +1,16 @@
 # Change Log - azureauth
 
-This log was last generated on Mon, 07 Oct 2024 17:28:12 GMT and should not be manually modified.
+This log was last generated on Wed, 30 Oct 2024 20:31:48 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.12.1
+
+Wed, 30 Oct 2024 20:31:48 GMT
+
+### Patches
+
+- fix the types for node-azureauth (jcreamer@microsoft.com)
 
 ## 0.12.0
 
