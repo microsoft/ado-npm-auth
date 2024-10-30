@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "fix the types for node-azureauth",
+      "packageName": "azureauth",
+      "email": "jcreamer@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
