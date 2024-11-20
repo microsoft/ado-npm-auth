@@ -1,0 +1,18 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Add custom user config file option",
+      "packageName": "ado-npm-auth",
+      "email": "brwai@microsoft.com",
+      "dependentChangeType": "patch"
+    },
+    {
+      "type": "patch",
+      "comment": "Add custom user config file option",
+      "packageName": "azureauth",
+      "email": "brwai@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}

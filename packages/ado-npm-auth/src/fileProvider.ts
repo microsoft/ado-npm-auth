@@ -40,6 +40,7 @@ export abstract class FileProvider {
     public id: string,
     public workspaceFileName: string,
     configFile?: string,
+    userConfigFile?: string,
   ) {
     let workspaceFilePath = undefined;
     if (configFile && path.basename(configFile) === this.workspaceFileName) {
@@ -50,9 +51,13 @@ export abstract class FileProvider {
     }
     this.workspaceFilePath = workspaceFilePath;
 
-    const userHome =
-      process.env["HOME"] || process.env["USERPROFILE"] || homedir() || "";
-    this.userFilePath = join(userHome, workspaceFileName);
+    if (userConfigFile && path.basename(userConfigFile) === this.workspaceFileName) {
+      this.userFilePath = userConfigFile;
+    } else {
+      const userHome =
+        process.env["ADO_NPM_AUTH_USER_CONFIG"] || process.env["HOME"] || process.env["USERPROFILE"] || homedir() || "";
+      this.userFilePath = join(userHome, workspaceFileName);
+    }
     this.feeds = new Map<string, Feed>();
   }
 

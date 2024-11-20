@@ -6,12 +6,17 @@ import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-
 import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
 
 export class YarnRcFileProvider extends FileProvider {
-  constructor(configFile?: string) {
-    super("YarnRc", ".yarnrc.yml", configFile);
+  constructor(configFile?: string, userConfigFile?: string) {
+    super("YarnRc", ".yarnrc.yml", configFile, userConfigFile);
   }
 
   override async prepUserFile(): Promise<void> {
-    // no need to do anything
+    try {
+      await fs.readFile(this.userFilePath, "utf-8");
+    } catch (error) {
+      // user yarnrc does not exist so make an empty one
+      await fs.writeFile(this.userFilePath, "");
+    }
   }
 
   override async getUserFeeds(): Promise<Map<string, Feed>> {
