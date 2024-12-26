@@ -57,7 +57,7 @@ export const run = async (args: Args): Promise<null | boolean> => {
     // get a token for each feed
     const organizationPatMap: Record<string, string> = {};
     for (const adoOrg of adoOrgs) {
-      organizationPatMap[adoOrg] = await generateNpmrcPat(adoOrg, false);
+      organizationPatMap[adoOrg] = await generateNpmrcPat(adoOrg, false, args.azureAuthLocation);
     }
 
     // Update the pat in the invalid feeds.
