@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Add support to pass an override for azureAuthLocation on the commandline",
+      "packageName": "ado-npm-auth",
+      "email": "dsfsdf@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
