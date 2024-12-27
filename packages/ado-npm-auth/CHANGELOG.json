@@ -2,6 +2,21 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Fri, 27 Dec 2024 20:26:44 GMT",
+      "version": "0.3.1",
+      "tag": "ado-npm-auth_v0.3.1",
+      "comments": {
+        "none": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "760870e1f16885663cbc202e64db4ca3114db3ca",
+            "comment": "fix formatting of accidentally merged pr"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 30 Oct 2024 20:31:48 GMT",
       "version": "0.3.1",
       "tag": "ado-npm-auth_v0.3.1",
