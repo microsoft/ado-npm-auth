@@ -11,7 +11,18 @@ export class YarnRcFileProvider extends FileProvider {
   }
 
   override async prepUserFile(): Promise<void> {
-    // no need to do anything
+    try {
+      const yarnrc = await this.paseYarnRc(this.userFilePath);
+
+      // remove the entry for registries in the user-level .npmrc
+      if (yarnrc && yarnrc.npmRegistryServer) {
+        delete yarnrc.npmRegistryServer;
+        await this.writeYarnRc(this.userFilePath, yarnrc);
+      }
+    } catch (error) {
+      // user .yarnrc file does not exist so make an empty one
+      await fs.writeFile(this.userFilePath, "");
+    }
   }
 
   override async getUserFeeds(): Promise<Map<string, Feed>> {
@@ -86,8 +97,12 @@ export class YarnRcFileProvider extends FileProvider {
       yarnrc.npmRegistries[yarnRcYamlKey] = entry;
     }
 
+    await this.writeYarnRc(this.userFilePath, yarnrc);
+  }
+
+  async writeYarnRc(filePath: string, yarnrc: YarnRc) {
     const yarnrcContent = yaml.dump(yarnrc);
-    await fs.writeFile(this.userFilePath, yarnrcContent);
+    await fs.writeFile(filePath, yarnrcContent, "utf8");
   }
 
   async paseYarnRc(filePath: string): Promise<YarnRc> {
