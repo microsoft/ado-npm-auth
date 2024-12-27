@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "none",
+      "comment": "fix formatting of accidentally merged pr",
+      "packageName": "ado-npm-auth",
+      "email": "dannyvv@microsoft.com",
+      "dependentChangeType": "none"
+    }
+  ]
+}
