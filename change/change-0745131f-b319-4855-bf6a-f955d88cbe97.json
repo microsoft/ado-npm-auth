@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "none",
+      "comment": "Format fixes",
+      "packageName": "ado-npm-auth",
+      "email": "dannyvv@microsoft.com",
+      "dependentChangeType": "none"
+    }
+  ]
+}

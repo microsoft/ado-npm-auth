@@ -26,8 +26,8 @@ export function parseArgs(args: string[]): Args {
       },
       azureAuthLocation: {
         type: "string",
-        description: "Allow specifying alternate location to azureauth"
-      }
+        description: "Allow specifying alternate location to azureauth",
+      },
     })
     .help()
     .parseSync();
