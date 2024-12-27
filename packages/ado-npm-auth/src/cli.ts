@@ -24,7 +24,9 @@ export const run = async (args: Args): Promise<null | boolean> => {
     }
   }
 
-  const invalidFeeds = validatedFeeds.filter((feed) => !feed.isValid);
+  // Filter to feeds to only feeds that were not authenticated and are actually
+  // azure devops feeds by checking if we discovered the adoOrganization for it.
+  const invalidFeeds = validatedFeeds.filter((feed) => !feed.isValid && feed.feed.adoOrganization);
   const invalidFeedCount = invalidFeeds.length;
 
   if (args.doValidCheck && invalidFeedCount == 0) {
