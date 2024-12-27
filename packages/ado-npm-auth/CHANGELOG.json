@@ -2,6 +2,41 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Fri, 27 Dec 2024 22:13:14 GMT",
+      "version": "0.3.2",
+      "tag": "ado-npm-auth_v0.3.2",
+      "comments": {
+        "none": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "7eb20d3ff80b2f8673d78219dc2ba5150acaa7b4",
+            "comment": "Format fixes"
+          }
+        ],
+        "patch": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "581e48518aab31bf8b439d1ac50e29d677021a59",
+            "comment": "Bump @npmcli/config to 10.0.0 to fix #52"
+          },
+          {
+            "author": "dsfsdf@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "cb8e0e113e7bfa2768cddaa2f62f06a10d3cb2ba",
+            "comment": "Add support to pass an override for azureAuthLocation on the commandline"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "7d7a4ff39c15735bb2c95eca2d75acbc405ebf55",
+            "comment": "Allow non azure devops feeds to be present in the configuration."
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 27 Dec 2024 20:26:44 GMT",
       "version": "0.3.1",
       "tag": "ado-npm-auth_v0.3.1",

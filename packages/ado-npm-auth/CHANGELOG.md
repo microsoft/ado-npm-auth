@@ -1,8 +1,18 @@
 # Change Log - ado-npm-auth
 
-This log was last generated on Wed, 30 Oct 2024 20:31:48 GMT and should not be manually modified.
+This log was last generated on Fri, 27 Dec 2024 22:13:14 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## 0.3.2
+
+Fri, 27 Dec 2024 22:13:14 GMT
+
+### Patches
+
+- Bump @npmcli/config to 10.0.0 to fix #52 (dannyvv@microsoft.com)
+- Add support to pass an override for azureAuthLocation on the commandline (dsfsdf@microsoft.com)
+- Allow non azure devops feeds to be present in the configuration. (dannyvv@microsoft.com)
 
 ## 0.3.1
 
