@@ -26,7 +26,9 @@ export const run = async (args: Args): Promise<null | boolean> => {
 
   // Filter to feeds to only feeds that were not authenticated and are actually
   // azure devops feeds by checking if we discovered the adoOrganization for it.
-  const invalidFeeds = validatedFeeds.filter((feed) => !feed.isValid && feed.feed.adoOrganization);
+  const invalidFeeds = validatedFeeds.filter(
+    (feed) => !feed.isValid && feed.feed.adoOrganization,
+  );
   const invalidFeedCount = invalidFeeds.length;
 
   if (args.doValidCheck && invalidFeedCount == 0) {
@@ -59,7 +61,11 @@ export const run = async (args: Args): Promise<null | boolean> => {
     // get a token for each feed
     const organizationPatMap: Record<string, string> = {};
     for (const adoOrg of adoOrgs) {
-      organizationPatMap[adoOrg] = await generateNpmrcPat(adoOrg, false, args.azureAuthLocation);
+      organizationPatMap[adoOrg] = await generateNpmrcPat(
+        adoOrg,
+        false,
+        args.azureAuthLocation,
+      );
     }
 
     // Update the pat in the invalid feeds.
