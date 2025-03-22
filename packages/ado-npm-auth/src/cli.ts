@@ -65,6 +65,7 @@ export const run = async (args: Args): Promise<null | boolean> => {
         adoOrg,
         false,
         args.azureAuthLocation,
+        args.writeAccess,
       );
     }
 

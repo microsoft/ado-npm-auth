@@ -10,6 +10,7 @@ export const generateNpmrcPat = async (
   organization: string,
   encode = false,
   azureAuthLocation?: string,
+  writeAccess = false,
 ): Promise<string> => {
   const name = `${hostname()}-${organization}`;
   const pat = await adoPat(
@@ -17,7 +18,7 @@ export const generateNpmrcPat = async (
       promptHint: `${name} .npmrc PAT`,
       organization,
       displayName: `${name}-npmrc-pat`,
-      scope: ["vso.packaging"],
+      scope: writeAccess ? ["vso.packaging_write"] : ["vso.packaging"],
       timeout: "30",
       output: "json",
     },

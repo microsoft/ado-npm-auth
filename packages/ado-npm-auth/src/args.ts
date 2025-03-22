@@ -6,6 +6,7 @@ export interface Args {
   skipAuth: boolean;
   configFile?: string;
   azureAuthLocation?: string;
+  writeAccess?: boolean;
 }
 
 export function parseArgs(args: string[]): Args {
@@ -28,6 +29,11 @@ export function parseArgs(args: string[]): Args {
         type: "string",
         description: "Allow specifying alternate location to azureauth",
       },
+      writeAccess: {
+        alias: "w",
+        type: "boolean",
+        description: "Create a PAT with write access",
+      },
     })
     .help()
     .parseSync();
@@ -37,5 +43,6 @@ export function parseArgs(args: string[]): Args {
     doValidCheck: !argv.skipCheck,
     configFile: argv.configFile,
     azureAuthLocation: argv.azureAuthLocation,
+    writeAccess: argv.writeAccess,
   };
 }
