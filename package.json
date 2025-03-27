@@ -1,6 +1,8 @@
 {
   "name": "root",
-  "private": "true",
+  "version": "0.0.0",
+  "private": true,
+  "repository": "https://github.com/microsoft/ado-npm-auth",
   "workspaces": [
     "packages/*"
   ],
@@ -10,8 +12,8 @@
     "lint": "lage lint",
     "test": "lage test",
     "format": "lage --no-cache lint --write",
-    "change": "beachball change -b origin/main",
-    "checkchange": "beachball check -b origin/main",
+    "change": "beachball change",
+    "checkchange": "beachball check",
     "ci": "lage build test lint bundle",
     "publish:beachball": "beachball publish --bump-deps -m\"📦 applying package updates ***NO_CI***\"  --verbose"
   },
