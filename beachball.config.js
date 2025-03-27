@@ -1,7 +1,7 @@
 // @ts-check
 /** @type {import("beachball").BeachballConfig} */
 const config = {
-  changehint: 'Run "pnpm run change" to generate a change file',
+  changehint: 'Run "pnpm change" to generate a change file',
   branch: "main",
   groupChanges: true,
   ignorePatterns: ["**/*.test.ts"],
