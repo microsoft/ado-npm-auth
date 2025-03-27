@@ -39,15 +39,15 @@
   "author": "Jonathan Creamer",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.12.7",
     "@types/decompress": "^4.2.7",
+    "@types/node": "^20.17.28",
     "decompress": "^4.2.1",
     "esbuild": "^0.23.1",
     "execa": "^7.2.0",
     "node-downloader-helper": "^2.1.9",
-    "prettier": "^3.2.5",
-    "typescript": "^5.4.5",
-    "vitest": "^2.0.5",
-    "vite": "~5.3.6"
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2",
+    "vite": "~5.3.6",
+    "vitest": "^2.1.9"
   }
 }
