@@ -139,7 +139,7 @@ run(args)
       logTelemetry({ success: true, automaticSuccess: true });
       console.log("✅ Automatic authentication successful");
       // if the user specified an exit code for reauthenticate, exit
-      if (args.exitCodeOnReAuthenticate) {
+      if (args.exitCodeOnReAuthenticate !== undefined) {
         process.exit(args.exitCodeOnReAuthenticate);
       }
     } else {
