@@ -2,6 +2,35 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Thu, 08 May 2025 17:36:52 GMT",
+      "version": "0.3.3",
+      "tag": "ado-npm-auth_v0.3.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "mantiquillal@gmail.com",
+            "package": "ado-npm-auth",
+            "commit": "17796d00a428ca67835a72e5929ac9007f03658c",
+            "comment": "Fix exit code check in WSL environments"
+          },
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "6adac7935e58832d6bd5868a56f34099b786c8e1",
+            "comment": "Update bundled devDependencies"
+          }
+        ],
+        "none": [
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "a8380c6b18581e72749f4407563d40ab3e97cd2c",
+            "comment": "Bump vite from 5.3.4 to 5.3.6"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 27 Dec 2024 22:13:14 GMT",
       "version": "0.3.2",
       "tag": "ado-npm-auth_v0.3.2",
