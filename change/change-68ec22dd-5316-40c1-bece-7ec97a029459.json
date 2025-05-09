@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Add flag to enable write scope to the generated PAT",
+      "packageName": "ado-npm-auth",
+      "email": "malaref@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
