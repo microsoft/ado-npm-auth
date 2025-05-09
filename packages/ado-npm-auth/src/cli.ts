@@ -138,6 +138,10 @@ run(args)
       // advertise success
       logTelemetry({ success: true, automaticSuccess: true });
       console.log("✅ Automatic authentication successful");
+      // if the user specified an exit code for reauthenticate, exit
+      if (args.exitCodeOnReAuthenticate !== undefined) {
+        process.exit(args.exitCodeOnReAuthenticate);
+      }
     } else {
       // automatic auth failed (for some reason)
       // advertise failure and link wiki to fix
