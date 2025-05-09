@@ -2,6 +2,27 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Fri, 09 May 2025 19:45:35 GMT",
+      "version": "0.12.1",
+      "tag": "azureauth_v0.12.1",
+      "comments": {
+        "none": [
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "azureauth",
+            "commit": "a8380c6b18581e72749f4407563d40ab3e97cd2c",
+            "comment": "Bump vite from 5.3.4 to 5.3.6"
+          },
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "azureauth",
+            "commit": "6adac7935e58832d6bd5868a56f34099b786c8e1",
+            "comment": "Update devDependencies"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 30 Oct 2024 20:31:48 GMT",
       "version": "0.12.1",
       "tag": "azureauth_v0.12.1",
