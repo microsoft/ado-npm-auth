@@ -1,5 +1,6 @@
 import path from "node:path";
 import fs from "node:fs";
+import { execSync } from "node:child_process";
 
 import { DownloaderHelper } from "node-downloader-helper";
 import decompress from "decompress";
@@ -22,6 +23,73 @@ async function download(url: string, saveDirectory: string): Promise<void> {
   });
 }
 
+async function extractDeb(debPath: string, outputDir: string): Promise<void> {
+  const tempDir = path.join(outputDir, "temp_deb_extract");
+  fs.mkdirSync(tempDir, { recursive: true });
+
+  try {
+    // Copy .deb to temp directory
+    const debInTemp = path.join(tempDir, path.basename(debPath));
+    fs.copyFileSync(debPath, debInTemp);
+
+    // Extract the .deb file (which is an ar archive) in temp directory
+    execSync(`ar x ${path.basename(debPath)}`, {
+      cwd: tempDir,
+      stdio: "inherit",
+    });
+
+    // Find and extract the data.tar.* file
+    const files = fs.readdirSync(tempDir);
+    const dataTar = files.find((f) => f.startsWith("data.tar"));
+
+    if (!dataTar) {
+      throw new Error("data.tar.* not found in .deb archive");
+    }
+
+    // Extract data.tar.* to a temp extract directory
+    const extractDir = path.join(tempDir, "extract");
+    fs.mkdirSync(extractDir, { recursive: true });
+
+    execSync(`tar -xf ${dataTar} -C ${extractDir}`, {
+      cwd: tempDir,
+      stdio: "inherit",
+    });
+
+    // Move all files from usr/lib/azureauth to the root of outputDir
+    const sourceDir = path.join(extractDir, "usr", "lib", "azureauth");
+
+    if (fs.existsSync(sourceDir)) {
+      // Recursively copy all files and directories
+      const copyRecursive = (src: string, dest: string) => {
+        const stats = fs.statSync(src);
+        if (stats.isDirectory()) {
+          if (!fs.existsSync(dest)) {
+            fs.mkdirSync(dest, { recursive: true });
+          }
+          const entries = fs.readdirSync(src);
+          for (const entry of entries) {
+            copyRecursive(path.join(src, entry), path.join(dest, entry));
+          }
+        } else {
+          fs.copyFileSync(src, dest);
+          // Make executable files executable
+          if (path.basename(src) === "azureauth" || stats.mode & fs.constants.S_IXUSR) {
+            fs.chmodSync(dest, 0o755);
+          }
+        }
+      };
+
+      const entries = fs.readdirSync(sourceDir);
+      for (const entry of entries) {
+        copyRecursive(path.join(sourceDir, entry), path.join(outputDir, entry));
+      }
+    }
+  } finally {
+    // Clean up temp directory
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+}
+
 const platform = process.platform;
 const arch = process.arch;
 
@@ -37,7 +105,7 @@ const AZUREAUTH_INFO = {
 const AZUREAUTH_NAME_MAP: any = {
   def: "azureauth",
   win32: "azureauth.exe",
-  linux: "azureauth.exe",
+  linux: "azureauth",
 };
 
 export const AZUREAUTH_NAME =
@@ -73,11 +141,10 @@ export const install = async () => {
       x64: `azureauth-${AZUREAUTH_INFO.version}-osx-x64.tar.gz`,
       arm64: `azureauth-${AZUREAUTH_INFO.version}-osx-arm64.tar.gz`,
     },
-    // TODO: support linux when the binaries are available
-    // linux: {
-    //   def: "azureauth.exe",
-    //   x64: "azureauth-${AZUREAUTH_INFO.version}-win10-x64.zip",
-    // },
+    linux: {
+      x64: `azureauth-${AZUREAUTH_INFO.version}-linux-x64.deb`,
+      arm64: `azureauth-${AZUREAUTH_INFO.version}-linux-arm64.deb`,
+    },
   };
   if (platform in DOWNLOAD_MAP) {
     // download the executable
@@ -106,7 +173,12 @@ export const install = async () => {
 
     const binaryPath = path.join(distPath, AZUREAUTH_NAME);
 
-    await decompress(archivePath, distPath);
+    // Handle .deb files differently from .zip and .tar.gz
+    if (filename.endsWith(".deb")) {
+      await extractDeb(archivePath, distPath);
+    } else {
+      await decompress(archivePath, distPath);
+    }
 
     if (fileExist(binaryPath)) {
       fs.chmodSync(binaryPath, fs.constants.S_IXUSR || 0o100);
@@ -115,7 +187,7 @@ export const install = async () => {
       fs.chmodSync(binaryPath, 0o755);
     }
 
-    console.log(`Unzipped in ${archivePath}`);
+    console.log(`Extracted in ${archivePath}`);
     fs.unlinkSync(archivePath);
   }
 };
