@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Add Linux x64 and arm64 support with .deb binary installation",
+      "packageName": "azureauth",
+      "email": "sverre.johansen@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
