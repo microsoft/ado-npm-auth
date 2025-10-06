@@ -51,18 +51,17 @@ export const run = async (args: Args): Promise<null | boolean> => {
   try {
     console.log("🔑 Authenticating to package feed...");
 
-    const adoOrgs = new Set<string>();
-    for (const adoOrg of invalidFeeds.map(
-      (feed) => feed.feed.adoOrganization,
-    )) {
-      adoOrgs.add(adoOrg);
+    const feedsToGetTokenFor = new Map<string, string>();
+    for (const feed of invalidFeeds.map((feed) => feed.feed)) {
+      feedsToGetTokenFor.set(feed.adoOrganization, feed.registry);
     }
 
     // get a token for each feed
     const organizationPatMap: Record<string, string> = {};
-    for (const adoOrg of adoOrgs) {
-      organizationPatMap[adoOrg] = await generateNpmrcPat(
-        adoOrg,
+    for (const [org, feed] of feedsToGetTokenFor) {
+      organizationPatMap[org] = await generateNpmrcPat(
+        org,
+        feed,
         false,
         args.azureAuthLocation,
       );

@@ -1,6 +1,7 @@
-import { hostname } from "os";
+import { hostname, platform } from "os";
 import { AdoPatResponse, adoPat } from "../azureauth/ado.js";
 import { toBase64 } from "../utils/encoding.js";
+import { credentialProviderPat } from "./nugetCredentialProvider.js";
 
 /**
  * Generates a valid ADO PAT, scoped for vso.packaging in the given ado organization, 30 minute timeout
@@ -8,23 +9,12 @@ import { toBase64 } from "../utils/encoding.js";
  */
 export const generateNpmrcPat = async (
   organization: string,
+  feed: string,
   encode = false,
   azureAuthLocation?: string,
 ): Promise<string> => {
   const name = `${hostname()}-${organization}`;
-  const pat = await adoPat(
-    {
-      promptHint: `${name} .npmrc PAT`,
-      organization,
-      displayName: `${name}-npmrc-pat`,
-      scope: ["vso.packaging"],
-      timeout: "30",
-      output: "json",
-    },
-    azureAuthLocation,
-  );
-
-  const rawToken = (pat as AdoPatResponse).token;
+  const rawToken = await getRawToken(name, organization, feed, azureAuthLocation);
 
   if (encode) {
     return toBase64(rawToken);
@@ -32,3 +22,29 @@ export const generateNpmrcPat = async (
 
   return rawToken;
 };
+
+
+async function getRawToken(name: string, organization: string, feed: string, azureAuthLocation?: string): Promise<string> {
+  switch (platform()) {
+    case "win32":
+    case "darwin":
+      const pat = await adoPat(
+        {
+          promptHint: `Authenticate to ${organization} to generate a temporary token for npm`,
+          organization: `https://dev.azure.com/${organization}`,
+          displayName: name,
+          scope: ["vso.packaging"],
+          timeout: "30m",
+        },
+        azureAuthLocation,
+      );
+      return (pat as AdoPatResponse).token;
+    case "linux":
+      const cpPat = await credentialProviderPat(feed)
+      return cpPat.Password;
+    default:
+      throw new Error(
+        `Platform ${platform()} is not supported for ADO authentication`,
+      );
+  }
+}
