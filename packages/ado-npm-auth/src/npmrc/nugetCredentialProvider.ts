@@ -10,7 +10,7 @@ const OutputDir = path.join(
   "..",
   ".bin",
   "CredentialProvider.Microsoft",
-  "v" + CredentialProviderVersion
+  "v" + CredentialProviderVersion,
 );
 
 interface CredentialProviderResponse {
