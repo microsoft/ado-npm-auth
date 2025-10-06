@@ -11,6 +11,7 @@ import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-
 import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
 import { fromBase64, toBase64 } from "../utils/encoding.js";
 import path from "node:path";
+import { writeFileLazy } from "../utils/fileUtils.js";
 
 export class NpmrcFileProvider extends FileProvider {
   constructor(configFile?: string) {
@@ -26,10 +27,10 @@ export class NpmrcFileProvider extends FileProvider {
         .split(EOL)
         .filter((line) => !line.includes("registry="))
         .join(EOL);
-      await fs.writeFile(this.userFilePath, updatedNpmrcContent);
+      await writeFileLazy(this.userFilePath, updatedNpmrcContent);
     } catch (error) {
       // user npmrc does not exist so make an empty one
-      await fs.writeFile(this.userFilePath, "");
+      await writeFileLazy(this.userFilePath, "");
     }
   }
 

@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import { fromBase64, toBase64 } from "../utils/encoding.js";
 import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
 import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
+import { writeFileLazy } from "../utils/fileUtils.js";
 
 export class YarnRcFileProvider extends FileProvider {
   constructor(configFile?: string) {
@@ -21,7 +22,7 @@ export class YarnRcFileProvider extends FileProvider {
       }
     } catch (error) {
       // user .yarnrc file does not exist so make an empty one
-      await fs.writeFile(this.userFilePath, "");
+      await writeFileLazy(this.userFilePath, "");
     }
   }
 
@@ -102,7 +103,7 @@ export class YarnRcFileProvider extends FileProvider {
 
   async writeYarnRc(filePath: string, yarnrc: YarnRc) {
     const yarnrcContent = yaml.dump(yarnrc);
-    await fs.writeFile(filePath, yarnrcContent, "utf8");
+    await writeFileLazy(filePath, yarnrcContent);
   }
 
   async paseYarnRc(filePath: string): Promise<YarnRc> {
