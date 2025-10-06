@@ -4,84 +4,119 @@ import path from "path";
 import { downloadFile } from "../utils/request.js";
 import { execProcess } from "../utils/exec.js";
 
-const OutputDir = path.join(__dirname, "..", ".bin", "CredentialProvider.Microsoft");
+const OutputDir = path.join(
+  __dirname,
+  "..",
+  ".bin",
+  "CredentialProvider.Microsoft",
+);
 const CredentialProviderVersion = "1.4.1";
 
 interface CredentialProviderResponse {
-    Username: string;
-    Password: string;
+  Username: string;
+  Password: string;
 }
 
-export async function credentialProviderPat(registry: string): Promise<CredentialProviderResponse> {
-    const nugetFeedUrl = toNugetUrl(registry);
-    const toolPath = await getCredentialProvider();
-    return await invokeCredentialProvider(toolPath, nugetFeedUrl);
+export async function credentialProviderPat(
+  registry: string,
+): Promise<CredentialProviderResponse> {
+  const nugetFeedUrl = toNugetUrl(registry);
+  const toolPath = await getCredentialProvider();
+  return await invokeCredentialProvider(toolPath, nugetFeedUrl);
 }
 
 function toNugetUrl(registry: string): string {
-    if (!registry.endsWith("/npm/registry/")) {
-        throw new Error(`Registry URL ${registry} is not a valid Azure Artifacts npm registry URL. Expected it to end with '/npm/registry/'`);
-    }
-    return "https://" + registry.replace("/npm/registry/", "/nuget/v3/index.json")
+  if (!registry.endsWith("/npm/registry/")) {
+    throw new Error(
+      `Registry URL ${registry} is not a valid Azure Artifacts npm registry URL. Expected it to end with '/npm/registry/'`,
+    );
+  }
+  return (
+    "https://" + registry.replace("/npm/registry/", "/nuget/v3/index.json")
+  );
 }
 
-async function invokeCredentialProvider(toolPath: string, nugetFeedUrl: string): Promise<CredentialProviderResponse> {
-    let response = "";
-    await execProcess(toolPath, ["-U", nugetFeedUrl, "-I", "-F", "Json"], {
-        stdio: "pipe",
-        processStdOut: (data: string) => {
-            response += data;
-        },
-        processStdErr: (data: string) => {
-            console.error(data);
-        }
-    });
-    try {
-        let value = JSON.parse(response);
-        return value as CredentialProviderResponse
-    } catch (error) {
-        throw new Error(`Failed to parse CredentialProvider output: ${response}`);
-    }
+async function invokeCredentialProvider(
+  toolPath: string,
+  nugetFeedUrl: string,
+): Promise<CredentialProviderResponse> {
+  let response = "";
+  await execProcess(toolPath, ["-U", nugetFeedUrl, "-I", "-F", "Json"], {
+    stdio: "pipe",
+    processStdOut: (data: string) => {
+      response += data;
+    },
+    processStdErr: (data: string) => {
+      console.error(data);
+    },
+  });
+  try {
+    let value = JSON.parse(response);
+    return value as CredentialProviderResponse;
+  } catch (error) {
+    throw new Error(`Failed to parse CredentialProvider output: ${response}`);
+  }
 }
 
 function tryFileExists(executable: string): string | undefined {
-    if (fs.existsSync(executable)) {
-        return executable;
-    } else if (fs.existsSync(executable + ".exe")) {
-        return executable + ".exe";
-    }
-    return undefined;
+  if (fs.existsSync(executable)) {
+    return executable;
+  } else if (fs.existsSync(executable + ".exe")) {
+    return executable + ".exe";
+  }
+  return undefined;
 }
 
 async function getCredentialProvider(): Promise<string> {
-    let toolPath = tryFileExists(path.join(os.homedir(), ".nuget", "plugins", "netcore", "CredentialProvider.Microsoft", "CredentialProvider.Microsoft"));
-    if (toolPath) {
-        return toolPath;
-    }
-
-    const downloadedFilePath = path.join(OutputDir, "plugins", "netcore", "CredentialProvider.Microsoft", "CredentialProvider.Microsoft");
-    toolPath = tryFileExists(downloadedFilePath);
-    if (toolPath) {
-        return toolPath;
-    }
-
-    await downloadCredentialProvider();
-    toolPath = tryFileExists(downloadedFilePath);
-    if (toolPath) {
-        fs.chmodSync(toolPath, 0o755);
-    } else {
-        throw new Error(`CredentialProvider was not found at expected path after download: ${toolPath}`);
-    }
-
+  let toolPath = tryFileExists(
+    path.join(
+      os.homedir(),
+      ".nuget",
+      "plugins",
+      "netcore",
+      "CredentialProvider.Microsoft",
+      "CredentialProvider.Microsoft",
+    ),
+  );
+  if (toolPath) {
     return toolPath;
+  }
+
+  const downloadedFilePath = path.join(
+    OutputDir,
+    "plugins",
+    "netcore",
+    "CredentialProvider.Microsoft",
+    "CredentialProvider.Microsoft",
+  );
+  toolPath = tryFileExists(downloadedFilePath);
+  if (toolPath) {
+    return toolPath;
+  }
+
+  await downloadCredentialProvider();
+  toolPath = tryFileExists(downloadedFilePath);
+  if (toolPath) {
+    fs.chmodSync(toolPath, 0o755);
+  } else {
+    throw new Error(
+      `CredentialProvider was not found at expected path after download: ${toolPath}`,
+    );
+  }
+
+  return toolPath;
 }
 
 async function downloadCredentialProvider(): Promise<void> {
-    const downloadUrl = `https://github.com/microsoft/artifacts-credprovider/releases/download/v${CredentialProviderVersion}/Microsoft.Net8.${os.platform()}-${os.arch()}.NuGet.CredentialProvider.tar.gz`
-    const downloadPath = path.join(OutputDir, "CredentialProvider.Microsoft.tar.gz");
+  const downloadUrl = `https://github.com/microsoft/artifacts-credprovider/releases/download/v${CredentialProviderVersion}/Microsoft.Net8.${os.platform()}-${os.arch()}.NuGet.CredentialProvider.tar.gz`;
+  const downloadPath = path.join(
+    OutputDir,
+    "CredentialProvider.Microsoft.tar.gz",
+  );
 
-    console.log(`🌐 Downloading ${downloadUrl}`);
-    await downloadFile(downloadUrl, downloadPath);
-    await execProcess("tar", ["-xzf", downloadPath, "-C", OutputDir], { stdio: "inherit" });
+  console.log(`🌐 Downloading ${downloadUrl}`);
+  await downloadFile(downloadUrl, downloadPath);
+  await execProcess("tar", ["-xzf", downloadPath, "-C", OutputDir], {
+    stdio: "inherit",
+  });
 }
-

@@ -14,7 +14,12 @@ export const generateNpmrcPat = async (
   azureAuthLocation?: string,
 ): Promise<string> => {
   const name = `${hostname()}-${organization}`;
-  const rawToken = await getRawToken(name, organization, feed, azureAuthLocation);
+  const rawToken = await getRawToken(
+    name,
+    organization,
+    feed,
+    azureAuthLocation,
+  );
 
   if (encode) {
     return toBase64(rawToken);
@@ -23,8 +28,12 @@ export const generateNpmrcPat = async (
   return rawToken;
 };
 
-
-async function getRawToken(name: string, organization: string, feed: string, azureAuthLocation?: string): Promise<string> {
+async function getRawToken(
+  name: string,
+  organization: string,
+  feed: string,
+  azureAuthLocation?: string,
+): Promise<string> {
   switch (platform()) {
     case "win32":
     case "darwin":
@@ -40,7 +49,7 @@ async function getRawToken(name: string, organization: string, feed: string, azu
       );
       return (pat as AdoPatResponse).token;
     case "linux":
-      const cpPat = await credentialProviderPat(feed)
+      const cpPat = await credentialProviderPat(feed);
       return cpPat.Password;
     default:
       throw new Error(
