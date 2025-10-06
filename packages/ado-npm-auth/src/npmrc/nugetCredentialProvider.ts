@@ -4,13 +4,14 @@ import path from "path";
 import { downloadFile } from "../utils/request.js";
 import { execProcess } from "../utils/exec.js";
 
+const CredentialProviderVersion = "1.4.1";
 const OutputDir = path.join(
   __dirname,
   "..",
   ".bin",
   "CredentialProvider.Microsoft",
+  "v" + CredentialProviderVersion
 );
-const CredentialProviderVersion = "1.4.1";
 
 interface CredentialProviderResponse {
   Username: string;
