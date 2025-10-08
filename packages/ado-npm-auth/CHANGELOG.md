@@ -1,8 +1,23 @@
 # Change Log - ado-npm-auth
 
-This log was last generated on Fri, 27 Dec 2024 22:13:14 GMT and should not be manually modified.
+<!-- This log was last generated on Wed, 08 Oct 2025 20:57:21 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.5.0
+
+Wed, 08 Oct 2025 20:57:21 GMT
+
+### Minor changes
+
+- Add new flag to return a specific exit code when authentication ran (dannyvv@microsoft.com)
+- Make file writes only when required (dannyvv@microsoft.com)
+- Add authentication support for Linux (dannyvv@microsoft.com)
+
+### Patches
+
+- Fix exit code check in WSL environments (mantiquillal@gmail.com)
+- Update bundled devDependencies (elcraig@microsoft.com)
 
 ## 0.3.2
 
