@@ -43,7 +43,7 @@ async function getRawToken(
           organization: `https://dev.azure.com/${organization}`,
           displayName: name,
           scope: ["vso.packaging"],
-          timeout: "30m",
+          timeout: "30",
         },
         azureAuthLocation,
       );
