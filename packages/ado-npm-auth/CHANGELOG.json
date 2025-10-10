@@ -2,6 +2,73 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Fri, 10 Oct 2025 20:59:26 GMT",
+      "version": "0.6.0",
+      "tag": "ado-npm-auth_v0.6.0",
+      "comments": {
+        "none": [
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "a8380c6b18581e72749f4407563d40ab3e97cd2c",
+            "comment": "Bump vite from 5.3.4 to 5.3.6"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "72277d1e40b2fb1567c3cb6c309dc7d14e40b0b7",
+            "comment": "Hopefully last manual version bump"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "ceacf9272c80ffd1b7f614241fbb39a74b4db2c9",
+            "comment": "Fix yarn version"
+          }
+        ],
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "9429a12f00ef63aa0384abcfaf69e16ae1d4504f",
+            "comment": "Add new flag to return a specific exit code when authentication ran"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "bf4cfd4a0079c621e1ec4efb8134c655fd6ca868",
+            "comment": "Make file writes only when required"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "c0d131824f9a2e2ff7eccdfaac131247a69fd705",
+            "comment": "Fix #79: Remove erroneously added `m` for minutes in the timeout configuration."
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "57a5bc5af0333cce6e6ccdd4846e4b98a1ddd7dd",
+            "comment": "Add authentication support for Linux"
+          }
+        ],
+        "patch": [
+          {
+            "author": "mantiquillal@gmail.com",
+            "package": "ado-npm-auth",
+            "commit": "17796d00a428ca67835a72e5929ac9007f03658c",
+            "comment": "Fix exit code check in WSL environments"
+          },
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "6adac7935e58832d6bd5868a56f34099b786c8e1",
+            "comment": "Update bundled devDependencies"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 27 Dec 2024 22:13:14 GMT",
       "version": "0.3.2",
       "tag": "ado-npm-auth_v0.3.2",
