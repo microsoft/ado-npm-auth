@@ -1,8 +1,16 @@
 # Change Log - ado-npm-auth
 
-<!-- This log was last generated on Thu, 16 Oct 2025 22:56:01 GMT and should not be manually modified. -->
+<!-- This log was last generated on Mon, 20 Oct 2025 20:32:22 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.7.0
+
+Mon, 20 Oct 2025 20:32:22 GMT
+
+### Minor changes
+
+- Version bump (dannyvv@microsoft.com)
 
 ## 0.6.0
 

@@ -2,6 +2,21 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Mon, 20 Oct 2025 20:32:22 GMT",
+      "version": "0.7.0",
+      "tag": "ado-npm-auth_v0.7.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "975c888668cb64c85965ed7dcc52691619ab14e6",
+            "comment": "Version bump"
+          }
+        ]
+      }
+    },
+    {
       "date": "Thu, 16 Oct 2025 22:56:01 GMT",
       "version": "0.6.0",
       "tag": "ado-npm-auth_v0.6.0",
