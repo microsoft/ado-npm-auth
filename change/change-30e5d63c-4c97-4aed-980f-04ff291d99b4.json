@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "fix: add missing output and remove redundant url in organization",
+      "packageName": "ado-npm-auth",
+      "email": "matanbobi@gmail.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
