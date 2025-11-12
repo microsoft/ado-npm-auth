@@ -1,4 +1,5 @@
 import https, { RequestOptions } from "https";
+import type { OutgoingHttpHeaders } from "http";
 import fs from "fs";
 import path from "path";
 
@@ -29,7 +30,10 @@ export const makeRequest = async (options: RequestOptions) => {
       });
 
       res.on("end", () => {
-        if (data && mergedOptions?.headers?.Accept === "application/json") {
+        if (
+          data &&
+          hasAcceptHeaderValue(mergedOptions?.headers, "application/json")
+        ) {
           dataJson = JSON.parse(data.toString().trim());
         }
 
@@ -53,6 +57,45 @@ export const makeRequest = async (options: RequestOptions) => {
     req.end();
   });
 };
+
+function hasAcceptHeaderValue(
+  headers: OutgoingHttpHeaders | readonly string[] | undefined,
+  acceptHeaderValueToCheck: string,
+): boolean {
+  if (!headers) {
+    return false;
+  }
+
+  if (Array.isArray(headers)) {
+    for (const header of headers) {
+      const indx = header.toLowerCase().indexOf("accept:");
+      if (indx === 0) {
+        const acceptHeaderValue = header.slice(indx + 7).trim();
+        const acceptHeaderValues = acceptHeaderValue
+          .split(",")
+          .map((value: string) => value.trim());
+        if (acceptHeaderValues.includes(acceptHeaderValueToCheck)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  const normalizedHeaders = headers as OutgoingHttpHeaders;
+  const acceptHeaderValue = Object.entries(normalizedHeaders).find(
+    ([key]) => key.toLowerCase() === "accept",
+  )?.[1];
+
+  if (typeof acceptHeaderValue === "string") {
+    return acceptHeaderValue === acceptHeaderValueToCheck;
+  } else if (Array.isArray(acceptHeaderValue)) {
+    return acceptHeaderValue.includes(acceptHeaderValueToCheck);
+  } else {
+    return false;
+  }
+}
 
 /**
  * Downloads a file from a URL to a local path.

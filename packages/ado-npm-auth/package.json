@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "bundle": "npm run bundleBin && npm run bundleIndex",
+    "bundle": "yarn bundleBin && yarn bundleIndex",
     "bundleBin": "esbuild --sourcemap=external --bundle --minify --platform=node src/cli.ts --outfile=dist/ado-npm-auth.cjs",
     "bundleIndex": "esbuild --sourcemap=external --bundle --minify --platform=node --format=esm src/index.ts --outfile=dist/index.js",
     "lint": "prettier --check src/**/*.ts",
