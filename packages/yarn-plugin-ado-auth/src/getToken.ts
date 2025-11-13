@@ -7,6 +7,8 @@ import {
 import { getOrganizationFromFeedUrl, generateNpmrcPat } from "ado-npm-auth";
 import { loadConfiguration } from "./configuration.ts";
 import { getConfigMap, getConfigString, type MapLike } from "./utils.ts";
+import { spawnSync } from "node:child_process";
+import os from "node:os";
 
 /** not correctly exported so redefined here */
 export type GetAuthHeaderOptions = {
@@ -40,7 +42,7 @@ class TokenCache {
     this.configuration = configuration;
     const settings = loadConfiguration(configuration);
     this.prefix = settings.adoNpmAuthFeedPrefix ?? "";
-    this.azureAuthPath = settings.adoNpmAuthToolPath;
+    this.azureAuthPath = settings.adoNpmAuthToolPath || findAzureAuthPath();
   }
 
   /**
@@ -52,7 +54,7 @@ class TokenCache {
     registry: string,
     ident?: Ident,
   ): string | Promise<string> | undefined {
-    if (!this.prefix || !registry.startsWith(this.prefix)) {
+    if (!this.prefix || registry.startsWith(this.prefix)) {
       return (this.cache[registry] ??= this.fetchToken(registry, ident));
     }
     return undefined;
@@ -175,4 +177,22 @@ class TokenCache {
 
     return noProtocolEntry ?? null;
   }
+}
+
+function findAzureAuthPath(): string | undefined {
+  const isWin = os.platform() === "win32";
+  const execName = isWin ? "azureauth.exe" : "azureauth";
+  const cmd = isWin ? "where" : "which";
+
+  try {
+    const result = spawnSync(cmd, [execName], { encoding: "utf-8" });
+    if (result.status === 0 && result.stdout) {
+      const line = result.stdout.split(/\r?\n/).find(Boolean);
+      return line ? line.trim() : undefined;
+    }
+  } catch {
+    // Ignore errors, fall through to undefined
+  }
+
+  return undefined;
 }
