@@ -24,7 +24,7 @@
     "typescript": "^5.8.2"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "packageManager": "yarn@4.11.0"
 }
