@@ -34,14 +34,13 @@ async function getRawToken(
   feed: string,
   azureAuthLocation?: string,
 ): Promise<string> {
-
   /**
    *  Use vso.packaging_write to include "Collaborator" (Feed and Upstream Reader) permissions.
    * vso.packaging only provides "Reader" access (view/download packages).
    * vso.packaging_write provides "Contributor" access (publish/promote/deprecate) which includes
    * Collaborator permissions (save packages from upstream sources).
    * Reference: https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth#available-scopes
-   * 
+   *
    * I filed feedback on VSO to add this: https://developercommunity.visualstudio.com/t/the-scope-for-vsopackaging-SHOULD-inclu/10998135
    */
   const patScope = "vso.packaging_write";
