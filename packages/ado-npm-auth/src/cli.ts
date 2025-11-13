@@ -24,7 +24,11 @@ export const run = async (args: Args): Promise<null | boolean> => {
     }
   }
 
-  const invalidFeeds = validatedFeeds.filter((feed) => !feed.isValid);
+  // Filter to feeds to only feeds that were not authenticated and are actually
+  // azure devops feeds by checking if we discovered the adoOrganization for it.
+  const invalidFeeds = validatedFeeds.filter(
+    (feed) => !feed.isValid && feed.feed.adoOrganization,
+  );
   const invalidFeedCount = invalidFeeds.length;
 
   if (args.doValidCheck && invalidFeedCount == 0) {
@@ -47,17 +51,20 @@ export const run = async (args: Args): Promise<null | boolean> => {
   try {
     console.log("🔑 Authenticating to package feed...");
 
-    const adoOrgs = new Set<string>();
-    for (const adoOrg of invalidFeeds.map(
-      (feed) => feed.feed.adoOrganization,
-    )) {
-      adoOrgs.add(adoOrg);
+    const feedsToGetTokenFor = new Map<string, string>();
+    for (const feed of invalidFeeds.map((feed) => feed.feed)) {
+      feedsToGetTokenFor.set(feed.adoOrganization, feed.registry);
     }
 
     // get a token for each feed
     const organizationPatMap: Record<string, string> = {};
-    for (const adoOrg of adoOrgs) {
-      organizationPatMap[adoOrg] = await generateNpmrcPat(adoOrg, false);
+    for (const [org, feed] of feedsToGetTokenFor) {
+      organizationPatMap[org] = await generateNpmrcPat(
+        org,
+        feed,
+        false,
+        args.azureAuthLocation,
+      );
     }
 
     // Update the pat in the invalid feeds.
@@ -130,6 +137,10 @@ run(args)
       // advertise success
       logTelemetry({ success: true, automaticSuccess: true });
       console.log("✅ Automatic authentication successful");
+      // if the user specified an exit code for reauthenticate, exit
+      if (args.exitCodeOnReAuthenticate !== undefined) {
+        process.exit(args.exitCodeOnReAuthenticate);
+      }
     } else {
       // automatic auth failed (for some reason)
       // advertise failure and link wiki to fix

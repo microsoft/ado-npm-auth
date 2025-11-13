@@ -5,6 +5,8 @@ export interface Args {
   doValidCheck: boolean;
   skipAuth: boolean;
   configFile?: string;
+  azureAuthLocation?: string;
+  exitCodeOnReAuthenticate?: number;
 }
 
 export function parseArgs(args: string[]): Args {
@@ -23,6 +25,14 @@ export function parseArgs(args: string[]): Args {
         type: "string",
         description: "Skip checking the validity of the feeds",
       },
+      azureAuthLocation: {
+        type: "string",
+        description: "Allow specifying alternate location to azureauth",
+      },
+      exitCodeOnReAuthenticate: {
+        type: "number",
+        description: "Exit when re-authentication occurs",
+      },
     })
     .help()
     .parseSync();
@@ -31,5 +41,7 @@ export function parseArgs(args: string[]): Args {
     skipAuth: argv.skipAuth || false,
     doValidCheck: !argv.skipCheck,
     configFile: argv.configFile,
+    azureAuthLocation: argv.azureAuthLocation,
+    exitCodeOnReAuthenticate: argv.exitCodeOnReAuthenticate,
   };
 }

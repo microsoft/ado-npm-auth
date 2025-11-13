@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import { fromBase64, toBase64 } from "../utils/encoding.js";
 import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
 import { getFeedWithoutProtocol } from "../utils/get-feed-without-protocol.js";
+import { writeFileLazy } from "../utils/fileUtils.js";
 
 export class YarnRcFileProvider extends FileProvider {
   constructor(configFile?: string) {
@@ -11,7 +12,18 @@ export class YarnRcFileProvider extends FileProvider {
   }
 
   override async prepUserFile(): Promise<void> {
-    // no need to do anything
+    try {
+      const yarnrc = await this.paseYarnRc(this.userFilePath);
+
+      // remove the entry for registries in the user-level .npmrc
+      if (yarnrc && yarnrc.npmRegistryServer) {
+        delete yarnrc.npmRegistryServer;
+        await this.writeYarnRc(this.userFilePath, yarnrc);
+      }
+    } catch (error) {
+      // user .yarnrc file does not exist so make an empty one
+      await writeFileLazy(this.userFilePath, "");
+    }
   }
 
   override async getUserFeeds(): Promise<Map<string, Feed>> {
@@ -86,8 +98,12 @@ export class YarnRcFileProvider extends FileProvider {
       yarnrc.npmRegistries[yarnRcYamlKey] = entry;
     }
 
+    await this.writeYarnRc(this.userFilePath, yarnrc);
+  }
+
+  async writeYarnRc(filePath: string, yarnrc: YarnRc) {
     const yarnrcContent = yaml.dump(yarnrc);
-    await fs.writeFile(this.userFilePath, yarnrcContent);
+    await writeFileLazy(filePath, yarnrcContent);
   }
 
   async paseYarnRc(filePath: string): Promise<YarnRc> {

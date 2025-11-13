@@ -20,16 +20,16 @@ View the [README.md](packages/node-azureauth/README.md) for more.
 
 ## Contributing
 
-Make sure to have [pnpm](https://pnpm.io/) installed.
+If you get an error that yarn is not availalbe, make sure to have [yarn](https://yarnpkg.com/getting-started/install) installed.
 
 Then you can install the repo's dependencies with...
 
 ```bash
-pnpm install
+yarn install
 ```
 
 And build the packages with...
 
 ```bash
-> pnpm exec lage build
+> yarn lage build
 ```

@@ -81,7 +81,7 @@ export const adoPat = async (
       try {
         result = spawnSync(command[0], command.slice(1), { encoding: "utf-8" });
 
-        if (result.status === 0 || (result.stderr && !result.stdout)) {
+        if (result.status !== 0 || (result.stderr && !result.stdout)) {
           throw new Error(
             `Azure Auth failed with exit code ${result.status}: ${result.stderr}`,
           );

@@ -1,18 +1,17 @@
 {
   "name": "azureauth",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "node-azure auth wrapps the AzureAuth CLI wrapper for performing AAD Authentication",
-  "bin": {
-    "azureauth": "./scripts/azureauth.cjs"
-  },
+  "bin": "./scripts/azureauth.cjs",
   "repository": {
     "url": "https://github.com/microsoft/ado-npm-auth"
   },
   "main": "dist/index.js",
+  "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "bundle": "npm run bundleInstall && npm run bundleCli && npm run bundleIndex",
+    "bundle": "yarn bundleInstall && yarn bundleCli && yarn bundleIndex",
     "bundleInstall": "esbuild --sourcemap --bundle --minify --platform=node --outfile=dist/install.cjs src/install.ts",
     "bundleCli": "esbuild --sourcemap --bundle --minify --platform=node cli.js --outfile=dist/cli.cjs",
     "bundleIndex": "esbuild --sourcemap --bundle --minify --platform=node --format=esm src/index.ts --outfile=dist/index.js",
@@ -38,15 +37,15 @@
   "author": "Jonathan Creamer",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.12.7",
     "@types/decompress": "^4.2.7",
+    "@types/node": "^20.17.28",
     "decompress": "^4.2.1",
     "esbuild": "^0.23.1",
     "execa": "^7.2.0",
     "node-downloader-helper": "^2.1.9",
-    "prettier": "^3.2.5",
-    "typescript": "^5.4.5",
-    "vitest": "^2.0.5",
-    "vite": "^5.2.8"
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2",
+    "vite": "~5.3.6",
+    "vitest": "^2.1.9"
   }
 }
