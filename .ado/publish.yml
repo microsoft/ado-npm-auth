@@ -34,9 +34,10 @@ parameters:
   - name: nodeVersions
     type: object
     default:
-      #- 16.x Pnpm v8 using corepack does not work on linux nor macos with node 16.x
       - 18.x
       - 20.x
+      - 22.x
+      - 24.x
   - name: skipNpmPublish
     displayName: Skip Npm Publish
     type: boolean
@@ -83,10 +84,10 @@ extends:
                   parameters:
                     nodeVersion: ${{ nodeVersion }}
 
-                - script: pnpm install
-                  displayName: Install dependencies (pnpm)
+                - script: yarn install --immutable
+                  displayName: Yarn install (installs package dependencies)
 
-                - script: npx lage build test lint bundle --reporter=azureDevops
+                - script: yarn lage build test lint bundle --reporter=azureDevOps
                   displayName: Build all
 
     - stage: publish
@@ -102,10 +103,10 @@ extends:
               parameters:
                 nodeVersion: 20.x
 
-            - script: pnpm install
-              displayName: Install dependencies (pnpm)
+            - script: yarn install --immutable
+              displayName: Yarn Install (Install package dependencies)
 
-            - script: npx lage build bundle --reporter=azureDevops
+            - script: yarn lage build bundle --reporter=azureDevOps
               displayName: Build & Bundle
 
             - script: |
@@ -134,5 +135,5 @@ extends:
                   git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
 
             - script: |
-                npm run publish:beachball -- $(SkipNpmPublishArgs) $(SkipGitPushPublishArgs) --access public --token $(npmAuthToken) -y
+                yarn publish:beachball -- $(SkipNpmPublishArgs) $(SkipGitPushPublishArgs) --access public --token $(npmAuthToken) -y
               displayName: Beachball Publish

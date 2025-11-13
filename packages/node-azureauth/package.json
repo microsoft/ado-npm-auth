@@ -2,9 +2,7 @@
   "name": "azureauth",
   "version": "0.12.1",
   "description": "node-azure auth wrapps the AzureAuth CLI wrapper for performing AAD Authentication",
-  "bin": {
-    "azureauth": "./scripts/azureauth.cjs"
-  },
+  "bin": "./scripts/azureauth.cjs",
   "repository": {
     "url": "https://github.com/microsoft/ado-npm-auth"
   },
@@ -13,7 +11,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "bundle": "npm run bundleInstall && npm run bundleCli && npm run bundleIndex",
+    "bundle": "yarn bundleInstall && yarn bundleCli && yarn bundleIndex",
     "bundleInstall": "esbuild --sourcemap --bundle --minify --platform=node --outfile=dist/install.cjs src/install.ts",
     "bundleCli": "esbuild --sourcemap --bundle --minify --platform=node cli.js --outfile=dist/cli.cjs",
     "bundleIndex": "esbuild --sourcemap --bundle --minify --platform=node --format=esm src/index.ts --outfile=dist/index.js",

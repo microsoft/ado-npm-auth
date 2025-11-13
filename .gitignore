@@ -4,3 +4,5 @@ dist
 lib
 .npmrc
 .vscode
+.yarn/global
+.yarn/install-state.gz
