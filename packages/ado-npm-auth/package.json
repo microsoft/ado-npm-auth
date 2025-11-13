@@ -6,7 +6,9 @@
   "license": "MIT",
   "type": "module",
   "main": "./lib/index.js",
+  "module": "./lib/index.js",
   "typings": "./lib/index.d.ts",
+  "sideEffects": false,
   "bin": {
     "ado-npm-auth": "./bin/index.js"
   },
