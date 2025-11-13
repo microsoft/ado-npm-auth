@@ -22,7 +22,8 @@
     "build": "tsc",
     "bundle": "npm run bundleBin",
     "bundleBin": "esbuild --sourcemap=external --bundle --minify --platform=node src/cli.ts --outfile=dist/ado-npm-auth.cjs",
-    "lint": "eslint . && prettier --check src/**/*.ts",
+    "eslint": "eslint .",
+    "lint": "prettier --check src/**/*.ts",
     "performance-test": "node lib/tests/performance.test.js",
     "test": "vitest run src"
   },
