@@ -12,30 +12,29 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [16.x, 18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, 24.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v4
 
-    - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v3
-
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v5
+      uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
+        cache: 'yarn'
 
     - name: Install dependencies
-      run: pnpm install
+      run: yarn install --immutable
 
     - name: Check for change files
-      run: pnpm run checkchange
+      run: yarn checkchange
 
     - name: Build, test & lint
-      run: pnpm exec lage build test lint bundle
+      run: yarn lage build test lint bundle
 
     - name: Check if files updated
       run: git diff --exit-code

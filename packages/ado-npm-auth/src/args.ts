@@ -7,7 +7,7 @@ export type Args = {
   configFile?: string;
   azureAuthLocation?: string;
   exitCodeOnReAuthenticate?: number;
-}
+};
 
 export function parseArgs(args: string[]): Args {
   const argv = yargs(hideBin(args))

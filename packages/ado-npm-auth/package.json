@@ -8,10 +8,8 @@
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "typings": "./lib/index.d.ts",
+  "bin": "./bin/index.js",
   "sideEffects": false,
-  "bin": {
-    "ado-npm-auth": "./bin/index.js"
-  },
   "files": [
     "dist/ado-npm-auth.cjs",
     "lib/**/*",
@@ -22,7 +20,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "bundle": "npm run bundleBin",
+    "bundle": "yarn bundleBin",
     "bundleBin": "esbuild --sourcemap=external --bundle --minify --platform=node src/cli.ts --outfile=dist/ado-npm-auth.cjs",
     "eslint": "eslint .",
     "lint": "prettier --check src/**/*.ts",
