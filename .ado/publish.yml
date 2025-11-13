@@ -64,8 +64,6 @@ extends:
         configuration: "recommended"
         parser: "@typescript-eslint/parser"
         parserOptions: ""
-      binskim:
-        scanOutputDirectoryOnly: true
     stages:
     - stage: build
       jobs:
@@ -90,6 +88,18 @@ extends:
 
                 - script: yarn lage build test lint bundle --reporter=azureDevOps
                   displayName: Build all
+
+                - task: PowerShell@2
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      $storePath = Join-Path -Path "$(System.DefaultWorkingDirectory)" -ChildPath "node_modules/.store"
+                      if (Test-Path -LiteralPath $storePath) {
+                        Get-ChildItem -LiteralPath $storePath -Directory |
+                          Where-Object { $_.Name -like '@esbuild-*' } |
+                          Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+                      }
+                  displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
 
     - stage: publish
       dependsOn: build # Make sure we build and pass tests on all platforms and node versions before publishing
