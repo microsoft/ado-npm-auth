@@ -29,7 +29,7 @@ parameters:
         image: ubuntu-latest
         os: linux
       - name: Azure Pipelines
-        vmImage: macos-13
+        vmImage: macos-latest
         os: macOS        
   - name: nodeVersions
     type: object
