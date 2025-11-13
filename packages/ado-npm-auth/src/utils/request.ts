@@ -1,4 +1,5 @@
-import https, { RequestOptions } from "https";
+import type { RequestOptions } from "https";
+import https from "https";
 import fs from "fs";
 import path from "path";
 
@@ -22,7 +23,7 @@ export const makeRequest = async (options: RequestOptions) => {
     const req = https.request(mergedOptions, (res) => {
       let data = "";
       let dataJson = {};
-      let ok = res.statusCode === 200;
+      const ok = res.statusCode === 200;
 
       res.on("data", (d) => {
         data += d;

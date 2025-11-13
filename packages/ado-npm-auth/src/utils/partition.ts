@@ -3,7 +3,7 @@ export function partition<TValue, TKey>(
   keySelector: (item: TValue) => TKey,
 ): Map<TKey, TValue[]> {
   const result = new Map<TKey, TValue[]>();
-  for (var item of items) {
+  for (const item of items) {
     const key = keySelector(item);
     const existing = result.get(key);
     if (existing) {

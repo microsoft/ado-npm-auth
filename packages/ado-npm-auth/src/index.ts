@@ -1,5 +1,10 @@
-export * from "./yarnrc/yarnrcFileProvider.js";
-export * from "./npmrc/npmrcFileProvider.js";
-export * from "./fileProvider.js";
+export { YarnRcFileProvider } from "./yarnrc/yarnrcFileProvider.js";
 
-export * from "./npmrc/generate-npmrc-pat.js";
+export { NpmrcFileProvider } from "./npmrc/npmrcFileProvider.js";
+
+export type { Feed, ValidatedFeed } from "./fileProvider.js";
+export { defaultUser, defaultEmail, FileProvider } from "./fileProvider.js";
+
+export { generateNpmrcPat } from "./npmrc/generate-npmrc-pat.js";
+
+export { getOrganizationFromFeedUrl } from "./utils/get-organization-from-feed-url.js";

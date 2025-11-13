@@ -9,10 +9,10 @@ export type TelemetryProperties = {
   error: string;
 };
 
-export interface TelemetryClient {
+export type TelemetryClient = {
   LogEvent: (eventName: string, properties: Map<string, string>) => void;
   flush(): void;
-}
+};
 
 /**
  * Logs an node-azure-auth event to telemetry.

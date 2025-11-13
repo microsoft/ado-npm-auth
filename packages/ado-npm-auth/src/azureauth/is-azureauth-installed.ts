@@ -21,7 +21,7 @@ export const isAzureAuthInstalled = async (): Promise<boolean> => {
       // version must be >=0.8.0.0
       const [, minor] = result.stdout.split(".");
       memo = parseInt(minor) >= 8;
-    } catch (error) {
+    } catch {
       // azureauth not installed
       memo = false;
     }

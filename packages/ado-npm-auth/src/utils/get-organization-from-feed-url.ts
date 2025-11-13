@@ -65,7 +65,7 @@ const extractAdoDetails = (url: string) => {
     throw new Error(
       "URL format not recognized or does not contain enough information.",
     );
-  } catch (error) {
+  } catch {
     throw new Error("Invalid URL or unsupported format");
   }
 };
@@ -83,7 +83,7 @@ export const getOrganizationFromFeedUrl = (
   try {
     const { organization } = extractAdoDetails(feedUrl);
     return organization;
-  } catch (error) {
+  } catch {
     return defaultOrg;
   }
 };
