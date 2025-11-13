@@ -64,7 +64,8 @@ extends:
         configuration: "recommended"
         parser: "@typescript-eslint/parser"
         parserOptions: ""
-
+      binskim:
+        scanOutputDirectoryOnly: true
     stages:
     - stage: build
       jobs:
