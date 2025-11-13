@@ -1,7 +1,7 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-export interface Args {
+export type Args = {
   doValidCheck: boolean;
   skipAuth: boolean;
   configFile?: string;

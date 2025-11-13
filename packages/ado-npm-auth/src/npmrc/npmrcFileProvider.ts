@@ -1,10 +1,6 @@
 import Config from "@npmcli/config";
-import {
-  defaultEmail,
-  defaultUser,
-  Feed,
-  FileProvider,
-} from "../fileProvider.js";
+import type { Feed } from "../fileProvider.js";
+import { defaultEmail, defaultUser, FileProvider } from "../fileProvider.js";
 import fs from "node:fs/promises";
 import { EOL } from "node:os";
 import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
@@ -28,7 +24,7 @@ export class NpmrcFileProvider extends FileProvider {
         .filter((line) => !line.includes("registry="))
         .join(EOL);
       await writeFileLazy(this.userFilePath, updatedNpmrcContent);
-    } catch (error) {
+    } catch {
       // user npmrc does not exist so make an empty one
       await writeFileLazy(this.userFilePath, "");
     }
@@ -147,7 +143,7 @@ export class NpmrcFileProvider extends FileProvider {
     const newLinesByRegistryAndField = new Map<string, string>();
 
     // Build a map with registry and feed with the updated line for value.
-    for (var feedToPatch of feedsToPatch) {
+    for (const feedToPatch of feedsToPatch) {
       newLinesByRegistryAndField.set(
         this.toRegistryAndFunctionKey(feedToPatch.registry, "username"),
         `//${feedToPatch.registry}:username=${feedToPatch.userName || defaultUser}`,
