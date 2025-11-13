@@ -1,0 +1,90 @@
+{
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/baselines"
+  },
+  "version": "1.0.0",
+  "baselines": {
+    "guardian-baseline": {
+      "name": "guardian-baseline",
+      "createdDate": "2025-10-10 20:53:02Z",
+      "lastUpdatedDate": "2025-10-10 20:53:02Z"
+    }
+  },
+  "results": {
+    "8d302f3b7a971721b9834b21b373e329f5149fd837281c01fc437e0c7d2cac72": {
+      "signature": "8d302f3b7a971721b9834b21b373e329f5149fd837281c01fc437e0c7d2cac72",
+      "alternativeSignatures": [
+        "6b33a1102e806d7c97033c4ad3b6ebb31970ea115dfec7860fe3d692d4515b08"
+      ],
+      "target": "node_modules/.pnpm/node_modules/@esbuild/win32-x64/esbuild.exe",
+      "memberOf": [
+        "guardian-baseline"
+      ],
+      "tool": "binskim",
+      "ruleId": "BA2001",
+      "createdDate": "2025-10-10 20:53:02Z",
+      "expirationDate": "2026-04-04 22:57:29Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-10-16 22:57:29Z"
+    },
+    "760771218276afb1a907360e16c3aa7c308818b95aa84c2a4d6fc9302559d287": {
+      "signature": "760771218276afb1a907360e16c3aa7c308818b95aa84c2a4d6fc9302559d287",
+      "alternativeSignatures": [
+        "0e534a8810b51a8236e9cb326f2bdd405d97d702b30c456c7d249e751119118e"
+      ],
+      "target": "node_modules/.pnpm/@esbuild+win32-x64@0.21.5/node_modules/@esbuild/win32-x64/esbuild.exe",
+      "memberOf": [
+        "guardian-baseline"
+      ],
+      "tool": "binskim",
+      "ruleId": "BA2001",
+      "createdDate": "2025-10-10 20:53:02Z",
+      "expirationDate": "2026-04-04 22:57:29Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-10-16 22:57:29Z"
+    },
+    "50157ef5e6dc32d3700f6fc2854c42b78d7c6f357b1c2e6f9163749c8cd7df5b": {
+      "signature": "50157ef5e6dc32d3700f6fc2854c42b78d7c6f357b1c2e6f9163749c8cd7df5b",
+      "alternativeSignatures": [
+        "ecee0202369c14b8edecd5dfb81cc0a1badf8c5c21ce90d241de54b2d2aa4455"
+      ],
+      "target": "node_modules/.pnpm/@esbuild+win32-x64@0.23.1/node_modules/@esbuild/win32-x64/esbuild.exe",
+      "memberOf": [
+        "guardian-baseline"
+      ],
+      "tool": "binskim",
+      "ruleId": "BA2001",
+      "createdDate": "2025-10-10 20:53:02Z",
+      "expirationDate": "2026-04-04 22:57:29Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-10-16 22:57:29Z"
+    },
+    "eca061a336679d90cc35adf6a1e20bff104184b571a9e8a1f9854fb7e518c77f": {
+      "signature": "eca061a336679d90cc35adf6a1e20bff104184b571a9e8a1f9854fb7e518c77f",
+      "alternativeSignatures": [
+        "054ab2a68b8cd22abf21951ed70a0d275a7fb1db70e7cd861c175a15fd4e70e4"
+      ],
+      "target": "node_modules/.pnpm/esbuild@0.21.5/node_modules/@esbuild/win32-x64/esbuild.exe",
+      "memberOf": [
+        "guardian-baseline"
+      ],
+      "tool": "binskim",
+      "ruleId": "BA2001",
+      "createdDate": "2025-10-10 20:53:02Z",
+      "expirationDate": "2026-04-04 22:57:29Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-10-16 22:57:29Z"
+    },
+    "2744f2850a67b5906e2afb38979cd82516f35e062f68184ca09db04ea6316644": {
+      "signature": "2744f2850a67b5906e2afb38979cd82516f35e062f68184ca09db04ea6316644",
+      "alternativeSignatures": [
+        "3acffcab12de4c112d9282e75f69eafb0d4122daf75f9d8438eff7f8dbb6162e"
+      ],
+      "target": "node_modules/.pnpm/esbuild@0.23.1/node_modules/@esbuild/win32-x64/esbuild.exe",
+      "memberOf": [
+        "guardian-baseline"
+      ],
+      "tool": "binskim",
+      "ruleId": "BA2001",
+      "createdDate": "2025-10-10 20:53:02Z",
+      "expirationDate": "2026-04-04 22:57:29Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-10-16 22:57:29Z"
+    }
+  }
+}
