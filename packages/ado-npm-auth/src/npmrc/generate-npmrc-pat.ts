@@ -41,10 +41,11 @@ async function getRawToken(
       const pat = await adoPat(
         {
           promptHint: `Authenticate to ${organization} to generate a temporary token for npm`,
-          organization: `https://dev.azure.com/${organization}`,
+          organization,
           displayName: name,
           scope: ["vso.packaging"],
           timeout: "30",
+          output: "json",
         },
         azureAuthLocation,
       );
