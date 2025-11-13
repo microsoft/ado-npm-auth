@@ -21,8 +21,3 @@ steps:
   - script: |
       npm install -g yarn
     displayName: "Setup yarn"
-
-  - script: |
-      corepack enable pnpm
-      corepack use pnpm@latest-8
-    displayName: "Setup pnpm"

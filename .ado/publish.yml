@@ -34,9 +34,10 @@ parameters:
   - name: nodeVersions
     type: object
     default:
-      #- 16.x Pnpm v8 using corepack does not work on linux nor macos with node 16.x
       - 18.x
       - 20.x
+      - 22.x
+      - 24.x
   - name: skipNpmPublish
     displayName: Skip Npm Publish
     type: boolean
@@ -83,10 +84,10 @@ extends:
                   parameters:
                     nodeVersion: ${{ nodeVersion }}
 
-                - script: pnpm install
-                  displayName: Install dependencies (pnpm)
+                - script: yarn install --immutable
+                  displayName: Yarn install (installs package dependencies)
 
-                - script: npx lage build test lint bundle --reporter=azureDevops
+                - script: yarn lage build test lint bundle --reporter=azureDevOps
                   displayName: Build all
 
     - stage: publish
@@ -97,21 +98,24 @@ extends:
             name: Azure-Pipelines-1ESPT-ExDShared
             image: ubuntu-latest
             os: linux
+          templateContext:
+            outputs:
+             - output: pipelineArtifact
+               targetPath: $(Pipeline.Workspace)/published-packages
+               artifactName: NpmPackedTarballs
+               displayName: 'Publish npm pack artifacts'
+               condition: succeededOrFailed()
+              
           steps:
             - template: /.ado/prep-node.yml@self
               parameters:
-                nodeVersion: 20.x
+                nodeVersion: 24.x
 
-            - script: pnpm install
-              displayName: Install dependencies (pnpm)
+            - script: yarn install --immutable
+              displayName: Yarn Install (Install package dependencies)
 
-            - script: npx lage build bundle --reporter=azureDevops
+            - script: yarn lage build bundle --reporter=azureDevOps
               displayName: Build & Bundle
-
-            - script: |
-                echo "##vso[task.setvariable variable=SkipNpmPublishArgs]--no-publish"
-              displayName: Enable No-Publish (npm)
-              condition: ${{ parameters.skipNpmPublish }}
 
             - script: |
                 echo "##vso[task.setvariable variable=SkipGitPushPublishArgs]--no-push"
@@ -122,7 +126,7 @@ extends:
               inputs:
                 azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
                 KeyVaultName: rnw-keyvault
-                SecretsFilter: 'githubAuthToken,npmAuthToken' # string. Required. Secrets filter. Default: *.  
+                SecretsFilter: 'githubAuthToken' # string. Required. Secrets filter. Default: *.  
               displayName: Obtaining secrets for publish
 
             - task: CmdLine@2
@@ -134,5 +138,26 @@ extends:
                   git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
 
             - script: |
-                npm run publish:beachball -- $(SkipNpmPublishArgs) $(SkipGitPushPublishArgs) --access public --token $(npmAuthToken) -y
+                if exist "$(Pipeline.Workspace)\published-packages" rd /s /q "$(Pipeline.Workspace)\published-packages"
+                mkdir "$(Pipeline.Workspace)\published-packages"
+                yarn publish:beachball --no-publish --pack-to-path "$(Pipeline.Workspace)\published-packages" $(SkipGitPushPublishArgs) --access public -yes --bump-deps --verbose
               displayName: Beachball Publish
+
+            - script: dir /s "$(Pipeline.Workspace)\published-packages"
+              displayName: Show packaged npm artifacts
+
+            - task: 'SFP.release-tasks.custom-build-release-task.EsrpRelease@9'
+              displayName: 'ESRP Release to npmjs.com'
+              condition: and(succeeded(), ${{ not(parameters.skipNpmPublish) }})
+              inputs:
+                connectedservicename: 'ESRP-JSHost3'
+                usemanagedidentity: false
+                keyvaultname: 'OGX-JSHost-KV'
+                authcertname: 'OGX-JSHost-Auth4'
+                signcertname: 'OGX-JSHost-Sign3'
+                clientid: '0a35e01f-eadf-420a-a2bf-def002ba898d'
+                domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
+                contenttype: npm
+                folderlocation: $(Pipeline.Workspace)\published-packages
+                owners: 'vmorozov@microsoft.com'
+                approvers: 'khosany@microsoft.com'
