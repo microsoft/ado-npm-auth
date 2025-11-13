@@ -48,7 +48,7 @@ const bundleOptions = {
 };
 
 const startTime = performance.now();
-await esbuild.build(bundleOptions).then((result) => {
+await esbuild.build(bundleOptions).then(() => {
   const timeTaken = ((performance.now() - startTime) / 1000).toFixed(2);
   const sizeKb = Math.round(fs.statSync(`dist/${bundleName}`).size / 1024);
   console.log(
