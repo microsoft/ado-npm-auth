@@ -15,7 +15,7 @@ export function execProcess(
   args: string[],
   options?: {
     cwd?: string;
-    env?: { [key: string]: string };
+    env?: Record<string, string>;
     stdio?: "pipe" | "inherit" | "ignore";
     shell?: boolean | string;
     processStdOut?: (data: string) => void;

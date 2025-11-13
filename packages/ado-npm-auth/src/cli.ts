@@ -2,9 +2,11 @@ import { isSupportedPlatformAndArchitecture } from "./azureauth/is-supported-pla
 import { isCodespaces } from "./utils/is-codespaces.js";
 import { logTelemetry } from "./telemetry/index.js";
 import { arch, platform } from "os";
-import { Args, parseArgs } from "./args.js";
+import type { Args } from "./args.js";
+import { parseArgs } from "./args.js";
 import { NpmrcFileProvider } from "./npmrc/npmrcFileProvider.js";
-import { defaultEmail, defaultUser, ValidatedFeed } from "./fileProvider.js";
+import type { ValidatedFeed } from "./fileProvider.js";
+import { defaultEmail, defaultUser } from "./fileProvider.js";
 import { generateNpmrcPat } from "./npmrc/generate-npmrc-pat.js";
 import { partition } from "./utils/partition.js";
 import { YarnRcFileProvider } from "./yarnrc/yarnrcFileProvider.js";

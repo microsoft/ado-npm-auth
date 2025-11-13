@@ -16,13 +16,13 @@ export const defaultUser = "me";
  */
 export const defaultEmail = "me@example.com";
 
-export interface Feed {
+export type Feed = {
   registry: string;
   adoOrganization: string;
   userName?: string;
   email?: string;
   authToken?: string;
-}
+};
 
 export type ValidatedFeed = {
   feed: Feed;
@@ -59,7 +59,7 @@ export abstract class FileProvider {
   public async isSupportedInRepo(): Promise<boolean> {
     try {
       await fs.access(this.workspaceFilePath);
-    } catch (error) {
+    } catch {
       return false;
     }
 
@@ -85,7 +85,7 @@ export abstract class FileProvider {
             password: feed.authToken || "",
             organization: feed.adoOrganization,
           });
-        } catch (e) {
+        } catch {
           feedIsValid = false;
         }
         result.push({ feed: feed, isValid: feedIsValid, fileProvider: this });

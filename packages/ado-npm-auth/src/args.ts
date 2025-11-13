@@ -1,13 +1,13 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-export interface Args {
+export type Args = {
   doValidCheck: boolean;
   skipAuth: boolean;
   configFile?: string;
   azureAuthLocation?: string;
   exitCodeOnReAuthenticate?: number;
-}
+};
 
 export function parseArgs(args: string[]): Args {
   const argv = yargs(hideBin(args))

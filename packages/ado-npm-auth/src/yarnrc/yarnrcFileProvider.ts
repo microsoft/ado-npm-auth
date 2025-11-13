@@ -1,4 +1,5 @@
-import { Feed, FileProvider } from "../fileProvider.js";
+import type { Feed } from "../fileProvider.js";
+import { FileProvider } from "../fileProvider.js";
 import yaml from "js-yaml";
 import fs from "node:fs/promises";
 import { fromBase64, toBase64 } from "../utils/encoding.js";
@@ -20,7 +21,7 @@ export class YarnRcFileProvider extends FileProvider {
         delete yarnrc.npmRegistryServer;
         await this.writeYarnRc(this.userFilePath, yarnrc);
       }
-    } catch (error) {
+    } catch {
       // user .yarnrc file does not exist so make an empty one
       await writeFileLazy(this.userFilePath, "");
     }
@@ -34,7 +35,7 @@ export class YarnRcFileProvider extends FileProvider {
       return result;
     }
     const npmRegistries = yarnrc.npmRegistries || {};
-    for (var registry of Object.keys(npmRegistries)) {
+    for (const registry of Object.keys(npmRegistries)) {
       const registryData = npmRegistries[registry] || {};
       const registryWithoutProtocol = registry.startsWith("//")
         ? registry.substring(2)
@@ -67,7 +68,7 @@ export class YarnRcFileProvider extends FileProvider {
     }
 
     if (yarnrc.npmScopes) {
-      for (var scope of Object.keys(yarnrc.npmScopes)) {
+      for (const scope of Object.keys(yarnrc.npmScopes)) {
         const scopeRegistry = yarnrc.npmScopes[scope]?.npmRegistryServer;
         if (scopeRegistry) {
           registries.push(scopeRegistry);
@@ -87,7 +88,7 @@ export class YarnRcFileProvider extends FileProvider {
       yarnrc.npmRegistries = {};
     }
 
-    for (var feed of feedsToPatch) {
+    for (const feed of feedsToPatch) {
       const yarnRcYamlKey = "//" + feed.registry;
       const entry = yarnrc.npmRegistries[yarnRcYamlKey] || {};
       // Make sure alwaysAuth is the default
@@ -112,21 +113,23 @@ export class YarnRcFileProvider extends FileProvider {
   }
 }
 
-interface YarnRc {
+type YarnRc = {
   npmRegistryServer?: string;
-  npmScopes?: {
-    [org: string]: {
+  npmScopes?: Record<
+    string,
+    {
       npmRegistryServer?: string;
       npmAlwaysAuth?: boolean;
       npmAuthIdent?: string;
       npmAuthToken?: string;
-    };
-  };
-  npmRegistries?: {
-    [registry: string]: {
+    }
+  >;
+  npmRegistries?: Record<
+    string,
+    {
       npmAlwaysAuth?: boolean;
       npmAuthIdent?: string;
       npmAuthToken?: string;
-    };
-  };
-}
+    }
+  >;
+};

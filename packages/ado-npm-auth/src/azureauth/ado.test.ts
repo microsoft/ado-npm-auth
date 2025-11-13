@@ -2,7 +2,8 @@ import { spawnSync } from "child_process";
 import { beforeEach, expect, test, vi } from "vitest";
 import { exec } from "../utils/exec.js";
 import * as utils from "../utils/is-wsl.js";
-import { AdoPatResponse, adoPat } from "./ado.js";
+import type { AdoPatResponse } from "./ado.js";
+import { adoPat } from "./ado.js";
 
 vi.mock("child_process", async () => {
   return {

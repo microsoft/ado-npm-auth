@@ -10,7 +10,9 @@ export async function writeFileLazy(
       // File already up to date, no need to write out content
       return;
     }
-  } catch (e) {}
+  } catch {
+    // no-op, proceed to write file as file doesn't exist
+  }
 
   await fs.writeFile(path, content, { encoding: "utf-8" });
   return;

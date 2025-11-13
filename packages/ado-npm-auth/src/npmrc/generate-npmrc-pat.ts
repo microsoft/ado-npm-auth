@@ -1,5 +1,6 @@
 import { hostname, platform } from "os";
-import { AdoPatResponse, adoPat } from "../azureauth/ado.js";
+import type { AdoPatResponse } from "../azureauth/ado.js";
+import { adoPat } from "../azureauth/ado.js";
 import { toBase64 } from "../utils/encoding.js";
 import { credentialProviderPat } from "./nugetCredentialProvider.js";
 
@@ -47,7 +48,7 @@ async function getRawToken(
 
   switch (platform()) {
     case "win32":
-    case "darwin":
+    case "darwin": {
       const pat = await adoPat(
         {
           promptHint: `Authenticate to ${organization} to generate a temporary token for npm`,
@@ -60,9 +61,11 @@ async function getRawToken(
         azureAuthLocation,
       );
       return (pat as AdoPatResponse).token;
-    case "linux":
+    }
+    case "linux": {
       const cpPat = await credentialProviderPat(feed);
       return cpPat.Password;
+    }
     default:
       throw new Error(
         `Platform ${platform()} is not supported for ADO authentication`,

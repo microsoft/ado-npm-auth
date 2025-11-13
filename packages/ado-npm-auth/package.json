@@ -5,13 +5,14 @@
   "repository": "https://github.com/microsoft/ado-npm-auth",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "bin": "./bin/index.js",
+  "sideEffects": false,
   "files": [
-    "dist/index.js",
     "dist/ado-npm-auth.cjs",
-    "lib/**/*.d.ts",
+    "lib/**/*",
     "bin",
     "static",
     "LICENCSE.txt",
@@ -19,31 +20,32 @@
   ],
   "scripts": {
     "build": "tsc",
-    "bundle": "yarn bundleBin && yarn bundleIndex",
+    "bundle": "yarn bundleBin",
     "bundleBin": "esbuild --sourcemap=external --bundle --minify --platform=node src/cli.ts --outfile=dist/ado-npm-auth.cjs",
-    "bundleIndex": "esbuild --sourcemap=external --bundle --minify --platform=node --format=esm src/index.ts --outfile=dist/index.js",
+    "eslint": "eslint .",
     "lint": "prettier --check src/**/*.ts",
     "performance-test": "node lib/tests/performance.test.js",
     "test": "vitest run src"
   },
   "dependencies": {
-    "azureauth": "workspace:^"
+    "@npmcli/config": "^10.1.0",
+    "azureauth": "workspace:^",
+    "js-yaml": "^4.1.0",
+    "tslib": "^2.8.1",
+    "workspace-tools": "^0.38.0"
   },
   "devDependencies": {
-    "@npmcli/config": "^10.1.0",
+    "@microsoft/eslint-plugin-sdl": "^1.1.0",
+    "@rnx-kit/eslint-plugin": "^0.9.3",
     "@types/js-yaml": "4.0.9",
     "@types/node": "^20.17.28",
     "@types/npmcli__config": "^6.0.3",
     "@types/yargs": "^17.0.33",
     "esbuild": "^0.23.1",
-    "eslint": "^8.57.1",
-    "js-yaml": "^4.1.0",
+    "eslint": "^9.39.1",
     "prettier": "^3.5.3",
-    "tslib": "^2.8.1",
     "typescript": "^5.8.2",
-    "vite": "~5.3.6",
     "vitest": "^2.1.9",
-    "workspace-tools": "^0.38.0",
     "yargs": "^17.7.2"
   }
 }
