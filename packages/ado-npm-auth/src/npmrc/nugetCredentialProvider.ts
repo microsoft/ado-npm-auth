@@ -13,10 +13,10 @@ const OutputDir = path.join(
   "v" + CredentialProviderVersion,
 );
 
-interface CredentialProviderResponse {
+type CredentialProviderResponse = {
   Username: string;
   Password: string;
-}
+};
 
 export async function credentialProviderPat(
   registry: string,
@@ -52,9 +52,9 @@ async function invokeCredentialProvider(
     },
   });
   try {
-    let value = JSON.parse(response);
+    const value = JSON.parse(response);
     return value as CredentialProviderResponse;
-  } catch (error) {
+  } catch {
     throw new Error(`Failed to parse CredentialProvider output: ${response}`);
   }
 }
