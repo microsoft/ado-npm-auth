@@ -6,7 +6,9 @@
   "license": "MIT",
   "type": "module",
   "main": "./lib/index.js",
+  "module": "./lib/index.js",
   "typings": "./lib/index.d.ts",
+  "sideEffects": false,
   "bin": {
     "ado-npm-auth": "./bin/index.js"
   },
@@ -41,7 +43,7 @@
     "@types/node": "^20.17.28",
     "@types/npmcli__config": "^6.0.3",
     "@types/yargs": "^17.0.33",
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.27.0",
     "eslint": "^9.39.1",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2",
