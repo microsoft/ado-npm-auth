@@ -1,0 +1,18 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Fix release pipeline",
+      "packageName": "ado-npm-auth",
+      "email": "dannyvv@microsoft.com",
+      "dependentChangeType": "patch"
+    },
+    {
+      "type": "minor",
+      "comment": "Fix release pipeline",
+      "packageName": "azureauth",
+      "email": "dannyvv@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
