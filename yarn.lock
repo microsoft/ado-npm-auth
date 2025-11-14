@@ -2113,7 +2113,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ado-npm-auth@workspace:*, ado-npm-auth@workspace:packages/ado-npm-auth":
+"ado-npm-auth@workspace:^, ado-npm-auth@workspace:packages/ado-npm-auth":
   version: 0.0.0-use.local
   resolution: "ado-npm-auth@workspace:packages/ado-npm-auth"
   dependencies:
@@ -7797,12 +7797,13 @@ __metadata:
     "@types/node": "npm:^20.17.28"
     "@yarnpkg/cli": "npm:^4.11.0"
     "@yarnpkg/core": "npm:^4.5.0"
-    ado-npm-auth: "workspace:*"
-    azureauth: "workspace:^"
+    ado-npm-auth: "workspace:^"
     esbuild: "npm:^0.27.0"
     eslint: "npm:^9.39.1"
     prettier: "npm:^3.5.3"
     typescript: "npm:^5.8.2"
+  peerDependencies:
+    "@yarnpkg/core": ^4.5.0
   languageName: unknown
   linkType: soft
 
