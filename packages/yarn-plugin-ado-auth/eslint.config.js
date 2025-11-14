@@ -14,19 +14,6 @@ export default [
     rules: {
       // types are a preferred way to define object shapes
       "@typescript-eslint/consistent-type-definitions": ["error", "type"],
-
-      // disable these to reduce noise and churn for now, they should be evaluated later
-      "no-useless-escape": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-    },
-  },
-  {
-    // turn off a few extra rules for test files
-    files: ["**/*.test.ts"],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "no-unused-labels": "off",
-      "no-empty": "off",
     },
   },
 ];
