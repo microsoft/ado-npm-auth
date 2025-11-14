@@ -32,15 +32,18 @@ export const getToken = (() => {
  * A simple in-memory cache for tokens per registry. This will attempt to load tokens from the
  * existing settings first, and if not found, will use the ADO CLI to get a new token.
  */
-class TokenCache {
+export class TokenCache {
   private configuration: Configuration;
   private prefix: string;
   private azureAuthPath?: string;
   private cache: Record<string, string | Promise<string>> = {};
 
-  constructor(configuration: Configuration) {
+  constructor(
+    configuration: Configuration,
+    loadConfig: typeof loadConfiguration = loadConfiguration,
+  ) {
     this.configuration = configuration;
-    const settings = loadConfiguration(configuration);
+    const settings = loadConfig(configuration);
     this.prefix = settings.adoNpmAuthFeedPrefix ?? "";
     this.azureAuthPath = settings.adoNpmAuthToolPath || findAzureAuthPath();
   }
@@ -85,7 +88,7 @@ class TokenCache {
           this.cache[registry] = tokenFromYarnrc;
           report.reportInfo(
             null,
-            `✅ Authenticated to: ${prettyRegistry} (via configuration)`,
+            `Authenticated to: ${prettyRegistry} (via configuration)`,
           );
           return;
         }
@@ -93,7 +96,7 @@ class TokenCache {
         const organization = getOrganizationFromFeedUrl(registry);
         if (!organization) {
           throw new Error(
-            `❌ Could not determine organization from registry URL: ${registry}`,
+            `Could not determine organization from registry URL: ${registry}`,
           );
         }
 
@@ -106,14 +109,14 @@ class TokenCache {
         this.cache[registry] = pat;
         report.reportInfo(
           null,
-          `✅ Authenticated to: ${prettyRegistry} (via ADO CLI)`,
+          `Authenticated to: ${prettyRegistry} (via ADO CLI)`,
         );
       },
     );
 
     const pat = this.cache[registry];
     if (pat == null) {
-      throw new Error(`❌ Failed to authenticate to: ${registry}`);
+      throw new Error(`Failed to authenticate to: ${registry}`);
     }
     return pat;
   }

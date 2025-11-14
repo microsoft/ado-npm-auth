@@ -5,12 +5,11 @@
   "repository": "https://github.com/microsoft/ado-npm-auth",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "files": [
-    "dist/index.js",
-    "dist/yarn-plugin-ado-auth.cjs",
-    "lib/**/*",
+    "dist",
+    "lib",
     "LICENCSE.txt",
     "README.md"
   ],
@@ -22,7 +21,7 @@
     "eslint": "eslint ."
   },
   "dependencies": {
-    "ado-npm-auth": "workspace:*"
+    "ado-npm-auth": "workspace:^"
   },
   "devDependencies": {
     "@microsoft/eslint-plugin-sdl": "^1.1.0",
@@ -31,10 +30,12 @@
     "@types/node": "^20.17.28",
     "@yarnpkg/cli": "^4.11.0",
     "@yarnpkg/core": "^4.5.0",
-    "azureauth": "workspace:^",
     "esbuild": "^0.27.0",
     "eslint": "^9.39.1",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@yarnpkg/core": "^4.5.0"
   }
 }

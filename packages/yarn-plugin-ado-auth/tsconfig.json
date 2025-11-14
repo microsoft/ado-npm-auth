@@ -1,7 +1,7 @@
 {
   "extends": "@rnx-kit/tsconfig/tsconfig.node.json",
   "compilerOptions": {
-    "noEmit": true
+    "outDir": "lib"
   },
   "include": ["./src"]
 }
