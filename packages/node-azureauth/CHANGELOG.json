@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Fri, 14 Nov 2025 19:18:32 GMT",
+      "version": "0.13.0",
+      "tag": "azureauth_v0.13.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "azureauth",
+            "commit": "033dd71600919833aa6e8e66bfff4a6ec306189d",
+            "comment": "Fix release pipeline"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 14 Nov 2025 19:10:12 GMT",
       "version": "0.12.2",
       "tag": "azureauth_v0.12.2",
