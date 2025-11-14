@@ -100,6 +100,7 @@ extends:
                           Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
                       }
                   displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
+                  condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
     - stage: publish
       dependsOn: build # Make sure we build and pass tests on all platforms and node versions before publishing
