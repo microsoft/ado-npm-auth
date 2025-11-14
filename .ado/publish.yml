@@ -93,12 +93,7 @@ extends:
                   inputs:
                     targetType: 'inline'
                     script: |
-                      $storePath = Join-Path -Path "$(System.DefaultWorkingDirectory)" -ChildPath "node_modules/.store"
-                      if (Test-Path -LiteralPath $storePath) {
-                        Get-ChildItem -LiteralPath $storePath -Directory |
-                          Where-Object { $_.Name -like '@esbuild-*' } |
-                          Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-                      }
+                      Get-ChildItem -Recurse -File -Filter 'esbuild.exe' | Remove-Item -Force -ErrorAction SilentlyContinue
                   displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
                   condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
