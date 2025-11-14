@@ -15,7 +15,7 @@
     "change": "beachball change",
     "checkchange": "beachball check",
     "ci": "lage build test lint bundle",
-    "publish:beachball": "beachball publish --bump-deps -m\"📦 applying package updates ***NO_CI***\"  --verbose"
+    "publish:beachball": "beachball publish --bump-deps -m \"📦 applying package updates ***NO_CI***\" --verbose --access public"
   },
   "devDependencies": {
     "beachball": "^2.51.1",

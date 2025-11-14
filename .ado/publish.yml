@@ -29,7 +29,7 @@ parameters:
         image: ubuntu-latest
         os: linux
       - name: Azure Pipelines
-        vmImage: macos-13
+        vmImage: macos-latest
         os: macOS        
   - name: nodeVersions
     type: object
@@ -97,9 +97,8 @@ extends:
                   displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
                   condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
-    - stage: publish
-      dependsOn: build # Make sure we build and pass tests on all platforms and node versions before publishing
-      jobs:
+    # - stage: publish
+    #   jobs:
         - job: Publish
           pool:
             name: Azure-Pipelines-1ESPT-ExDShared
@@ -145,9 +144,9 @@ extends:
                   git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
 
             - script: |
-                if exist "$(Pipeline.Workspace)\published-packages" rd /s /q "$(Pipeline.Workspace)\published-packages"
-                mkdir "$(Pipeline.Workspace)\published-packages"
-                yarn publish:beachball --no-publish --pack-to-path "$(Pipeline.Workspace)\published-packages" $(SkipGitPushPublishArgs) --access public -yes --bump-deps --verbose
+                rm -rf "$(Pipeline.Workspace)/published-packages"
+                mkdir "$(Pipeline.Workspace)/published-packages"
+                yarn publish:beachball --no-publish --pack-to-path "$(Pipeline.Workspace)/published-packages" $(SkipGitPushPublishArgs) --yes  
               displayName: Beachball Publish
 
             - script: dir /s "$(Pipeline.Workspace)\published-packages"
