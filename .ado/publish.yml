@@ -109,6 +109,8 @@ extends:
                condition: succeededOrFailed()
               
           steps:
+            - checkout: self
+
             - template: /.ado/prep-node.yml@self
               parameters:
                 nodeVersion: 24.x
