@@ -138,6 +138,13 @@ extends:
             - script: ls "$(Pipeline.Workspace)/published-packages"
               displayName: Show packaged npm artifacts
 
+            - script: |
+                git config --global user.email "53619745+rnbot@users.noreply.github.com"
+                git config --global user.name "React-Native Bot"
+                echo git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
+                git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
+              displayName: Git Config
+
             - script: git status
               displayName: Git Status
 
@@ -148,19 +155,13 @@ extends:
               displayName: Git commit
 
             - script: |
-                git config --global user.email "53619745+rnbot@users.noreply.github.com"
-                git config --global user.name "React-Native Bot"
-                echo git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
-                git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
-                
                 echo git push origin HEAD:$pr_branch --force
                 git push origin HEAD:$pr_branch --force
               env:
                 GH_TOKEN: $(githubAuthToken)
                 GH_REPO: microsoft/ado-npm-auth
                 pr_branch: $(ReleaseBranch)
-
-              displayName: Push beachball changes to release branch
+              displayName: Git push
 
     - stage: CreatePullRequestAndMerge
       dependsOn:
