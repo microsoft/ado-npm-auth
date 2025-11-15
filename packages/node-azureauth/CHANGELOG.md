@@ -1,8 +1,16 @@
 # Change Log - azureauth
 
-<!-- This log was last generated on Fri, 14 Nov 2025 19:10:12 GMT and should not be manually modified. -->
+<!-- This log was last generated on Sat, 15 Nov 2025 23:36:34 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.13.0
+
+Sat, 15 Nov 2025 23:36:34 GMT
+
+### Minor changes
+
+- Fix release pipeline (dannyvv@microsoft.com)
 
 ## 0.12.2
 
