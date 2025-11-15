@@ -18,7 +18,7 @@ variables:
   - name: tags
     value: production,externalfacing
   - name: ReleaseBranch
-    value: rnbot/beachball-release-$(Build.BuildId)
+    value: rnbot/beachball/release-$(Build.BuildId)
 
 parameters:
   - name: pools
