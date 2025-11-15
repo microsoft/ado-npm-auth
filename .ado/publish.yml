@@ -17,35 +17,29 @@ resources:
 variables:
   - name: tags
     value: production,externalfacing
+  - name: ReleaseBranch
+    value: rnbot/beachball-release-$(Build.BuildId)
 
 parameters:
   - name: pools
     type: object
     default:
-      - name: Azure-Pipelines-1ESPT-ExDShared
-        image: windows-latest
-        os: windows
-      - name: Azure-Pipelines-1ESPT-ExDShared
-        image: ubuntu-latest
-        os: linux
+      # - name: Azure-Pipelines-1ESPT-ExDShared
+      #   image: windows-latest
+      #   os: windows
+      # - name: Azure-Pipelines-1ESPT-ExDShared
+      #   image: ubuntu-latest
+      #   os: linux
       - name: Azure Pipelines
         vmImage: macos-latest
         os: macOS        
   - name: nodeVersions
     type: object
     default:
-      - 18.x
-      - 20.x
-      - 22.x
+      # - 18.x
+      # - 20.x
+      # - 22.x
       - 24.x
-  - name: skipNpmPublish
-    displayName: Skip Npm Publish
-    type: boolean
-    default: false
-  - name: skipGitPush
-    displayName: Skip Git Push
-    type: boolean
-    default: false
 
 extends:
   template: v1/Office.Official.PipelineTemplate.yml@OfficePipelineTemplates
@@ -97,7 +91,7 @@ extends:
                   displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
                   condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
-    - stage: publish
+    - stage: BuildForPublish
       dependsOn: build # Make sure we build and pass tests on all platforms and node versions before publishing
       jobs:
         - job: Publish
@@ -124,11 +118,6 @@ extends:
             - script: yarn lage build bundle --reporter=azureDevOps
               displayName: Build & Bundle
 
-            - script: |
-                echo "##vso[task.setvariable variable=SkipGitPushPublishArgs]--no-push"
-              displayName: Enable No-Publish (git)
-              condition: ${{ parameters.skipGitPush }}
-
             - task: AzureKeyVault@2
               inputs:
                 azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
@@ -136,26 +125,162 @@ extends:
                 SecretsFilter: 'githubAuthToken' # string. Required. Secrets filter. Default: *.  
               displayName: Obtaining secrets for publish
 
-            - task: CmdLine@2
-              displayName: Configure git auth for publishing to github
-              inputs:
-                script: |
-                  git config --global user.email "53619745+rnbot@users.noreply.github.com"
-                  git config --global user.name "React-Native Bot"
-                  git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
-
             - script: |
                 rm -rf "$(Pipeline.Workspace)/published-packages"
                 mkdir "$(Pipeline.Workspace)/published-packages"
               displayName: Clear previous packed up packages.
 
             - script: |
-                yarn beachball publish --messagem "📦 applying package updates ***NO_CI***" --verbose --access public --no-publish --pack-to-path "$(Pipeline.Workspace)/published-packages" $(SkipGitPushPublishArgs) --yes  
+                yarn beachball publish --verbose --access public --no-publish --no-push --pack-to-path "$(Pipeline.Workspace)/published-packages" --yes
               displayName: Beachball Publish
 
             - script: dir /s "$(Pipeline.Workspace)\published-packages"
               displayName: Show packaged npm artifacts
 
+            - script: git status
+              displayName: Check if there are changes
+
+            - script: |
+                git config --global user.email "53619745+rnbot@users.noreply.github.com"
+                git config --global user.name "React-Native Bot"
+                git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
+
+                git push origin HEAD:$pr_branch --force-with-lease
+              env:
+                GH_TOKEN: $(githubAuthToken)
+                GH_REPO: microsoft/ado-npm-auth
+                pr_branch: $(ReleaseBranch)
+
+              displayName: Push beachball changes to release branch
+
+    - stage: CreatePullRequestAndMerge
+      dependsOn:
+        - build
+        - BuildForPublish
+      jobs:
+        - job: CreatePullRequest
+          pool:
+            name: Azure-Pipelines-1ESPT-ExDShared
+            image: ubuntu-latest
+            os: linux
+          steps:
+            - checkout: self
+
+            - task: AzureKeyVault@2
+              displayName: Obtain GitHub auth token for PR creation
+              inputs:
+                azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
+                KeyVaultName: rnw-keyvault
+                SecretsFilter: 'githubAuthToken'
+              condition: and(succeeded(), not(${{ parameters.skipGitPush }}))
+
+            - script: |
+                set -euo pipefail
+                if [ -z "$branch" ]; then
+                  echo "No beachball release branch recorded; skipping PR creation."
+                  exit 0
+                fi
+
+                pr_title="📦 applying package updates ***NO_CI***"
+                pr_body="Applying package updates for release build $(Build.BuildNumber)"
+                pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
+
+                if [ -z "$pr_number" ]; then
+                  gh pr create --head "$branch" --base main --title "$pr_title" --body "$pr_body"
+                  echo "Created PR for $branch"
+                  pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
+                else
+                  echo "PR #$pr_number already exists for $branch"
+                fi
+                if [ -n "$pr_number" ]; then
+                  echo "##vso[task.setvariable variable=BeachballPRNumber;isOutput=true]$pr_number"
+                  echo "Recorded PR number $pr_number"
+                fi
+              env:
+                GH_TOKEN: $(githubAuthToken)
+                GH_REPO: microsoft/ado-npm-auth
+                branch: $(releaseBranch)
+
+              displayName: Create or locate beachball release PR
+              name: RecordBeachballPR
+              condition: and(succeeded(), not(${{ parameters.skipGitPush }}))
+
+        - job: WaitForPRMerge
+          dependsOn: CreatePullRequest
+          pool:
+            name: Azure-Pipelines-1ESPT-ExDShared
+            image: ubuntu-latest
+            os: linux
+          variables:
+            BeachballPRNumber: $[ dependencies.CreatePullRequest.outputs['RecordBeachballPR.BeachballPRNumber'] ]
+          steps:
+            - checkout: self
+
+            - task: AzureKeyVault@2
+              displayName: Obtain GitHub auth token for PR creation
+              inputs:
+                azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
+                KeyVaultName: rnw-keyvault
+                SecretsFilter: 'githubAuthToken'
+              condition: and(succeeded(), not(${{ parameters.skipGitPush }}))
+
+            - script: |
+                set -euo pipefail
+                if [ -z "$pr_branch" ]; then
+                  echo "No beachball release branch recorded; skipping PR wait."
+                  exit 0
+                fi
+                if [ -z "$pr_number" ]; then
+                  pr_number=$(gh pr list --head "$pr_branch" --json number --jq '.[0].number' || true)
+                fi
+                if [ -z "$pr_number" ]; then
+                  echo "No PR found for $pr_branch; nothing to wait on."
+                  exit 0
+                fi
+                echo "Waiting for PR #$pr_number to merge..."
+                while true; do
+                  state=$(gh pr view "$pr_number" --json state --jq '.state' || true)
+                  case "$state" in
+                    MERGED)
+                      echo "PR #$pr_number merged."
+                      break
+                      ;;
+                    CLOSED)
+                      echo "PR #$pr_number closed without merge." >&2
+                      exit 1
+                      ;;
+                    *)
+                      echo "PR #$pr_number still open; sleeping 60s."
+                      sleep 60
+                      ;;
+                  esac
+                done
+              env:
+                GH_TOKEN: $(githubAuthToken)
+                GH_REPO: microsoft/ado-npm-auth
+                pr_number: $(BeachballPRNumber)
+                pr_branch: $(releaseBranch)
+
+              displayName: Wait for beachball PR merge
+              condition: and(succeeded(), not(${{ parameters.skipGitPush }}))
+
+
+    - stage: PublishNpmPackages
+      dependsOn: CreatePullRequestAndMerge # Make sure we build and pass tests on all platforms and node versions before publishing
+      jobs:
+        - job: PublishNpmPackages
+          pool:
+            name: Azure-Pipelines-1ESPT-ExDShared
+            image: windows-latest
+            os: windows
+          steps:
+            - task: DownloadPipelineArtifact@2
+              displayName: 'Download packaged npm artifacts'
+              inputs:
+                buildType: 'current'
+                artifact: 'NpmPackedTarballs'
+                path: '$(Pipeline.Workspace)\published-packages'
+            
             - task: 'SFP.release-tasks.custom-build-release-task.EsrpRelease@9'
               displayName: 'ESRP Release to npmjs.com'
               condition: and(succeeded(), ${{ not(parameters.skipNpmPublish) }})
