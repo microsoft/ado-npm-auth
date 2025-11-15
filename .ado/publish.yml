@@ -59,7 +59,7 @@ extends:
         parser: "@typescript-eslint/parser"
         parserOptions: ""
     stages:
-    - stage: build
+    - stage: Verification
       jobs:
         - ${{ each pool in parameters.pools }}:
           - ${{ each nodeVersion in parameters.nodeVersions }}:
@@ -91,8 +91,8 @@ extends:
                   displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
                   condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
-    - stage: BuildForPublish
-      dependsOn: build # Make sure we build and pass tests on all platforms and node versions before publishing
+    - stage: Build
+      dependsOn: Verification # Make sure we build and pass tests on all platforms and node versions before publishing
       jobs:
         - job: Publish
           pool:
@@ -134,7 +134,7 @@ extends:
                 yarn beachball publish --verbose --access public --no-publish --no-push --pack-to-path "$(Pipeline.Workspace)/published-packages" --yes
               displayName: Beachball Publish
 
-            - script: dir /s "$(Pipeline.Workspace)\published-packages"
+            - script: ls "$(Pipeline.Workspace)/published-packages"
               displayName: Show packaged npm artifacts
 
             - script: git status
@@ -155,8 +155,7 @@ extends:
 
     - stage: CreatePullRequestAndMerge
       dependsOn:
-        - build
-        - BuildForPublish
+        - Build
       jobs:
         - job: CreatePullRequest
           pool:
