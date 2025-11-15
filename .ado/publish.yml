@@ -59,103 +59,104 @@ extends:
         parser: "@typescript-eslint/parser"
         parserOptions: ""
     stages:
-    - stage: Verification
-      jobs:
-        - ${{ each pool in parameters.pools }}:
-          - ${{ each nodeVersion in parameters.nodeVersions }}:
-            - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
-              displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
-              pool: ${{ pool }}
-              templateContext:
-                outputs:
-                  # declare the outputs for compliance.
-                  - output: pipelineArtifact
-                    targetPath: $(System.DefaultWorkingDirectory)
-                    artifactName: publish-${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
-              steps:
-                - template: /.ado/prep-node.yml@self
-                  parameters:
-                    nodeVersion: ${{ nodeVersion }}
-
-                - script: yarn install --immutable
-                  displayName: Yarn install (installs package dependencies)
-
-                - script: yarn lage build test lint bundle --reporter=azureDevOps
-                  displayName: Build all
-
-                - task: PowerShell@2
-                  inputs:
-                    targetType: 'inline'
-                    script: |
-                      Get-ChildItem -Recurse -File -Filter 'esbuild.exe' | Remove-Item -Force -ErrorAction SilentlyContinue
-                  displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
-                  condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
-
-    # - stage: Build
-    #   dependsOn: Verification # Make sure we build and pass tests on all platforms and node versions before publishing
+    # - stage: Verification
     #   jobs:
-    #     - job: Publish
-    #       pool:
-    #         name: Azure-Pipelines-1ESPT-ExDShared
-    #         image: ubuntu-latest
-    #         os: linux
-    #       templateContext:
-    #         outputs:
-    #          - output: pipelineArtifact
-    #            targetPath: $(Pipeline.Workspace)/published-packages
-    #            artifactName: NpmPackedTarballs
-    #            displayName: 'Publish npm pack artifacts'
-    #            condition: succeededOrFailed()
+    #     - ${{ each pool in parameters.pools }}:
+    #       - ${{ each nodeVersion in parameters.nodeVersions }}:
+    #         - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+    #           displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
+    #           pool: ${{ pool }}
+    #           templateContext:
+    #             outputs:
+    #               # declare the outputs for compliance.
+    #               - output: pipelineArtifact
+    #                 targetPath: $(System.DefaultWorkingDirectory)
+    #                 artifactName: publish-${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+    #           steps:
+    #             - template: /.ado/prep-node.yml@self
+    #               parameters:
+    #                 nodeVersion: ${{ nodeVersion }}
+
+    #             - script: yarn install --immutable
+    #               displayName: Yarn install (installs package dependencies)
+
+    #             - script: yarn lage build test lint bundle --reporter=azureDevOps
+    #               displayName: Build all
+
+    #             - task: PowerShell@2
+    #               inputs:
+    #                 targetType: 'inline'
+    #                 script: |
+    #                   Get-ChildItem -Recurse -File -Filter 'esbuild.exe' | Remove-Item -Force -ErrorAction SilentlyContinue
+    #               displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
+    #               condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
+
+    - stage: Build
+      # dependsOn: 
+      #  - Verification # Make sure we build and pass tests on all platforms and node versions before publishing
+      jobs:
+        - job: Publish
+          pool:
+            name: Azure-Pipelines-1ESPT-ExDShared
+            image: ubuntu-latest
+            os: linux
+          templateContext:
+            outputs:
+             - output: pipelineArtifact
+               targetPath: $(Pipeline.Workspace)/published-packages
+               artifactName: NpmPackedTarballs
+               displayName: 'Publish npm pack artifacts'
+               condition: succeededOrFailed()
               
-    #       steps:
-    #         - template: /.ado/prep-node.yml@self
-    #           parameters:
-    #             nodeVersion: 24.x
+          steps:
+            - template: /.ado/prep-node.yml@self
+              parameters:
+                nodeVersion: 24.x
 
-    #         - script: yarn install --immutable
-    #           displayName: Yarn Install (Install package dependencies)
+            - script: yarn install --immutable
+              displayName: Yarn Install (Install package dependencies)
 
-    #         - script: yarn lage build bundle --reporter=azureDevOps
-    #           displayName: Build & Bundle
+            - script: yarn lage build bundle --reporter=azureDevOps
+              displayName: Build & Bundle
 
-    #         - task: AzureKeyVault@2
-    #           inputs:
-    #             azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
-    #             KeyVaultName: rnw-keyvault
-    #             SecretsFilter: 'githubAuthToken' # string. Required. Secrets filter. Default: *.  
-    #           displayName: Obtaining secrets for publish
+            - task: AzureKeyVault@2
+              inputs:
+                azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
+                KeyVaultName: rnw-keyvault
+                SecretsFilter: 'githubAuthToken' # string. Required. Secrets filter. Default: *.  
+              displayName: Obtaining secrets for publish
 
-    #         - script: |
-    #             rm -rf "$(Pipeline.Workspace)/published-packages"
-    #             mkdir "$(Pipeline.Workspace)/published-packages"
-    #           displayName: Clear previous packed up packages.
+            - script: |
+                rm -rf "$(Pipeline.Workspace)/published-packages"
+                mkdir "$(Pipeline.Workspace)/published-packages"
+              displayName: Clear previous packed up packages.
 
-    #         - script: |
-    #             yarn beachball publish --verbose --access public --no-publish --no-push --pack-to-path "$(Pipeline.Workspace)/published-packages" --yes
-    #           displayName: Beachball Publish
+            - script: |
+                yarn beachball publish --verbose --access public --no-publish --no-push --pack-to-path "$(Pipeline.Workspace)/published-packages" --yes
+              displayName: Beachball Publish
 
-    #         - script: ls "$(Pipeline.Workspace)/published-packages"
-    #           displayName: Show packaged npm artifacts
+            - script: ls "$(Pipeline.Workspace)/published-packages"
+              displayName: Show packaged npm artifacts
 
-    #         - script: git status
-    #           displayName: Check if there are changes
+            - script: git status
+              displayName: Check if there are changes
 
-    #         - script: |
-    #             git config --global user.email "53619745+rnbot@users.noreply.github.com"
-    #             git config --global user.name "React-Native Bot"
-    #             git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
+            - script: |
+                git config --global user.email "53619745+rnbot@users.noreply.github.com"
+                git config --global user.name "React-Native Bot"
+                git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
 
-    #             git push origin HEAD:$pr_branch --force-with-lease
-    #           env:
-    #             GH_TOKEN: $(githubAuthToken)
-    #             GH_REPO: microsoft/ado-npm-auth
-    #             pr_branch: $(ReleaseBranch)
+                git push origin HEAD:$pr_branch --force-with-lease
+              env:
+                GH_TOKEN: $(githubAuthToken)
+                GH_REPO: microsoft/ado-npm-auth
+                pr_branch: $(ReleaseBranch)
 
-    #           displayName: Push beachball changes to release branch
+              displayName: Push beachball changes to release branch
 
     - stage: CreatePullRequestAndMerge
-      # dependsOn:
-      #   - Build
+      dependsOn:
+        - Build
       jobs:
         - job: CreatePullRequest
           pool:
