@@ -2,6 +2,47 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Fri, 14 Nov 2025 19:10:12 GMT",
+      "version": "0.7.0",
+      "tag": "ado-npm-auth_v0.7.0",
+      "comments": {
+        "patch": [
+          {
+            "author": "jasonmo@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "e2bc23710461b14a52b5137786301a12edc15241",
+            "comment": "ship loose .js files to allow tree shaking, enable eslint support with fixes to increase strictness"
+          },
+          {
+            "author": "matanbobi@gmail.com",
+            "package": "ado-npm-auth",
+            "commit": "db881c81fa5334fb270b8f4498c9639cce313617",
+            "comment": "fix: add missing output and remove redundant url in organization"
+          }
+        ],
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "4d54b8625f0bb432860e2a28aacb2bcd55b32501",
+            "comment": "Use vso.packaging_write permission to support pulling in packages from Azure DevOps upstream feeds"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "d4448b8cc9612caefa3ebc059b140e8a522d51fc",
+            "comment": "Switch from pnpm to yarn v4"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "975c888668cb64c85965ed7dcc52691619ab14e6",
+            "comment": "Version bump"
+          }
+        ]
+      }
+    },
+    {
       "date": "Thu, 16 Oct 2025 22:56:01 GMT",
       "version": "0.6.0",
       "tag": "ado-npm-auth_v0.6.0",

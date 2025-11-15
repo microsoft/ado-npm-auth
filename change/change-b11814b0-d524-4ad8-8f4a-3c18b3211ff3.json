@@ -2,17 +2,17 @@
   "changes": [
     {
       "type": "minor",
-      "comment": "Switch from pnpm to yarn v4",
+      "comment": "Fix release pipeline",
       "packageName": "ado-npm-auth",
       "email": "dannyvv@microsoft.com",
-      "dependentChangeType": "none"
+      "dependentChangeType": "patch"
     },
     {
-      "type": "none",
-      "comment": "Switch from pnpm to yarn v4",
+      "type": "minor",
+      "comment": "Fix release pipeline",
       "packageName": "azureauth",
       "email": "dannyvv@microsoft.com",
-      "dependentChangeType": "none"
+      "dependentChangeType": "patch"
     }
   ]
 }

@@ -14,11 +14,10 @@
     "format": "lage --no-cache lint --write",
     "change": "beachball change",
     "checkchange": "beachball check",
-    "ci": "lage build test lint bundle",
-    "publish:beachball": "beachball publish --bump-deps -m\"📦 applying package updates ***NO_CI***\"  --verbose"
+    "ci": "lage build test lint bundle"
   },
   "devDependencies": {
-    "beachball": "^2.51.1",
+    "beachball": "^2.56.0",
     "lage": "^2.14.15",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"

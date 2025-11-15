@@ -29,7 +29,7 @@ parameters:
         image: ubuntu-latest
         os: linux
       - name: Azure Pipelines
-        vmImage: macos-13
+        vmImage: macos-latest
         os: macOS        
   - name: nodeVersions
     type: object
@@ -93,12 +93,7 @@ extends:
                   inputs:
                     targetType: 'inline'
                     script: |
-                      $storePath = Join-Path -Path "$(System.DefaultWorkingDirectory)" -ChildPath "node_modules/.store"
-                      if (Test-Path -LiteralPath $storePath) {
-                        Get-ChildItem -LiteralPath $storePath -Directory |
-                          Where-Object { $_.Name -like '@esbuild-*' } |
-                          Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-                      }
+                      Get-ChildItem -Recurse -File -Filter 'esbuild.exe' | Remove-Item -Force -ErrorAction SilentlyContinue
                   displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
                   condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
@@ -150,9 +145,12 @@ extends:
                   git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
 
             - script: |
-                if exist "$(Pipeline.Workspace)\published-packages" rd /s /q "$(Pipeline.Workspace)\published-packages"
-                mkdir "$(Pipeline.Workspace)\published-packages"
-                yarn publish:beachball --no-publish --pack-to-path "$(Pipeline.Workspace)\published-packages" $(SkipGitPushPublishArgs) --access public -yes --bump-deps --verbose
+                rm -rf "$(Pipeline.Workspace)/published-packages"
+                mkdir "$(Pipeline.Workspace)/published-packages"
+              displayName: Clear previous packed up packages.
+
+            - script: |
+                yarn beachball publish --messagem "📦 applying package updates ***NO_CI***" --verbose --access public --no-publish --pack-to-path "$(Pipeline.Workspace)/published-packages" $(SkipGitPushPublishArgs) --yes  
               displayName: Beachball Publish
 
             - script: dir /s "$(Pipeline.Workspace)\published-packages"
