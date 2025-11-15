@@ -139,16 +139,22 @@ extends:
               displayName: Show packaged npm artifacts
 
             - script: git status
-              displayName: Check if there are changes
+              displayName: Git Status
+
+            - script: git add --all
+              displayName: Git add --all
+
+            - script: git commit -m "Apply beachball changes"
+              displayName: Git commit
 
             - script: |
                 git config --global user.email "53619745+rnbot@users.noreply.github.com"
                 git config --global user.name "React-Native Bot"
+                echo git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
                 git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
-
-                git add --all
-                git commit -m "Apply beachball changes"
-                git push origin HEAD:$pr_branch --force-with-lease
+                
+                echo git push origin HEAD:$pr_branch --force
+                git push origin HEAD:$pr_branch --force
               env:
                 GH_TOKEN: $(githubAuthToken)
                 GH_REPO: microsoft/ado-npm-auth
