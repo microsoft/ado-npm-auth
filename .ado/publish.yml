@@ -17,6 +17,8 @@ resources:
 variables:
   - name: tags
     value: production,externalfacing
+  - name: ReleaseBranch
+    value: rnbot/beachball/rel$(Build.BuildId)
 
 parameters:
   - name: pools
@@ -29,7 +31,7 @@ parameters:
         image: ubuntu-latest
         os: linux
       - name: Azure Pipelines
-        vmImage: macos-13
+        vmImage: macos-latest
         os: macOS        
   - name: nodeVersions
     type: object
@@ -38,14 +40,6 @@ parameters:
       - 20.x
       - 22.x
       - 24.x
-  - name: skipNpmPublish
-    displayName: Skip Npm Publish
-    type: boolean
-    default: false
-  - name: skipGitPush
-    displayName: Skip Git Push
-    type: boolean
-    default: false
 
 extends:
   template: v1/Office.Official.PipelineTemplate.yml@OfficePipelineTemplates
@@ -65,7 +59,7 @@ extends:
         parser: "@typescript-eslint/parser"
         parserOptions: ""
     stages:
-    - stage: build
+    - stage: Verification
       jobs:
         - ${{ each pool in parameters.pools }}:
           - ${{ each nodeVersion in parameters.nodeVersions }}:
@@ -93,17 +87,13 @@ extends:
                   inputs:
                     targetType: 'inline'
                     script: |
-                      $storePath = Join-Path -Path "$(System.DefaultWorkingDirectory)" -ChildPath "node_modules/.store"
-                      if (Test-Path -LiteralPath $storePath) {
-                        Get-ChildItem -LiteralPath $storePath -Directory |
-                          Where-Object { $_.Name -like '@esbuild-*' } |
-                          Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-                      }
+                      Get-ChildItem -Recurse -File -Filter 'esbuild.exe' | Remove-Item -Force -ErrorAction SilentlyContinue
                   displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
                   condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
-    - stage: publish
-      dependsOn: build # Make sure we build and pass tests on all platforms and node versions before publishing
+    - stage: Publish
+      dependsOn: 
+       - Verification # Make sure we build and pass tests on all platforms and node versions before publishing
       jobs:
         - job: Publish
           pool:
@@ -119,6 +109,8 @@ extends:
                condition: succeededOrFailed()
               
           steps:
+            - checkout: self
+
             - template: /.ado/prep-node.yml@self
               parameters:
                 nodeVersion: 24.x
@@ -129,11 +121,6 @@ extends:
             - script: yarn lage build bundle --reporter=azureDevOps
               displayName: Build & Bundle
 
-            - script: |
-                echo "##vso[task.setvariable variable=SkipGitPushPublishArgs]--no-push"
-              displayName: Enable No-Publish (git)
-              condition: ${{ parameters.skipGitPush }}
-
             - task: AzureKeyVault@2
               inputs:
                 azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
@@ -141,26 +128,42 @@ extends:
                 SecretsFilter: 'githubAuthToken' # string. Required. Secrets filter. Default: *.  
               displayName: Obtaining secrets for publish
 
-            - task: CmdLine@2
-              displayName: Configure git auth for publishing to github
-              inputs:
-                script: |
-                  git config --global user.email "53619745+rnbot@users.noreply.github.com"
-                  git config --global user.name "React-Native Bot"
-                  git remote set-url origin https://rnbot:$(githubAuthToken)@github.com/microsoft/ado-npm-auth
+            - script: |
+                rm -rf "$(Pipeline.Workspace)/published-packages"
+                mkdir "$(Pipeline.Workspace)/published-packages"
+              displayName: Clear previous packed up packages.
 
             - script: |
-                if exist "$(Pipeline.Workspace)\published-packages" rd /s /q "$(Pipeline.Workspace)\published-packages"
-                mkdir "$(Pipeline.Workspace)\published-packages"
-                yarn publish:beachball --no-publish --pack-to-path "$(Pipeline.Workspace)\published-packages" $(SkipGitPushPublishArgs) --access public -yes --bump-deps --verbose
+                git config --global user.email "53619745+rnbot@users.noreply.github.com"
+                git config --global user.name "React-Native Bot"
+                echo git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
+                git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
+              displayName: Git Config
+
+            - script: |
+                yarn beachball publish --message "📦 applying package updates ***NO_CI***" --verbose --access public --no-publish --pack-to-path "$(Pipeline.Workspace)/published-packages" $(SkipGitPushPublishArgs) --yes  
               displayName: Beachball Publish
 
-            - script: dir /s "$(Pipeline.Workspace)\published-packages"
-              displayName: Show packaged npm artifacts
+            - script: ls "$(Pipeline.Workspace)/published-packages"
 
+    - stage: PublishNpmPackages
+      dependsOn: Publish # Make sure we build and pass tests on all platforms and node versions before publishing
+      jobs:
+        - job: PublishNpmPackages
+          pool:
+            name: Azure-Pipelines-1ESPT-ExDShared
+            image: windows-latest
+            os: windows
+          steps:
+            - task: DownloadPipelineArtifact@2
+              displayName: 'Download packaged npm artifacts'
+              inputs:
+                buildType: 'current'
+                artifact: 'NpmPackedTarballs'
+                path: '$(Pipeline.Workspace)\published-packages'
+            
             - task: 'SFP.release-tasks.custom-build-release-task.EsrpRelease@9'
               displayName: 'ESRP Release to npmjs.com'
-              condition: and(succeeded(), ${{ not(parameters.skipNpmPublish) }})
               inputs:
                 connectedservicename: 'ESRP-JSHost3'
                 usemanagedidentity: false

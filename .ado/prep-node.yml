@@ -9,7 +9,6 @@ steps:
     inputs:
       version: ${{ parameters.nodeVersion }}
 
-
   - bash: |
       mv publish.npmrc .npmrc
     displayName: "Configure .npmrc to use CFS"
