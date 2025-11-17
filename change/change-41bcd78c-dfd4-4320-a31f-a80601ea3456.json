@@ -1,25 +1,25 @@
 {
   "changes": [
     {
-      "type": "patch",
+      "type": "minor",
       "comment": "add yarn-v4 plugin for on-demand ado authentication",
       "packageName": "ado-npm-auth",
       "email": "jasonmo@microsoft.com",
       "dependentChangeType": "patch"
     },
     {
-      "type": "patch",
-      "comment": "add yarn-v4 plugin for on-demand ado authentication",
+      "type": "none",
+      "comment": "switch to esbuild 0.27",
       "packageName": "azureauth",
       "email": "jasonmo@microsoft.com",
-      "dependentChangeType": "patch"
+      "dependentChangeType": "none"
     },
     {
-      "type": "patch",
+      "type": "none",
       "comment": "add yarn-v4 plugin for on-demand ado authentication",
-      "packageName": "yarn-plugin-ado-auth",
+      "packageName": "@microsoft/yarn-plugin-ado-auth",
       "email": "jasonmo@microsoft.com",
-      "dependentChangeType": "patch"
+      "dependentChangeType": "none"
     }
   ]
 }
