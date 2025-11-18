@@ -2,6 +2,21 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Tue, 18 Nov 2025 17:55:32 GMT",
+      "version": "0.9.0",
+      "tag": "ado-npm-auth_v0.9.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "jasonmo@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "1f1575588c0baae491ac862b49c7e2f1473c3dc7",
+            "comment": "add yarn-v4 plugin for on-demand ado authentication"
+          }
+        ]
+      }
+    },
+    {
       "date": "Sun, 16 Nov 2025 00:12:40 GMT",
       "version": "0.8.0",
       "tag": "ado-npm-auth_v0.8.0",
