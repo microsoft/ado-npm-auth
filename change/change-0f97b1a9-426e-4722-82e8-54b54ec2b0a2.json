@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Add Linux x64 and arm64 platform support",
+      "packageName": "ado-npm-auth",
+      "email": "sverre.johansen@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
