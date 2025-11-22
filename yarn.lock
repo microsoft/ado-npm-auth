@@ -2418,7 +2418,7 @@ __metadata:
     node-downloader-helper: "npm:^2.1.9"
     prettier: "npm:^3.5.3"
     typescript: "npm:^5.8.2"
-    vite: "npm:~5.3.6"
+    vite: "npm:~5.4.21"
     vitest: "npm:^2.1.9"
   bin:
     azureauth: ./scripts/azureauth.cjs
@@ -5991,7 +5991,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.39, postcss@npm:^8.4.43":
+"postcss@npm:^8.4.43":
   version: 8.5.6
   resolution: "postcss@npm:8.5.6"
   dependencies:
@@ -6318,7 +6318,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:^4.13.0, rollup@npm:^4.20.0":
+"rollup@npm:^4.20.0":
   version: 4.53.2
   resolution: "rollup@npm:4.53.2"
   dependencies:
@@ -7425,7 +7425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.0.0":
+"vite@npm:^5.0.0, vite@npm:~5.4.21":
   version: 5.4.21
   resolution: "vite@npm:5.4.21"
   dependencies:
@@ -7465,46 +7465,6 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 10c0/468336a1409f728b464160cbf02672e72271fb688d0e605e776b74a89d27e1029509eef3a3a6c755928d8011e474dbf234824d054d07960be5f23cd176bc72de
-  languageName: node
-  linkType: hard
-
-"vite@npm:~5.3.6":
-  version: 5.3.6
-  resolution: "vite@npm:5.3.6"
-  dependencies:
-    esbuild: "npm:^0.21.3"
-    fsevents: "npm:~2.3.3"
-    postcss: "npm:^8.4.39"
-    rollup: "npm:^4.13.0"
-  peerDependencies:
-    "@types/node": ^18.0.0 || >=20.0.0
-    less: "*"
-    lightningcss: ^1.21.0
-    sass: "*"
-    stylus: "*"
-    sugarss: "*"
-    terser: ^5.4.0
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  peerDependenciesMeta:
-    "@types/node":
-      optional: true
-    less:
-      optional: true
-    lightningcss:
-      optional: true
-    sass:
-      optional: true
-    stylus:
-      optional: true
-    sugarss:
-      optional: true
-    terser:
-      optional: true
-  bin:
-    vite: bin/vite.js
-  checksum: 10c0/d2cf20e17c8e8dd975fbf6eeb628ea3c594a78d4586619e26b2f46836454f3d96699469b5f45e7389386435dc724192b2d3607de26100a5330e64e932f5ac529
   languageName: node
   linkType: hard
 
