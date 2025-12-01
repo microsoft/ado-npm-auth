@@ -26,7 +26,6 @@ import { execSync } from "node:child_process";
 
 import { AZURE_AUTH_VERSION } from "./install.js";
 
-// When bundled to CJS, __dirname is available
 const PACKAGES_DIR = path.resolve(__dirname, "..", "..");
 const MAIN_PACKAGE_DIR = path.resolve(__dirname, "..");
 
@@ -66,7 +65,6 @@ async function downloadFile(url: string, destPath: string): Promise<void> {
       `Failed to download ${url}: ${response.status} ${response.statusText}`,
     );
   }
-  // Convert web stream to Node.js stream
   const nodeStream = Readable.fromWeb(response.body as any);
   await pipeline(nodeStream, createWriteStream(destPath));
 }
