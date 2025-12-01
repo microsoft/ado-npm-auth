@@ -1,0 +1,16 @@
+{
+  "name": "@azureauth/darwin-x64",
+  "version": "0.8.4",
+  "description": "The macOS x64 binary for azureauth",
+  "repository": {
+    "url": "https://github.com/microsoft/ado-npm-auth"
+  },
+  "license": "MIT",
+  "preferUnplugged": true,
+  "os": ["darwin"],
+  "cpu": ["x64"],
+  "files": [
+    "bin",
+    "LICENSE"
+  ]
+}
