@@ -7,8 +7,12 @@
   },
   "license": "MIT",
   "preferUnplugged": true,
-  "os": ["darwin"],
-  "cpu": ["arm64"],
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
   "files": [
     "bin",
     "LICENSE"

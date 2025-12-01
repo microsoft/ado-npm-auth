@@ -7,8 +7,12 @@
   },
   "license": "MIT",
   "preferUnplugged": true,
-  "os": ["win32"],
-  "cpu": ["x64"],
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "x64"
+  ],
   "files": [
     "bin",
     "LICENSE"
