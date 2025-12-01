@@ -1,0 +1,25 @@
+{
+  "changes": [
+    {
+      "type": "none",
+      "comment": "Add platform-specific binary package for azureauth",
+      "packageName": "@azureauth/darwin-arm64",
+      "email": "sverre.johansen@microsoft.com",
+      "dependentChangeType": "none"
+    },
+    {
+      "type": "none",
+      "comment": "Add platform-specific binary package for azureauth",
+      "packageName": "@azureauth/darwin-x64",
+      "email": "sverre.johansen@microsoft.com",
+      "dependentChangeType": "none"
+    },
+    {
+      "type": "none",
+      "comment": "Add platform-specific binary package for azureauth",
+      "packageName": "@azureauth/win32-x64",
+      "email": "sverre.johansen@microsoft.com",
+      "dependentChangeType": "none"
+    }
+  ]
+}
