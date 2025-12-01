@@ -4,19 +4,11 @@ import fs from "node:fs";
 import { DownloaderHelper } from "node-downloader-helper";
 import decompress from "decompress";
 
+import { AZURE_AUTH_VERSION, PLATFORM_PACKAGES } from "./constants.js";
+
 declare const require: NodeRequire;
 
-export const AZURE_AUTH_VERSION = "0.8.4";
-
-const PLATFORM_PACKAGES: Record<string, Record<string, string>> = {
-  darwin: {
-    arm64: "@azureauth/darwin-arm64",
-    x64: "@azureauth/darwin-x64",
-  },
-  win32: {
-    x64: "@azureauth/win32-x64",
-  },
-};
+export { AZURE_AUTH_VERSION };
 
 /**
  * Check if the binary is available via optional dependency.

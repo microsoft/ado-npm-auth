@@ -3,17 +3,9 @@ import process from "node:process";
 import fs from "node:fs";
 import { createRequire } from "node:module";
 
-const require = createRequire(import.meta.url);
+import { PLATFORM_PACKAGES } from "./constants.js";
 
-const PLATFORM_PACKAGES: Record<string, Record<string, string>> = {
-  darwin: {
-    arm64: "@azureauth/darwin-arm64",
-    x64: "@azureauth/darwin-x64",
-  },
-  win32: {
-    x64: "@azureauth/win32-x64",
-  },
-};
+const require = createRequire(import.meta.url);
 
 /**
  * Try to find the binary from the platform-specific optional dependency.
@@ -67,6 +59,3 @@ export const azureAuthCommand = () => {
 
   return azureauth;
 };
-
-// Export for use by install.ts
-export { getBinaryFromOptionalDep };
