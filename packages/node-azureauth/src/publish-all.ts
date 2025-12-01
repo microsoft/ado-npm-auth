@@ -14,7 +14,7 @@
  *
  * Prerequisites:
  * - Must be logged in to npm (`npm login`)
- * - Must have publish access to @azureauth scope
+ * - Must have publish access to @microsoft scope
  */
 
 import fs from "node:fs";
@@ -151,9 +151,9 @@ async function main(): Promise<void> {
   const mainPkg = JSON.parse(fs.readFileSync(mainPkgPath, "utf-8"));
 
   mainPkg.optionalDependencies = {
-    "@azureauth/darwin-arm64": AZURE_AUTH_VERSION,
-    "@azureauth/darwin-x64": AZURE_AUTH_VERSION,
-    "@azureauth/win32-x64": AZURE_AUTH_VERSION,
+    "@microsoft/azureauth-darwin-arm64": AZURE_AUTH_VERSION,
+    "@microsoft/azureauth-darwin-x64": AZURE_AUTH_VERSION,
+    "@microsoft/azureauth-win32-x64": AZURE_AUTH_VERSION,
   };
 
   fs.writeFileSync(mainPkgPath, JSON.stringify(mainPkg, null, 2) + "\n");

@@ -1,5 +1,5 @@
 {
-  "name": "@azureauth/win32-x64",
+  "name": "@microsoft/azureauth-win32-x64",
   "version": "0.8.4",
   "description": "The Windows x64 binary for azureauth",
   "repository": {

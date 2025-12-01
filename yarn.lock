@@ -165,24 +165,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azureauth/darwin-arm64@workspace:packages/azureauth-darwin-arm64":
-  version: 0.0.0-use.local
-  resolution: "@azureauth/darwin-arm64@workspace:packages/azureauth-darwin-arm64"
-  languageName: unknown
-  linkType: soft
-
-"@azureauth/darwin-x64@workspace:packages/azureauth-darwin-x64":
-  version: 0.0.0-use.local
-  resolution: "@azureauth/darwin-x64@workspace:packages/azureauth-darwin-x64"
-  languageName: unknown
-  linkType: soft
-
-"@azureauth/win32-x64@workspace:packages/azureauth-win32-x64":
-  version: 0.0.0-use.local
-  resolution: "@azureauth/win32-x64@workspace:packages/azureauth-win32-x64"
-  languageName: unknown
-  linkType: soft
-
 "@babel/code-frame@npm:^7.0.0":
   version: 7.27.1
   resolution: "@babel/code-frame@npm:7.27.1"
@@ -708,6 +690,24 @@ __metadata:
   checksum: 10c0/f9e538f302b63c0ebc06eecb1dd9918dd4289ed36147a0ddce35d6ea4d7ebbda243cda7b2213b6a5e1d8087a298d5cf630fb2bd39329cdecb82017023f6081a0
   languageName: node
   linkType: hard
+
+"@microsoft/azureauth-darwin-arm64@workspace:packages/azureauth-darwin-arm64":
+  version: 0.0.0-use.local
+  resolution: "@microsoft/azureauth-darwin-arm64@workspace:packages/azureauth-darwin-arm64"
+  languageName: unknown
+  linkType: soft
+
+"@microsoft/azureauth-darwin-x64@workspace:packages/azureauth-darwin-x64":
+  version: 0.0.0-use.local
+  resolution: "@microsoft/azureauth-darwin-x64@workspace:packages/azureauth-darwin-x64"
+  languageName: unknown
+  linkType: soft
+
+"@microsoft/azureauth-win32-x64@workspace:packages/azureauth-win32-x64":
+  version: 0.0.0-use.local
+  resolution: "@microsoft/azureauth-win32-x64@workspace:packages/azureauth-win32-x64"
+  languageName: unknown
+  linkType: soft
 
 "@microsoft/eslint-plugin-sdl@npm:^1.1.0":
   version: 1.1.0

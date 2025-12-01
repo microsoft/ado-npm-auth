@@ -1,5 +1,5 @@
 {
-  "name": "@azureauth/darwin-arm64",
+  "name": "@microsoft/azureauth-darwin-arm64",
   "version": "0.8.4",
   "description": "The macOS ARM64 binary for azureauth",
   "repository": {
