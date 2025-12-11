@@ -91,7 +91,7 @@ extends:
                   displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
                   condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
-    - stage: Publish
+    - stage: Build
       dependsOn: 
        - Verification # Make sure we build and pass tests on all platforms and node versions before publishing
       jobs:
@@ -134,20 +134,148 @@ extends:
               displayName: Clear previous packed up packages.
 
             - script: |
+                yarn beachball publish --verbose --access public --no-publish --no-push --pack-to-path "$(Pipeline.Workspace)/published-packages" --yes
+              displayName: Beachball Publish
+
+            - script: ls "$(Pipeline.Workspace)/published-packages"
+              displayName: Show packaged npm artifacts
+
+            - script: |
                 git config --global user.email "53619745+rnbot@users.noreply.github.com"
                 git config --global user.name "React-Native Bot"
                 echo git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
                 git remote set-url origin https://rnbot:$GH_TOKEN@github.com/microsoft/ado-npm-auth
               displayName: Git Config
 
-            - script: |
-                yarn beachball publish --message "📦 applying package updates ***NO_CI***" --verbose --access public --no-publish --pack-to-path "$(Pipeline.Workspace)/published-packages" $(SkipGitPushPublishArgs) --yes  
-              displayName: Beachball Publish
+            - script: git status
+              displayName: git status
 
-            - script: ls "$(Pipeline.Workspace)/published-packages"
+            - script: git add --all
+              displayName: git add --all
+
+            - script: git commit -m "Apply beachball changes"
+              displayName: git commit
+
+            - script: git log -10
+              displayName: git log
+
+            - script: |
+                echo git push origin HEAD:refs/heads/$pr_branch --force-with-lease
+                git push origin HEAD:refs/heads/$pr_branch --force-with-lease
+              env:
+                GH_TOKEN: $(githubAuthToken)
+                GH_REPO: microsoft/ado-npm-auth
+                pr_branch: $(ReleaseBranch)
+              displayName: git push
+
+    - stage: CreatePullRequestAndMerge
+      dependsOn:
+        - Build
+      jobs:
+        - job: CreatePullRequest
+          pool:
+            name: Azure-Pipelines-1ESPT-ExDShared
+            image: ubuntu-latest
+            os: linux
+          steps:
+            - checkout: self
+
+            - task: AzureKeyVault@2
+              displayName: Obtain GitHub auth token for PR creation
+              inputs:
+                azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
+                KeyVaultName: rnw-keyvault
+                SecretsFilter: 'githubAuthToken'
+
+            - script: |
+                set -euo pipefail
+                if [ -z "$branch" ]; then
+                  echo "No beachball release branch recorded; skipping PR creation."
+                  exit 0
+                fi
+
+                pr_title="📦 applying package updates ***NO_CI***"
+                pr_body="Applying package updates for release build $(Build.BuildNumber)"
+                pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
+
+                if [ -z "$pr_number" ]; then
+                  gh pr create --head "$branch" --base main --title "$pr_title" --body "$pr_body"
+                  echo "Created PR for $branch"
+                  pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
+                else
+                  echo "PR #$pr_number already exists for $branch"
+                fi
+                if [ -n "$pr_number" ]; then
+                  echo "##vso[task.setvariable variable=BeachballPRNumber;isOutput=true]$pr_number"
+                  echo "Recorded PR number $pr_number"
+                fi
+              env:
+                GH_TOKEN: $(githubAuthToken)
+                GH_REPO: microsoft/ado-npm-auth
+                branch: $(releaseBranch)
+
+              displayName: Create or locate beachball release PR
+              name: RecordBeachballPR
+
+        - job: WaitForPRMerge
+          dependsOn: CreatePullRequest
+          pool:
+            name: Azure-Pipelines-1ESPT-ExDShared
+            image: ubuntu-latest
+            os: linux
+          variables:
+            BeachballPRNumber: $[ dependencies.CreatePullRequest.outputs['RecordBeachballPR.BeachballPRNumber'] ]
+          steps:
+            - checkout: self
+
+            - task: AzureKeyVault@2
+              displayName: Obtain GitHub auth token for PR creation
+              inputs:
+                azureSubscription: 'CXE - RNW CI & Anomaly-Detection (8735cced-c5b3-4da5-867b-2c3f680273c8)'
+                KeyVaultName: rnw-keyvault
+                SecretsFilter: 'githubAuthToken'
+
+            - script: |
+                set -euo pipefail
+                if [ -z "$pr_branch" ]; then
+                  echo "No beachball release branch recorded; skipping PR wait."
+                  exit 0
+                fi
+                if [ -z "$pr_number" ]; then
+                  pr_number=$(gh pr list --head "$pr_branch" --json number --jq '.[0].number' || true)
+                fi
+                if [ -z "$pr_number" ]; then
+                  echo "No PR found for $pr_branch; nothing to wait on."
+                  exit 0
+                fi
+                echo "Waiting for PR #$pr_number to merge at https://github.com/microsoft/ado-npm-auth/pull/$pr_number ..."
+                while true; do
+                  state=$(gh pr view "$pr_number" --json state --jq '.state' || true)
+                  case "$state" in
+                    MERGED)
+                      echo "PR #$pr_number merged."
+                      break
+                      ;;
+                    CLOSED)
+                      echo "PR #$pr_number closed without merge." >&2
+                      exit 1
+                      ;;
+                    *)
+                      echo "[$(date +"%H:%M:%S")] PR #$pr_number still open. Please merge: https://github.com/microsoft/ado-npm-auth/pull/$pr_number ; sleeping 2 minutes."
+                      sleep 120
+                      ;;
+                  esac
+                done
+              env:
+                GH_TOKEN: $(githubAuthToken)
+                GH_REPO: microsoft/ado-npm-auth
+                pr_number: $(BeachballPRNumber)
+                pr_branch: $(releaseBranch)
+
+              displayName: Wait for beachball PR merge
 
     - stage: PublishNpmPackages
-      dependsOn: Publish # Make sure we build and pass tests on all platforms and node versions before publishing
+      dependsOn: CreatePullRequestAndMerge # Make sure we build and pass tests on all platforms and node versions before publishing
       jobs:
         - job: PublishNpmPackages
           pool:

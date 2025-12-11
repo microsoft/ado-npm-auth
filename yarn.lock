@@ -2439,25 +2439,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"beachball@npm:^2.56.0":
-  version: 2.56.0
-  resolution: "beachball@npm:2.56.0"
+"beachball@npm:^2.60.1":
+  version: 2.60.1
+  resolution: "beachball@npm:2.60.1"
   dependencies:
     cosmiconfig: "npm:^9.0.0"
     execa: "npm:^5.0.0"
     fs-extra: "npm:^11.1.1"
-    lodash: "npm:^4.17.15"
     minimatch: "npm:^3.0.4"
     p-graph: "npm:^1.1.2"
     p-limit: "npm:^3.0.2"
     prompts: "npm:^2.4.2"
     semver: "npm:^7.0.0"
     toposort: "npm:^2.0.2"
-    workspace-tools: "npm:^0.38.2"
+    workspace-tools: "npm:^0.40.0"
     yargs-parser: "npm:^21.0.0"
   bin:
     beachball: bin/beachball.js
-  checksum: 10c0/79a4c033d927a189cb203339a770301819fd09497404901b39ded8f28208664654f0d38b36e8355fc4ffc9622690fe21c6cf826ee95e6cfded3041af3d183ed1
+  checksum: 10c0/3552d854862cf6aa01d66b19d4d438327ee4bd1487df07d4cbcbc3ea0f8199bb06421499c6a5220653d196912d878a247f7638f59dd5f5df1e63975010eaf556
   languageName: node
   linkType: hard
 
@@ -5173,7 +5172,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.17.20":
+"lodash@npm:^4.17.20":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
@@ -6403,7 +6402,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
-    beachball: "npm:^2.56.0"
+    beachball: "npm:^2.60.1"
     lage: "npm:^2.14.15"
     prettier: "npm:^3.5.3"
     typescript: "npm:^5.8.2"
@@ -7687,7 +7686,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workspace-tools@npm:^0.38.0, workspace-tools@npm:^0.38.2":
+"workspace-tools@npm:^0.38.0":
   version: 0.38.4
   resolution: "workspace-tools@npm:0.38.4"
   dependencies:
@@ -7699,6 +7698,21 @@ __metadata:
     js-yaml: "npm:^4.1.0"
     micromatch: "npm:^4.0.0"
   checksum: 10c0/a61e8bbd2fb4e6c9c8d01b1f1527e2954f14abbcdf5c253ac9538ba462d844ffbf557ce8d262b9b79cfbdc34307a5b37b927725e01a976b3bf9da1bcef22bfe2
+  languageName: node
+  linkType: hard
+
+"workspace-tools@npm:^0.40.0":
+  version: 0.40.0
+  resolution: "workspace-tools@npm:0.40.0"
+  dependencies:
+    "@yarnpkg/lockfile": "npm:^1.1.0"
+    fast-glob: "npm:^3.3.1"
+    git-url-parse: "npm:^16.0.0"
+    globby: "npm:^11.0.0"
+    jju: "npm:^1.4.0"
+    js-yaml: "npm:^4.1.0"
+    micromatch: "npm:^4.0.0"
+  checksum: 10c0/5454ea2a85be161fd90c6b3948afe9bedb5e1e2a678147cffb43ca6b7d6a7b8292e7f1cce48684c32e067011f2b9c58f3efc41eb9b3696de94a7e235b0af4912
   languageName: node
   linkType: hard
 
