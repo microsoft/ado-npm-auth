@@ -17,7 +17,7 @@
     "ci": "lage build test lint bundle"
   },
   "devDependencies": {
-    "beachball": "^2.56.0",
+    "beachball": "^2.60.1",
     "lage": "^2.14.15",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"

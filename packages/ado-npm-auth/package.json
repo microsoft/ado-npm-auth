@@ -32,7 +32,7 @@
     "azureauth": "workspace:^",
     "js-yaml": "^4.1.0",
     "tslib": "^2.8.1",
-    "workspace-tools": "^0.38.0"
+    "workspace-tools": "^0.40.0"
   },
   "devDependencies": {
     "@microsoft/eslint-plugin-sdl": "^1.1.0",
