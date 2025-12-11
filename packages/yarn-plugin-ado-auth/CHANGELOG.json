@@ -1,0 +1,20 @@
+{
+  "name": "@microsoft/yarn-plugin-ado-auth",
+  "entries": [
+    {
+      "date": "Thu, 11 Dec 2025 22:16:10 GMT",
+      "version": "0.1.1",
+      "tag": "@microsoft/yarn-plugin-ado-auth_v0.1.1",
+      "comments": {
+        "none": [
+          {
+            "author": "jasonmo@microsoft.com",
+            "package": "@microsoft/yarn-plugin-ado-auth",
+            "commit": "1f1575588c0baae491ac862b49c7e2f1473c3dc7",
+            "comment": "add yarn-v4 plugin for on-demand ado authentication"
+          }
+        ]
+      }
+    }
+  ]
+}
