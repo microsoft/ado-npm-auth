@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Thu, 11 Dec 2025 21:18:58 GMT",
+      "version": "0.13.0",
+      "tag": "azureauth_v0.13.0",
+      "comments": {
+        "none": [
+          {
+            "author": "jasonmo@microsoft.com",
+            "package": "azureauth",
+            "commit": "1f1575588c0baae491ac862b49c7e2f1473c3dc7",
+            "comment": "switch to esbuild 0.27"
+          }
+        ]
+      }
+    },
+    {
       "date": "Sun, 16 Nov 2025 00:12:40 GMT",
       "version": "0.13.0",
       "tag": "azureauth_v0.13.0",

@@ -2,6 +2,29 @@
   "name": "ado-npm-auth",
   "entries": [
     {
+      "date": "Thu, 11 Dec 2025 21:18:58 GMT",
+      "version": "0.9.0",
+      "tag": "ado-npm-auth_v0.9.0",
+      "comments": {
+        "patch": [
+          {
+            "author": "jasonmo@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "55f63fbbc9ea6f3f84da7b8c135d135d138b64de",
+            "comment": "fix __dirname usage, switch to ESM equivalent"
+          }
+        ],
+        "minor": [
+          {
+            "author": "jasonmo@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "1f1575588c0baae491ac862b49c7e2f1473c3dc7",
+            "comment": "add yarn-v4 plugin for on-demand ado authentication"
+          }
+        ]
+      }
+    },
+    {
       "date": "Sun, 16 Nov 2025 00:12:40 GMT",
       "version": "0.8.0",
       "tag": "ado-npm-auth_v0.8.0",

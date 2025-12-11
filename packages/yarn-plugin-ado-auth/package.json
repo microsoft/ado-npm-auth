@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/yarn-plugin-ado-auth",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Yarn plugin to enable Azure DevOps authentication for private npm registries.",
   "repository": "https://github.com/microsoft/ado-npm-auth",
   "license": "MIT",
@@ -21,7 +21,7 @@
     "eslint": "eslint ."
   },
   "dependencies": {
-    "ado-npm-auth": "workspace:^"
+    "ado-npm-auth": "^0.9.0"
   },
   "devDependencies": {
     "@microsoft/eslint-plugin-sdl": "^1.1.0",
