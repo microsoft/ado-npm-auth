@@ -1,8 +1,20 @@
 # Change Log - ado-npm-auth
 
-<!-- This log was last generated on Sun, 16 Nov 2025 00:12:40 GMT and should not be manually modified. -->
+<!-- This log was last generated on Fri, 12 Dec 2025 00:37:25 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.9.0
+
+Fri, 12 Dec 2025 00:37:25 GMT
+
+### Minor changes
+
+- add yarn-v4 plugin for on-demand ado authentication (jasonmo@microsoft.com)
+
+### Patches
+
+- fix __dirname usage, switch to ESM equivalent (jasonmo@microsoft.com)
 
 ## 0.8.0
 
