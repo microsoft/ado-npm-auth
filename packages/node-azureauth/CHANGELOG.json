@@ -2,6 +2,21 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Fri, 12 Dec 2025 22:56:07 GMT",
+      "version": "0.14.0",
+      "tag": "azureauth_v0.14.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "198982749+Copilot@users.noreply.github.com",
+            "package": "azureauth",
+            "commit": "6acdc45af7349e0f809d88c0e6a68671c4d46844",
+            "comment": "Bump vite from 5.3.6 to 5.4.21"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 12 Dec 2025 20:36:14 GMT",
       "version": "0.13.0",
       "tag": "azureauth_v0.13.0",
