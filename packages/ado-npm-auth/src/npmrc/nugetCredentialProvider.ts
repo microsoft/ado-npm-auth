@@ -1,12 +1,13 @@
 import os from "os";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { downloadFile } from "../utils/request.js";
 import { execProcess } from "../utils/exec.js";
 
 const CredentialProviderVersion = "1.4.1";
 const OutputDir = path.join(
-  __dirname,
+  path.dirname(fileURLToPath(import.meta.url)),
   "..",
   ".bin",
   "CredentialProvider.Microsoft",
