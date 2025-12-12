@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Bump vite from 5.3.6 to 5.4.21",
+      "packageName": "azureauth",
+      "email": "198982749+Copilot@users.noreply.github.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
