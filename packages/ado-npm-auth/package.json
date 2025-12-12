@@ -1,6 +1,6 @@
 {
   "name": "ado-npm-auth",
-  "version": "0.6.0",
+  "version": "0.8.0",
   "description": "The ado-npm-auth package can automatically use the azureauth CLI to fetch tokens and update a user's .npmrc file for authenticating to ADO package feeds.",
   "repository": "https://github.com/microsoft/ado-npm-auth",
   "license": "MIT",
@@ -41,7 +41,7 @@
     "@types/node": "^20.17.28",
     "@types/npmcli__config": "^6.0.3",
     "@types/yargs": "^17.0.33",
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.27.0",
     "eslint": "^9.39.1",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2",

@@ -1,8 +1,31 @@
 # Change Log - ado-npm-auth
 
-<!-- This log was last generated on Thu, 16 Oct 2025 22:56:01 GMT and should not be manually modified. -->
+<!-- This log was last generated on Sun, 16 Nov 2025 00:12:40 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.8.0
+
+Sun, 16 Nov 2025 00:12:40 GMT
+
+### Minor changes
+
+- Fix release pipeline (dannyvv@microsoft.com)
+
+## 0.7.0
+
+Fri, 14 Nov 2025 19:10:12 GMT
+
+### Minor changes
+
+- Use vso.packaging_write permission to support pulling in packages from Azure DevOps upstream feeds (dannyvv@microsoft.com)
+- Switch from pnpm to yarn v4 (dannyvv@microsoft.com)
+- Version bump (dannyvv@microsoft.com)
+
+### Patches
+
+- ship loose .js files to allow tree shaking, enable eslint support with fixes to increase strictness (jasonmo@microsoft.com)
+- fix: add missing output and remove redundant url in organization (matanbobi@gmail.com)
 
 ## 0.6.0
 

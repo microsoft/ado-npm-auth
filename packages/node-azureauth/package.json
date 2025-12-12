@@ -1,6 +1,6 @@
 {
   "name": "azureauth",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "description": "node-azure auth wrapps the AzureAuth CLI wrapper for performing AAD Authentication",
   "bin": "./scripts/azureauth.cjs",
   "repository": {
@@ -40,7 +40,7 @@
     "@types/decompress": "^4.2.7",
     "@types/node": "^20.17.28",
     "decompress": "^4.2.1",
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.27.0",
     "execa": "^7.2.0",
     "node-downloader-helper": "^2.1.9",
     "prettier": "^3.5.3",

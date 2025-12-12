@@ -2,9 +2,9 @@
   "changes": [
     {
       "type": "patch",
-      "comment": "fix: add missing output and remove redundant url in organization",
+      "comment": "fix __dirname usage, switch to ESM equivalent",
       "packageName": "ado-npm-auth",
-      "email": "matanbobi@gmail.com",
+      "email": "jasonmo@microsoft.com",
       "dependentChangeType": "patch"
     }
   ]
