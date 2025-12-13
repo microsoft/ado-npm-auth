@@ -1,4 +1,4 @@
-import { release, platform } from "os";
+import { release, platform } from "node:os";
 
 /**
  * Determine if the current machine's platform is WSL

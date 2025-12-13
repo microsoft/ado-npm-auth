@@ -21,7 +21,7 @@
     "eslint": "eslint ."
   },
   "dependencies": {
-    "ado-npm-auth": "workspace:^"
+    "@microsoft/ado-npm-auth-lib": "workspace:^"
   },
   "devDependencies": {
     "@microsoft/eslint-plugin-sdl": "^1.1.0",

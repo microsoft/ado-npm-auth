@@ -1,9 +1,9 @@
-import { arch, platform } from "os";
+import { arch, platform } from "node:os";
+import { spawnSync } from "node:child_process";
 import { exec } from "../utils/exec.js";
 import { isSupportedPlatformAndArchitecture } from "./is-supported-platform-and-architecture.js";
 import { azureAuthCommand } from "./azureauth-command.js";
 import { isWsl } from "../utils/is-wsl.js";
-import { spawnSync } from "child_process";
 import { isAzureAuthInstalled } from "./is-azureauth-installed.js";
 
 export type AdoPatOptions = {

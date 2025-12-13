@@ -1,4 +1,4 @@
-import { platform, arch } from "os";
+import { platform, arch } from "node:os";
 import { isWsl } from "../utils/is-wsl.js";
 
 export type TelemetryProperties = {

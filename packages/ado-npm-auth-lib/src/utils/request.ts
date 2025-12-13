@@ -1,7 +1,7 @@
-import https, { type RequestOptions } from "https";
-import type { OutgoingHttpHeaders } from "http";
-import fs from "fs";
-import path from "path";
+import https, { type RequestOptions } from "node:https";
+import type { OutgoingHttpHeaders } from "node:http";
+import fs from "node:fs";
+import path from "node:path";
 
 const defaultOptions: RequestOptions = {
   port: 443,

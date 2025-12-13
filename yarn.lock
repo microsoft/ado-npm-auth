@@ -691,6 +691,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@microsoft/ado-npm-auth-lib@workspace:^, @microsoft/ado-npm-auth-lib@workspace:packages/ado-npm-auth-lib":
+  version: 0.0.0-use.local
+  resolution: "@microsoft/ado-npm-auth-lib@workspace:packages/ado-npm-auth-lib"
+  dependencies:
+    "@microsoft/eslint-plugin-sdl": "npm:^1.1.0"
+    "@npmcli/config": "npm:^10.1.0"
+    "@rnx-kit/eslint-plugin": "npm:^0.9.3"
+    "@types/js-yaml": "npm:4.0.9"
+    "@types/node": "npm:^20.17.28"
+    "@types/npmcli__config": "npm:^6.0.3"
+    "@types/yargs": "npm:^17.0.33"
+    azureauth: "workspace:^"
+    esbuild: "npm:^0.27.0"
+    eslint: "npm:^9.39.1"
+    js-yaml: "npm:^4.1.0"
+    prettier: "npm:^3.5.3"
+    tslib: "npm:^2.8.1"
+    typescript: "npm:^5.8.2"
+    vitest: "npm:^2.1.9"
+    workspace-tools: "npm:^0.40.0"
+    yargs: "npm:^17.7.2"
+  bin:
+    ado-npm-auth-lib: ./bin/index.js
+  languageName: unknown
+  linkType: soft
+
 "@microsoft/eslint-plugin-sdl@npm:^1.1.0":
   version: 1.1.0
   resolution: "@microsoft/eslint-plugin-sdl@npm:1.1.0"
@@ -708,13 +734,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@microsoft/yarn-plugin-ado-auth@workspace:packages/yarn-plugin-ado-auth"
   dependencies:
+    "@microsoft/ado-npm-auth-lib": "workspace:^"
     "@microsoft/eslint-plugin-sdl": "npm:^1.1.0"
     "@rnx-kit/eslint-plugin": "npm:^0.9.3"
     "@rnx-kit/tsconfig": "npm:^2.1.1"
     "@types/node": "npm:^20.17.28"
     "@yarnpkg/cli": "npm:^4.11.0"
     "@yarnpkg/core": "npm:^4.5.0"
-    ado-npm-auth: "workspace:^"
     esbuild: "npm:^0.27.0"
     eslint: "npm:^9.39.1"
     prettier: "npm:^3.5.3"
@@ -2133,26 +2159,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ado-npm-auth@workspace:^, ado-npm-auth@workspace:packages/ado-npm-auth":
+"ado-npm-auth@workspace:packages/ado-npm-auth":
   version: 0.0.0-use.local
   resolution: "ado-npm-auth@workspace:packages/ado-npm-auth"
   dependencies:
+    "@microsoft/ado-npm-auth-lib": "workspace:^"
     "@microsoft/eslint-plugin-sdl": "npm:^1.1.0"
-    "@npmcli/config": "npm:^10.1.0"
-    "@rnx-kit/eslint-plugin": "npm:^0.9.3"
-    "@types/js-yaml": "npm:4.0.9"
     "@types/node": "npm:^20.17.28"
-    "@types/npmcli__config": "npm:^6.0.3"
-    "@types/yargs": "npm:^17.0.33"
     azureauth: "workspace:^"
     esbuild: "npm:^0.27.0"
     eslint: "npm:^9.39.1"
-    js-yaml: "npm:^4.1.0"
     prettier: "npm:^3.5.3"
-    tslib: "npm:^2.8.1"
     typescript: "npm:^5.8.2"
-    vitest: "npm:^2.1.9"
-    workspace-tools: "npm:^0.40.0"
     yargs: "npm:^17.7.2"
   bin:
     ado-npm-auth: ./bin/index.js
