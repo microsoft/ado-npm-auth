@@ -4,7 +4,33 @@ import fs from "node:fs";
 import { DownloaderHelper } from "node-downloader-helper";
 import decompress from "decompress";
 
-const AZURE_AUTH_VERSION = "0.8.4";
+import { AZURE_AUTH_VERSION, PLATFORM_PACKAGES } from "./constants.js";
+
+declare const require: NodeRequire;
+
+export { AZURE_AUTH_VERSION };
+
+/**
+ * Check if the binary is available via optional dependency.
+ */
+function isOptionalDepInstalled(): boolean {
+  const platformPackage = PLATFORM_PACKAGES[process.platform]?.[process.arch];
+  if (!platformPackage) {
+    return false;
+  }
+
+  const binaryName =
+    process.platform === "win32" ? "azureauth.exe" : "azureauth";
+
+  try {
+    const resolvedPath = require.resolve(`${platformPackage}/package.json`);
+    const packageDir = path.dirname(resolvedPath);
+    const binaryPath = path.join(packageDir, "bin", binaryName);
+    return fs.existsSync(binaryPath);
+  } catch {
+    return false;
+  }
+}
 
 async function download(url: string, saveDirectory: string): Promise<void> {
   const downloader = new DownloaderHelper(url, saveDirectory);
@@ -46,6 +72,14 @@ export const AZUREAUTH_NAME =
     : AZUREAUTH_NAME_MAP.def;
 
 export const install = async () => {
+  // Check if binary is available via optional dependency (esbuild pattern)
+  if (isOptionalDepInstalled()) {
+    console.log(
+      "azureauth binary available via platform-specific package, skipping download",
+    );
+    return;
+  }
+
   const OUTPUT_DIR = path.join(__dirname, "..", "bin");
   const fileExist = (pathToCheck: string) => {
     try {

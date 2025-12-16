@@ -691,6 +691,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@microsoft/azureauth-darwin-arm64@workspace:packages/azureauth-darwin-arm64":
+  version: 0.0.0-use.local
+  resolution: "@microsoft/azureauth-darwin-arm64@workspace:packages/azureauth-darwin-arm64"
+  languageName: unknown
+  linkType: soft
+
+"@microsoft/azureauth-darwin-x64@workspace:packages/azureauth-darwin-x64":
+  version: 0.0.0-use.local
+  resolution: "@microsoft/azureauth-darwin-x64@workspace:packages/azureauth-darwin-x64"
+  languageName: unknown
+  linkType: soft
+
+"@microsoft/azureauth-win32-x64@workspace:packages/azureauth-win32-x64":
+  version: 0.0.0-use.local
+  resolution: "@microsoft/azureauth-win32-x64@workspace:packages/azureauth-win32-x64"
+  languageName: unknown
+  linkType: soft
+
 "@microsoft/eslint-plugin-sdl@npm:^1.1.0":
   version: 1.1.0
   resolution: "@microsoft/eslint-plugin-sdl@npm:1.1.0"

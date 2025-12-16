@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Add optionalDependencies support for platform-specific binaries (esbuild pattern)",
+      "packageName": "azureauth",
+      "email": "sverre.johansen@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
