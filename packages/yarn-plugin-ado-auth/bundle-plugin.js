@@ -12,6 +12,7 @@ const bundleName = `${name}.cjs`;
 const bundleOptions = {
   entryPoints: ["src/plugin.ts"],
   outfile: `dist/${bundleName}`,
+  metafile: true,
   bundle: true,
   sourcemap: true,
   minify: false,
@@ -48,10 +49,12 @@ const bundleOptions = {
 };
 
 const startTime = performance.now();
-await esbuild.build(bundleOptions).then(() => {
-  const timeTaken = ((performance.now() - startTime) / 1000).toFixed(2);
-  const sizeKb = Math.round(fs.statSync(`dist/${bundleName}`).size / 1024);
-  console.log(
-    `Bundled: dist/${bundleName} (size ${sizeKb} kb) in ${timeTaken}s)`,
-  );
-});
+let result = await esbuild.build(bundleOptions);
+
+const timeTaken = ((performance.now() - startTime) / 1000).toFixed(2);
+const sizeKb = Math.round(fs.statSync(`dist/${bundleName}`).size / 1024);
+console.log(
+  `Bundled: dist/${bundleName} (size ${sizeKb} kb) in ${timeTaken}s)`,
+);
+
+fs.writeFileSync(`dist/${bundleName}.meta.json`, JSON.stringify(result.metafile))

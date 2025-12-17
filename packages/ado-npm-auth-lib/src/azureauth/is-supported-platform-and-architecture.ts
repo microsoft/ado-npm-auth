@@ -1,4 +1,4 @@
-import { arch, platform } from "os";
+import { arch, platform } from "node:os";
 import { isWsl } from "../utils/is-wsl.js";
 
 /**

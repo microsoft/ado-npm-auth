@@ -1,0 +1,382 @@
+{
+  "name": "ado-npm-auth",
+  "entries": [
+    {
+      "date": "Sun, 16 Nov 2025 00:12:40 GMT",
+      "version": "0.8.0",
+      "tag": "ado-npm-auth_v0.8.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "55ffed23007141dbedfb57c53c6ecf34f72e8206",
+            "comment": "Fix release pipeline"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 14 Nov 2025 19:10:12 GMT",
+      "version": "0.7.0",
+      "tag": "ado-npm-auth_v0.7.0",
+      "comments": {
+        "patch": [
+          {
+            "author": "jasonmo@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "e2bc23710461b14a52b5137786301a12edc15241",
+            "comment": "ship loose .js files to allow tree shaking, enable eslint support with fixes to increase strictness"
+          },
+          {
+            "author": "matanbobi@gmail.com",
+            "package": "ado-npm-auth",
+            "commit": "db881c81fa5334fb270b8f4498c9639cce313617",
+            "comment": "fix: add missing output and remove redundant url in organization"
+          }
+        ],
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "4d54b8625f0bb432860e2a28aacb2bcd55b32501",
+            "comment": "Use vso.packaging_write permission to support pulling in packages from Azure DevOps upstream feeds"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "d4448b8cc9612caefa3ebc059b140e8a522d51fc",
+            "comment": "Switch from pnpm to yarn v4"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "975c888668cb64c85965ed7dcc52691619ab14e6",
+            "comment": "Version bump"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 16 Oct 2025 22:56:01 GMT",
+      "version": "0.6.0",
+      "tag": "ado-npm-auth_v0.6.0",
+      "comments": {
+        "none": [
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "a8380c6b18581e72749f4407563d40ab3e97cd2c",
+            "comment": "Bump vite from 5.3.4 to 5.3.6"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "72277d1e40b2fb1567c3cb6c309dc7d14e40b0b7",
+            "comment": "Hopefully last manual version bump"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "ceacf9272c80ffd1b7f614241fbb39a74b4db2c9",
+            "comment": "Fix yarn version"
+          }
+        ],
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "9429a12f00ef63aa0384abcfaf69e16ae1d4504f",
+            "comment": "Add new flag to return a specific exit code when authentication ran"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "bf4cfd4a0079c621e1ec4efb8134c655fd6ca868",
+            "comment": "Make file writes only when required"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "c0d131824f9a2e2ff7eccdfaac131247a69fd705",
+            "comment": "Fix #79: Remove erroneously added `m` for minutes in the timeout configuration."
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "57a5bc5af0333cce6e6ccdd4846e4b98a1ddd7dd",
+            "comment": "Add authentication support for Linux"
+          }
+        ],
+        "patch": [
+          {
+            "author": "mantiquillal@gmail.com",
+            "package": "ado-npm-auth",
+            "commit": "17796d00a428ca67835a72e5929ac9007f03658c",
+            "comment": "Fix exit code check in WSL environments"
+          },
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "6adac7935e58832d6bd5868a56f34099b786c8e1",
+            "comment": "Update bundled devDependencies"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 27 Dec 2024 22:13:14 GMT",
+      "version": "0.3.2",
+      "tag": "ado-npm-auth_v0.3.2",
+      "comments": {
+        "none": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "7eb20d3ff80b2f8673d78219dc2ba5150acaa7b4",
+            "comment": "Format fixes"
+          }
+        ],
+        "patch": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "581e48518aab31bf8b439d1ac50e29d677021a59",
+            "comment": "Bump @npmcli/config to 10.0.0 to fix #52"
+          },
+          {
+            "author": "dsfsdf@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "cb8e0e113e7bfa2768cddaa2f62f06a10d3cb2ba",
+            "comment": "Add support to pass an override for azureAuthLocation on the commandline"
+          },
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "7d7a4ff39c15735bb2c95eca2d75acbc405ebf55",
+            "comment": "Allow non azure devops feeds to be present in the configuration."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 27 Dec 2024 20:26:44 GMT",
+      "version": "0.3.1",
+      "tag": "ado-npm-auth_v0.3.1",
+      "comments": {
+        "none": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "760870e1f16885663cbc202e64db4ca3114db3ca",
+            "comment": "fix formatting of accidentally merged pr"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 30 Oct 2024 20:31:48 GMT",
+      "version": "0.3.1",
+      "tag": "ado-npm-auth_v0.3.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.12.1",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 08 Oct 2024 17:07:15 GMT",
+      "version": "0.3.0",
+      "tag": "ado-npm-auth_v0.3.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "1375d8cc4db409405ca3016232e40879e3642cfe",
+            "comment": "Ensure all types are included in the package"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 07 Oct 2024 17:28:12 GMT",
+      "version": "0.2.0",
+      "tag": "ado-npm-auth_v0.2.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "1731be2186e3f48b58dd6d114fc607a2686f40c0",
+            "comment": "Expose functionality as a library"
+          },
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.12.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 13 Sep 2024 19:47:53 GMT",
+      "version": "0.1.11",
+      "tag": "ado-npm-auth_v0.1.11",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.11.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 13 Sep 2024 18:59:07 GMT",
+      "version": "0.1.10",
+      "tag": "ado-npm-auth_v0.1.10",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.10.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 13 Sep 2024 18:42:55 GMT",
+      "version": "0.1.9",
+      "tag": "ado-npm-auth_v0.1.9",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.9.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 13 Sep 2024 18:15:05 GMT",
+      "version": "0.1.8",
+      "tag": "ado-npm-auth_v0.1.8",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.8.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 13 Sep 2024 17:50:14 GMT",
+      "version": "0.1.7",
+      "tag": "ado-npm-auth_v0.1.7",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.7.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 12 Sep 2024 21:56:08 GMT",
+      "version": "0.1.6",
+      "tag": "ado-npm-auth_v0.1.6",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.6.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 11 Sep 2024 20:04:18 GMT",
+      "version": "0.1.5",
+      "tag": "ado-npm-auth_v0.1.5",
+      "comments": {
+        "patch": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "bc3533c7489857c75a8deec785397943990fec6f",
+            "comment": "Linting fixes"
+          },
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.5.1",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 11 Sep 2024 16:57:41 GMT",
+      "version": "0.1.4",
+      "tag": "ado-npm-auth_v0.1.4",
+      "comments": {
+        "patch": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "5d5c5cdc2b98bfbcbd29fcad19054255544c30c0",
+            "comment": "Make ado-npm-auth use bundles to avoid pulling in a bunch of packages for a build tool"
+          },
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.5.0",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 09 Sep 2024 17:27:01 GMT",
+      "version": "0.1.3",
+      "tag": "ado-npm-auth_v0.1.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "ado-npm-auth",
+            "commit": "bb5431e37d0b40ace73c9f06e736219c5412f32c",
+            "comment": "Initial official release"
+          },
+          {
+            "author": "beachball",
+            "package": "ado-npm-auth",
+            "comment": "Bump azureauth to v0.4.7",
+            "commit": "not available"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -4,7 +4,10 @@ import {
   StreamReport,
   formatUtils,
 } from "@yarnpkg/core";
-import { getOrganizationFromFeedUrl, generateNpmrcPat } from "ado-npm-auth";
+import {
+  getOrganizationFromFeedUrl,
+  generateNpmrcPat,
+} from "@microsoft/ado-npm-auth-lib";
 import { loadConfiguration } from "./configuration.ts";
 import { getConfigMap, getConfigString, type MapLike } from "./utils.ts";
 import { spawnSync } from "node:child_process";

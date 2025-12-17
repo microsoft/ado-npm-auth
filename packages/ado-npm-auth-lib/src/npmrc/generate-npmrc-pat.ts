@@ -1,4 +1,4 @@
-import { hostname, platform } from "os";
+import { hostname, platform } from "node:os";
 import type { AdoPatResponse } from "../azureauth/ado.js";
 import { adoPat } from "../azureauth/ado.js";
 import { toBase64 } from "../utils/encoding.js";

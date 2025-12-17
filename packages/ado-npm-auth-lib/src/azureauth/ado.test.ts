@@ -1,4 +1,4 @@
-import { spawnSync } from "child_process";
+import { spawnSync } from "node:child_process";
 import { beforeEach, expect, test, vi } from "vitest";
 import { exec } from "../utils/exec.js";
 import * as utils from "../utils/is-wsl.js";

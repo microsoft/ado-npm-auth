@@ -1,8 +1,9 @@
-import { getWorkspaceRoot } from "workspace-tools";
 import { join } from "node:path";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { homedir } from "node:os";
+// Index into workspace-tools to save 100Kb in the final bundle
+import { getWorkspaceManagerRoot } from "workspace-tools/lib/workspaces/getWorkspaceRoot.js";
 import { getOrganizationFromFeedUrl } from "./utils/get-organization-from-feed-url.js";
 import { makeADORequest } from "./ado/make-ado-request.js";
 
@@ -45,7 +46,7 @@ export abstract class FileProvider {
     if (configFile && path.basename(configFile) === this.workspaceFileName) {
       workspaceFilePath = path.resolve(configFile);
     } else {
-      const workspaceRoot = getWorkspaceRoot(process.cwd()) || "";
+      const workspaceRoot = getWorkspaceManagerRoot(process.cwd()) || "";
       workspaceFilePath = join(workspaceRoot, this.workspaceFileName);
     }
     this.workspaceFilePath = workspaceFilePath;
