@@ -1,6 +1,21 @@
 {
-  "name": "ado-npm-auth",
+  "name": "@microsoft/ado-npm-auth-lib",
   "entries": [
+    {
+      "date": "Wed, 17 Dec 2025 23:18:54 GMT",
+      "version": "0.9.0",
+      "tag": "@microsoft/ado-npm-auth-lib_v0.9.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "@microsoft/ado-npm-auth-lib",
+            "commit": "adb946a066d144097e007dccbd528bcbe3d0951e",
+            "comment": "Factor out library from the cli bundle"
+          }
+        ]
+      }
+    },
     {
       "date": "Sun, 16 Nov 2025 00:12:40 GMT",
       "version": "0.8.0",

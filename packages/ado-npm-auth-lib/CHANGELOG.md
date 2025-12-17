@@ -1,8 +1,16 @@
-# Change Log - ado-npm-auth
+# Change Log - @microsoft/ado-npm-auth-lib
 
-<!-- This log was last generated on Sun, 16 Nov 2025 00:12:40 GMT and should not be manually modified. -->
+<!-- This log was last generated on Wed, 17 Dec 2025 23:18:54 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.9.0
+
+Wed, 17 Dec 2025 23:18:54 GMT
+
+### Minor changes
+
+- Factor out library from the cli bundle (dannyvv@microsoft.com)
 
 ## 0.8.0
 
