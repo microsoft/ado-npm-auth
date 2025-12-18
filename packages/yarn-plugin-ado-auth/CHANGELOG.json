@@ -2,6 +2,21 @@
   "name": "@microsoft/yarn-plugin-ado-auth",
   "entries": [
     {
+      "date": "Wed, 17 Dec 2025 23:18:54 GMT",
+      "version": "0.2.0",
+      "tag": "@microsoft/yarn-plugin-ado-auth_v0.2.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "@microsoft/yarn-plugin-ado-auth",
+            "commit": "adb946a066d144097e007dccbd528bcbe3d0951e",
+            "comment": "Factor out library from the cli bundle"
+          }
+        ]
+      }
+    },
+    {
       "date": "Fri, 12 Dec 2025 20:36:14 GMT",
       "version": "0.1.1",
       "tag": "@microsoft/yarn-plugin-ado-auth_v0.1.1",
