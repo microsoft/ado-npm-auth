@@ -2,6 +2,21 @@
   "name": "@microsoft/ado-npm-auth-lib",
   "entries": [
     {
+      "date": "Mon, 05 Jan 2026 22:27:36 GMT",
+      "version": "0.9.1",
+      "tag": "@microsoft/ado-npm-auth-lib_v0.9.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "nikolaia@microsoft.com",
+            "package": "@microsoft/ado-npm-auth-lib",
+            "commit": "1106629fdec2bad449167e98b3a5080664988a26",
+            "comment": "fix: remove duplicate yargs dependency and clean up package.json"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 17 Dec 2025 23:18:54 GMT",
       "version": "0.9.0",
       "tag": "@microsoft/ado-npm-auth-lib_v0.9.0",
