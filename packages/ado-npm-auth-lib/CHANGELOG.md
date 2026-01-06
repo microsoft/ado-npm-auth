@@ -1,8 +1,16 @@
 # Change Log - @microsoft/ado-npm-auth-lib
 
-<!-- This log was last generated on Wed, 17 Dec 2025 23:18:54 GMT and should not be manually modified. -->
+<!-- This log was last generated on Mon, 05 Jan 2026 22:27:36 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.9.1
+
+Mon, 05 Jan 2026 22:27:36 GMT
+
+### Patches
+
+- fix: remove duplicate yargs dependency and clean up package.json (nikolaia@microsoft.com)
 
 ## 0.9.0
 
