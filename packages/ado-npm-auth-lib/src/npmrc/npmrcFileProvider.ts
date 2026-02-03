@@ -64,32 +64,41 @@ export class NpmrcFileProvider extends FileProvider {
       (config.data?.get("project") || {})["data"] || {},
     );
 
-    // find any and all keys which are a registry
-    const registries = projectNpmrcKeys.filter((key) =>
-      key.includes("registry"),
+    // find any and all keys which are a registry.
+    const registryConfigKeys = projectNpmrcKeys.filter(
+      (key) => key === "registry" || key.endsWith(":registry"),
     );
 
-    return registries
-      .map<string>((registry) => config.get(registry, "project") as string)
+    return registryConfigKeys
+      .map<string>(
+        (registryConfigKey) =>
+          config.get(registryConfigKey, "project") as string,
+      )
       .map((feed) => getFeedWithoutProtocol(feed));
   }
 
   override async getUserFeeds(): Promise<Map<string, Feed>> {
-    const result = new Map<string, Feed>();
+    const feeds = new Map<string, Feed>();
+    await this.processFeeds(this.userFilePath, feeds);
+    await this.processFeeds(this.workspaceFilePath, feeds);
+    return feeds;
+  }
 
+  async processFeeds(filePath: string, feeds: Map<string, Feed>): Promise<void> {
     await this.processNpmRcFile(
-      this.userFilePath,
+      filePath,
       (_: string, registry: string, field: string, value: string) => {
-        let feed = result.get(registry);
+        let feed = feeds.get(registry);
         if (!feed) {
           feed = {
             registry: registry,
             adoOrganization: getOrganizationFromFeedUrl(registry),
           };
-          result.set(feed.registry, feed);
+          feeds.set(feed.registry, feed);
         }
         switch (field) {
           case "_password":
+          case "_authToken":
             feed.authToken = fromBase64(value).trim();
             break;
           case "username":
@@ -101,8 +110,6 @@ export class NpmrcFileProvider extends FileProvider {
         }
       },
     );
-
-    return result;
   }
 
   async patchUserNpmRcFile(
