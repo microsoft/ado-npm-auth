@@ -84,7 +84,10 @@ export class NpmrcFileProvider extends FileProvider {
     return feeds;
   }
 
-  async processFeeds(filePath: string, feeds: Map<string, Feed>): Promise<void> {
+  async processFeeds(
+    filePath: string,
+    feeds: Map<string, Feed>,
+  ): Promise<void> {
     await this.processNpmRcFile(
       filePath,
       (_: string, registry: string, field: string, value: string) => {
@@ -98,8 +101,11 @@ export class NpmrcFileProvider extends FileProvider {
         }
         switch (field) {
           case "_password":
-          case "_authToken":
+          case "_auth":
             feed.authToken = fromBase64(value).trim();
+            break;
+          case "_authToken":
+            feed.authToken = value.trim();
             break;
           case "username":
             feed.userName = value;
