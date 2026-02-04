@@ -1,8 +1,16 @@
 # Change Log - @microsoft/ado-npm-auth-lib
 
-<!-- This log was last generated on Mon, 05 Jan 2026 22:27:36 GMT and should not be manually modified. -->
+<!-- This log was last generated on Wed, 04 Feb 2026 18:33:54 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.10.0
+
+Wed, 04 Feb 2026 18:33:54 GMT
+
+### Minor changes
+
+- Fix registry extraction form .npmrc. We had false positives for authentication comments like :// (dannyvv@microsoft.com)
 
 ## 0.9.1
 
