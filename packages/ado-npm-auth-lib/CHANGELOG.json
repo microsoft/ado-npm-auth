@@ -2,6 +2,21 @@
   "name": "@microsoft/ado-npm-auth-lib",
   "entries": [
     {
+      "date": "Wed, 04 Feb 2026 20:09:46 GMT",
+      "version": "0.10.0",
+      "tag": "@microsoft/ado-npm-auth-lib_v0.10.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "@microsoft/ado-npm-auth-lib",
+            "commit": "be875df993ef427acaa4816e23393c7d389e231a",
+            "comment": "Fix registry extraction form .npmrc. We had false positives for authentication comments like ://"
+          }
+        ]
+      }
+    },
+    {
       "date": "Mon, 05 Jan 2026 22:27:36 GMT",
       "version": "0.9.1",
       "tag": "@microsoft/ado-npm-auth-lib_v0.9.1",
