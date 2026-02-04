@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Fix registry extraction form .npmrc. We had false positives for authentication comments like ://",
+      "packageName": "@microsoft/ado-npm-auth-lib",
+      "email": "dannyvv@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
