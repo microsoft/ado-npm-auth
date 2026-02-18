@@ -58,6 +58,8 @@ export class TokenCache {
    */
   private async fetchToken(registry: string, ident?: Ident): Promise<string> {
     const configuration = this.configuration;
+    let token: string | null = null;
+
     await StreamReport.start(
       { configuration, stdout: process.stdout },
       async (report) => {
@@ -70,6 +72,7 @@ export class TokenCache {
         const authConfig = this.getAuthConfiguration(registry, ident);
         const tokenFromYarnrc = getConfigString(authConfig, "npmAuthToken");
         if (tokenFromYarnrc) {
+          token = tokenFromYarnrc;
           this.cache[registry] = tokenFromYarnrc;
           report.reportInfo(
             null,
@@ -91,6 +94,7 @@ export class TokenCache {
           false,
           this.azureAuthPath,
         );
+        token = pat;
         this.cache[registry] = pat;
         report.reportInfo(
           null,
@@ -99,11 +103,10 @@ export class TokenCache {
       },
     );
 
-    const pat = this.cache[registry];
-    if (pat == null) {
+    if (token == null) {
       throw new Error(`Failed to authenticate to: ${registry}`);
     }
-    return pat;
+    return token;
   }
 
   /**
