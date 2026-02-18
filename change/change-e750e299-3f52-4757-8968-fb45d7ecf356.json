@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Fix circular promise in fetchTokens",
+      "packageName": "@microsoft/yarn-plugin-ado-auth",
+      "email": "masplund@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
