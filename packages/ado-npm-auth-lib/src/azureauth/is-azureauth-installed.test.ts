@@ -6,7 +6,7 @@ import * as utils from "../utils/is-wsl.js";
 
 vi.mock("../utils/is-wsl.js", async () => {
   return {
-    isWsl: vi.fn(),
+    isLinux: vi.fn(),
   };
 });
 
@@ -29,7 +29,7 @@ test("when azure auth is not installed", async () => {
       stderr: "",
     }) as any,
   );
-  vi.mocked(utils.isWsl).mockReturnValue(false);
+  vi.mocked(utils.isLinux).mockReturnValue(false);
 
   const azureAuthInstalled = await isAzureAuthInstalled();
 
@@ -45,7 +45,7 @@ test("when azure auth is installed", async () => {
       stderr: "",
     }) as any,
   );
-  vi.mocked(utils.isWsl).mockReturnValue(false);
+  vi.mocked(utils.isLinux).mockReturnValue(false);
 
   const azureAuthInstalled = await isAzureAuthInstalled();
 
@@ -54,19 +54,19 @@ test("when azure auth is installed", async () => {
   expect(azureAuthInstalled).toBe(true);
 });
 
-test("when azure auth is installed on windows", async () => {
+test("when azure auth is installed on linux", async () => {
   vi.mocked(exec).mockReturnValue(
     Promise.resolve({
       stdout: "0.8.5",
       stderr: "",
     }) as any,
   );
-  vi.mocked(utils.isWsl).mockReturnValue(true);
+  vi.mocked(utils.isLinux).mockReturnValue(true);
 
   const azureAuthInstalled = await isAzureAuthInstalled();
 
   expect(vi.mocked(exec)).toBeCalled();
-  expect(vi.mocked(exec)).toBeCalledWith("azureauth.exe --version", {
+  expect(vi.mocked(exec)).toBeCalledWith("azureauth --version", {
     env: expect.any(Object),
   });
 
