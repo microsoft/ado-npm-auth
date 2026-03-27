@@ -1,4 +1,4 @@
-import { isWsl } from "../utils/is-wsl.js";
+import { isLinux } from "../utils/is-wsl.js";
 
 let memo: string[] | undefined = undefined;
 
@@ -30,7 +30,7 @@ export const azureAuthCommand = (): {
   env: Record<string, string>;
 } => {
   if (!memo) {
-    memo = isWsl() ? ["azureauth.exe"] : npxAzureAuthCommand;
+    memo = isLinux() ? ["azureauth"] : npxAzureAuthCommand;
   }
 
   return { command: memo, env: npxEnv };
