@@ -4,6 +4,8 @@ import { getConfigString } from "./utils.ts";
 export type AuthPluginConfigurationValueMap = {
   adoNpmAuthToolPath?: string;
   adoNpmAuthFeedPrefix: string;
+  adoNpmAuthTenantId?: string;
+  adoNpmAuthDomain?: string;
 };
 
 export function getConfiguration() {
@@ -18,6 +20,16 @@ export function getConfiguration() {
       type: SettingsType.STRING,
       default: `https://pkgs.dev.azure.com/`,
     },
+    adoNpmAuthTenantId: {
+      description: `The Azure AD tenant ID to use when authenticating with Azure DevOps. If unset, azureauth defaults to the Microsoft tenant, which fails for non-Microsoft corporate tenants.`,
+      type: SettingsType.STRING,
+      default: null,
+    },
+    adoNpmAuthDomain: {
+      description: `The preferred account domain for filtering cached MSAL accounts (e.g. "contoso.com"). Useful when the user has cached accounts in multiple tenants.`,
+      type: SettingsType.STRING,
+      default: null,
+    },
   } as Plugin["configuration"];
 }
 
@@ -31,5 +43,7 @@ export function loadConfiguration(
       "adoNpmAuthFeedPrefix",
       true,
     ),
+    adoNpmAuthTenantId: getConfigString(configuration, "adoNpmAuthTenantId"),
+    adoNpmAuthDomain: getConfigString(configuration, "adoNpmAuthDomain"),
   };
 }
