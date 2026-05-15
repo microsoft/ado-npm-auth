@@ -26,14 +26,15 @@ export async function credentialProviderPat(
 }
 
 function toNugetUrl(registry: string): string {
-  if (!registry.endsWith("/npm/registry/")) {
+  // Yarn 4 normalizes registry URLs by stripping the trailing slash before
+  // invoking auth hooks, so accept the URL with or without it.
+  const normalized = registry.endsWith("/") ? registry : registry + "/";
+  if (!normalized.endsWith("/npm/registry/")) {
     throw new Error(
       `Registry URL ${registry} is not a valid Azure Artifacts npm registry URL. Expected it to end with '/npm/registry/'`,
     );
   }
-  return (
-    "https://" + registry.replace("/npm/registry/", "/nuget/v3/index.json")
-  );
+  return normalized.replace("/npm/registry/", "/nuget/v3/index.json");
 }
 
 async function invokeCredentialProvider(
