@@ -58,6 +58,15 @@ export class TokenCache {
    */
   private async fetchToken(registry: string, ident?: Ident): Promise<string> {
     const configuration = this.configuration;
+    // Resolved within the StreamReport callback below. We do *not* write
+    // directly to `this.cache[registry]` from inside the callback: the
+    // `via configuration` path is fully synchronous, which would mutate the
+    // cache before getToken's `??=` assigns the in-flight promise — the
+    // assignment would then overwrite the string with the promise, and this
+    // function would end up returning its own promise (causing
+    // "Chaining cycle detected for promise"). Cache management is left to
+    // getToken's `??=` so there is exactly one writer per registry.
+    let token: string | undefined;
     await StreamReport.start(
       { configuration, stdout: process.stdout },
       async (report) => {
@@ -70,7 +79,7 @@ export class TokenCache {
         const authConfig = this.getAuthConfiguration(registry, ident);
         const tokenFromYarnrc = getConfigString(authConfig, "npmAuthToken");
         if (tokenFromYarnrc) {
-          this.cache[registry] = tokenFromYarnrc;
+          token = tokenFromYarnrc;
           report.reportInfo(
             null,
             `Authenticated to: ${prettyRegistry} (via configuration)`,
@@ -85,13 +94,12 @@ export class TokenCache {
           );
         }
 
-        const pat = await generateNpmrcPat(
+        token = await generateNpmrcPat(
           organization,
           registry,
           false,
           this.azureAuthPath,
         );
-        this.cache[registry] = pat;
         report.reportInfo(
           null,
           `Authenticated to: ${prettyRegistry} (via ADO CLI)`,
@@ -99,11 +107,10 @@ export class TokenCache {
       },
     );
 
-    const pat = this.cache[registry];
-    if (pat == null) {
+    if (token == null) {
       throw new Error(`Failed to authenticate to: ${registry}`);
     }
-    return pat;
+    return token;
   }
 
   /**
