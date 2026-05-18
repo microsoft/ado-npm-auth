@@ -2,6 +2,21 @@
   "name": "@microsoft/yarn-plugin-ado-auth",
   "entries": [
     {
+      "date": "Mon, 18 May 2026 23:46:23 GMT",
+      "version": "0.2.3",
+      "tag": "@microsoft/yarn-plugin-ado-auth_v0.2.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "masplund@microsoft.com",
+            "package": "@microsoft/yarn-plugin-ado-auth",
+            "commit": "62f992e791fb666668f0cd77728834d0e6157f4a",
+            "comment": "Fix circular promise in fetchTokens"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 17 Dec 2025 23:18:54 GMT",
       "version": "0.2.0",
       "tag": "@microsoft/yarn-plugin-ado-auth_v0.2.0",
