@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Fix registry url validation for yarn v4",
+      "packageName": "@microsoft/ado-npm-auth-lib",
+      "email": "alwaibel@microsoft.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
