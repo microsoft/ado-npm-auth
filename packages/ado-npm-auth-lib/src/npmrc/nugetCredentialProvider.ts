@@ -26,14 +26,22 @@ export async function credentialProviderPat(
 }
 
 function toNugetUrl(registry: string): string {
-  if (!registry.endsWith("/npm/registry/")) {
+  // Yarn 4 normalizes registry URLs by stripping the trailing slash before
+  // invoking auth hooks, so accept the URL with or without it.
+  const normalized = registry.endsWith("/") ? registry : registry + "/";
+  if (!normalized.endsWith("/npm/registry/")) {
     throw new Error(
       `Registry URL ${registry} is not a valid Azure Artifacts npm registry URL. Expected it to end with '/npm/registry/'`,
     );
   }
-  return (
-    "https://" + registry.replace("/npm/registry/", "/nuget/v3/index.json")
+  const nugetPath = normalized.replace(
+    "/npm/registry/",
+    "/nuget/v3/index.json",
   );
+  // Tolerate scheme-less inputs (e.g. older callers) by prepending https://
+  // when no scheme is present. Yarn 4 always supplies a scheme, but the
+  // function signature accepts any string.
+  return /^[a-z]+:\/\//i.test(nugetPath) ? nugetPath : "https://" + nugetPath;
 }
 
 async function invokeCredentialProvider(
