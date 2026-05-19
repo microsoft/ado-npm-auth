@@ -1,8 +1,16 @@
 # Change Log - @microsoft/ado-npm-auth-lib
 
-<!-- This log was last generated on Wed, 04 Feb 2026 18:33:54 GMT and should not be manually modified. -->
+<!-- This log was last generated on Tue, 19 May 2026 17:42:33 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.10.1
+
+Tue, 19 May 2026 17:42:33 GMT
+
+### Patches
+
+- Fix registry url validation for yarn v4 (alwaibel@microsoft.com)
 
 ## 0.10.0
 
