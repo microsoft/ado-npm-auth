@@ -1,8 +1,16 @@
 # Change Log - @microsoft/ado-npm-auth-lib
 
-<!-- This log was last generated on Tue, 19 May 2026 17:42:33 GMT and should not be manually modified. -->
+<!-- This log was last generated on Wed, 03 Jun 2026 19:42:06 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.11.0
+
+Wed, 03 Jun 2026 19:42:06 GMT
+
+### Minor changes
+
+- Bump vite to 6.4.2 and vitest to 4.1.0 (dannyvv@microsoft.com)
 
 ## 0.10.1
 
