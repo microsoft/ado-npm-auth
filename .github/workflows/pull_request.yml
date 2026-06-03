@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.x, 20.x, 22.x, 24.x]
+        node-version: [20.x, 22.x, 24.x]
         os: [ubuntu-latest, windows-latest]
         # We have dropped running on macOS due to excessive queue times by github hosted agents.
         # The publish pipeline will still run on macOS on ADO.
