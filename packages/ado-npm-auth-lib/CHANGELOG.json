@@ -2,6 +2,21 @@
   "name": "@microsoft/ado-npm-auth-lib",
   "entries": [
     {
+      "date": "Wed, 03 Jun 2026 16:36:30 GMT",
+      "version": "0.11.0",
+      "tag": "@microsoft/ado-npm-auth-lib_v0.11.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "@microsoft/ado-npm-auth-lib",
+            "commit": "54fd844f373ffd09e7548e17ab304e38add4dc66",
+            "comment": "Bump vite to 6.4.2 and vitest to 4.1.0"
+          }
+        ]
+      }
+    },
+    {
       "date": "Tue, 19 May 2026 17:42:33 GMT",
       "version": "0.10.1",
       "tag": "@microsoft/ado-npm-auth-lib_v0.10.1",
