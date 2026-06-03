@@ -1,0 +1,18 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Update AzureAuth for macOS broker support",
+      "packageName": "ado-npm-auth",
+      "email": "kyle@rubenok.ca",
+      "dependentChangeType": "patch"
+    },
+    {
+      "type": "minor",
+      "comment": "Update AzureAuth for macOS broker support",
+      "packageName": "@microsoft/yarn-plugin-ado-auth",
+      "email": "kyle@rubenok.ca",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
