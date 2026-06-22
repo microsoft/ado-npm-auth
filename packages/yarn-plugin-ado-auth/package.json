@@ -25,12 +25,12 @@
   },
   "devDependencies": {
     "@microsoft/eslint-plugin-sdl": "^1.1.0",
-    "@rnx-kit/eslint-plugin": "^0.9.3",
+    "@rnx-kit/eslint-plugin": "^0.9.9",
     "@rnx-kit/tsconfig": "^2.1.1",
     "@types/node": "^20.17.28",
-    "@yarnpkg/cli": "^4.11.0",
+    "@yarnpkg/cli": "^4.17.0",
     "@yarnpkg/core": "^4.5.0",
-    "esbuild": "^0.27.0",
+    "esbuild": "^0.28.1",
     "eslint": "^9.39.1",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"
