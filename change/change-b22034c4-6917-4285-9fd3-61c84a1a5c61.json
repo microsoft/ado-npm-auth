@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Bump js-yaml from 4.2.0 to 5.0.0",
+      "packageName": "@microsoft/ado-npm-auth-lib",
+      "email": "198982749+Copilot@users.noreply.github.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
