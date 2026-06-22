@@ -1,8 +1,16 @@
 # Change Log - @microsoft/yarn-plugin-ado-auth
 
-<!-- This log was last generated on Tue, 19 May 2026 17:42:33 GMT and should not be manually modified. -->
+<!-- This log was last generated on Mon, 22 Jun 2026 18:16:18 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.3.0
+
+Mon, 22 Jun 2026 18:16:18 GMT
+
+### Minor changes
+
+- Bump dependencies (dannyvv@microsoft.com)
 
 ## 0.2.3
 
