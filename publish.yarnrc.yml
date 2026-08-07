@@ -1,0 +1,27 @@
+approvedGitRepositories:
+  - "**"
+
+compressionLevel: 0
+
+enableGlobalCache: false
+
+enableScripts: false
+
+enableTelemetry: false
+
+globalFolder: .yarn/global
+
+nodeLinker: pnpm
+
+npmMinimalAgeGate: 0
+
+plugins:
+  - checksum: 471ba8134605c19541845aab20958d5dd51f00bb2dc53d54da5f2f2d61fbf5f93dbf845481e5fc34e9602409bfab6600415f0c17fa4e18cdfedbb07c50565fac
+    path: .yarn/plugins/@yarnpkg/plugin-npmrc.cjs
+    spec: "https://raw.githubusercontent.com/ecraig12345/yarn-plugins/npmrc_v0.4.1/plugins/npmrc/dist/plugin.js"
+
+yarnPath: .yarn/releases/yarn-4.17.0.cjs
+
+npmRegistryServer: https://office.pkgs.visualstudio.com/_packaging/Office/npm/registry/
+npmAlwaysAuth: true
+npmrcAuthEnabled: true
