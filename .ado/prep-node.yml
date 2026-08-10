@@ -20,3 +20,7 @@ steps:
   - script: |
       npm install -g yarn
     displayName: "Setup yarn"
+
+  - bash: |
+      cp publish.yarnrc.yml .yarnrc.yml
+    displayName: "Configure .yarnrc.yml to use CFS"

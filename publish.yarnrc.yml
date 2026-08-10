@@ -22,6 +22,6 @@ plugins:
 
 yarnPath: .yarn/releases/yarn-4.17.0.cjs
 
-npmRegistryServer: https://office.pkgs.visualstudio.com/_packaging/Office/npm/registry/
+npmRegistryServer: https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/
 npmAlwaysAuth: true
 npmrcAuthEnabled: true
