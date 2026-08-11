@@ -7,3 +7,11 @@ import { release, platform } from "node:os";
 export const isWsl = () => {
   return platform() === "linux" && release().toLowerCase().includes("wsl");
 };
+
+/**
+ * Determine if the current machine's platform is Linux (includes WSL)
+ * @returns { boolean } if the current platform is Linux
+ */
+export const isLinux = () => {
+  return platform() === "linux";
+};

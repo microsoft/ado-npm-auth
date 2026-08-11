@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import { exec } from "../utils/exec.js";
 import { isSupportedPlatformAndArchitecture } from "./is-supported-platform-and-architecture.js";
 import { azureAuthCommand } from "./azureauth-command.js";
-import { isWsl } from "../utils/is-wsl.js";
+import { isLinux } from "../utils/is-wsl.js";
 import { isAzureAuthInstalled } from "./is-azureauth-installed.js";
 
 export type AdoPatOptions = {
@@ -53,7 +53,7 @@ export const adoPat = async (
     ...authCommand,
     `ado`,
     `pat`,
-    `--prompt-hint ${isWsl() ? options.promptHint : `"${options.promptHint}"`}`, // We only use spawn for WSL. spawn does not does not require prompt hint to be wrapped in quotes. exec does.
+    `--prompt-hint ${isLinux() ? options.promptHint : `"${options.promptHint}"`}`, // We only use spawn for Linux (includes WSL). spawn does not require prompt hint to be wrapped in quotes. exec does.
     `--organization ${options.organization}`,
     `--display-name ${options.displayName}`,
     ...options.scope.map((scope) => `--scope ${scope}`),
@@ -77,7 +77,7 @@ export const adoPat = async (
 
   try {
     let result;
-    if (isWsl()) {
+    if (isLinux()) {
       try {
         result = spawnSync(command[0], command.slice(1), { encoding: "utf-8" });
 
