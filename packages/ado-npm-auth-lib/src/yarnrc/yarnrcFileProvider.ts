@@ -1,6 +1,6 @@
 import type { Feed } from "../fileProvider.js";
 import { FileProvider } from "../fileProvider.js";
-import yaml from "js-yaml";
+import { dump, load } from "js-yaml";
 import fs from "node:fs/promises";
 import { fromBase64, toBase64 } from "../utils/encoding.js";
 import { getOrganizationFromFeedUrl } from "../utils/get-organization-from-feed-url.js";
@@ -103,13 +103,13 @@ export class YarnRcFileProvider extends FileProvider {
   }
 
   async writeYarnRc(filePath: string, yarnrc: YarnRc) {
-    const yarnrcContent = yaml.dump(yarnrc);
+    const yarnrcContent = dump(yarnrc);
     await writeFileLazy(filePath, yarnrcContent);
   }
 
   async paseYarnRc(filePath: string): Promise<YarnRc> {
     const content = await fs.readFile(filePath, "utf8");
-    return yaml.load(content, { filename: filePath }) as YarnRc;
+    return load(content, { filename: filePath }) as YarnRc;
   }
 }
 
