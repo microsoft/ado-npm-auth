@@ -25,6 +25,14 @@ Use the `azureauth` CLI by calling it from NPM scripts.
 > npm run authcli
 ```
 
+On macOS, AzureAuth supports brokered authentication through the Microsoft Enterprise SSO Extension. Broker auth is opt-in; pass `--mode broker` to the `azureauth` command when you want to use it.
+
+```json
+"scripts": {
+  "authcli": "azureauth ado pat --mode broker"
+}
+```
+
 Use it as a node module by importing azureauth.
 
 ```js
@@ -35,5 +43,6 @@ const pat = await adoPat({
   organization: "test",
   promptHint: "test",
   scope: ["test"],
+  mode: "broker",
 });
 ```

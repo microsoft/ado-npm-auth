@@ -22,6 +22,12 @@ The main difference between the two is how they function, and where they can run
 
 Since the `azureauth-cli` is cross-platform, `ado-npm-auth` will also run cross-platform as well!
 
+On macOS, the bundled `azureauth` CLI supports brokered authentication through the Microsoft Enterprise SSO Extension. Broker auth is opt-in; set `AZUREAUTH_MODE=broker` before running `ado-npm-auth` to use it.
+
+```bash
+AZUREAUTH_MODE=broker npm exec ado-npm-auth
+```
+
 One of the easiest ways to use the tool is to add it to your `"preinstall"` script in your repo like this...
 
 ```json
@@ -36,12 +42,14 @@ It will then perform a quick "pre-flight" check to assess if the token is valid,
 
 ### Beware the chicken and egg problem
 
-You may need to set the registry to the public NPM feed when running `npm exec` or `npx`. 
+You may need to set the registry to the public NPM feed when running `npm exec` or `npx`.
 
 There are 2 options to address this case:
 
 ### 1: Explictly pass the config file.
+
 You can hop one directory up, or run it from an arbitrary path and pass the configuration.
+
 ```cmd
 pushd ..
 npx ado-npm-auth -c <myrepo>\.npmrc
@@ -49,9 +57,10 @@ popd
 ```
 
 ### 2: configure registry explicilty
-If that's the case, set the environment variable `npm_config_registry=https://registry.npmjs.org`. 
 
-That will ensure that `npx` or `npm exec` grabs from the public NPM feed, bypassing the soon-to-be authenticated ADO feed. 
+If that's the case, set the environment variable `npm_config_registry=https://registry.npmjs.org`.
+
+That will ensure that `npx` or `npm exec` grabs from the public NPM feed, bypassing the soon-to-be authenticated ADO feed.
 
 ```json
 "scripts": {
