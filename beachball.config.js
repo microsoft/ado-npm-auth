@@ -1,8 +1,9 @@
 // @ts-check
 /** @type {import("beachball").BeachballConfig} */
 const config = {
-  changehint: 'Run "yarn change" to generate a change file',
   branch: "main",
+  changehint: 'Run "yarn change" to generate a change file',
+  commit: false,
   // The current publishing setup skips the step that creates git tags, so make it explicit that they're not created
   gitTags: false,
   groupChanges: true,

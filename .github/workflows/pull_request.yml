@@ -15,9 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [20.x, 22.x, 24.x]
-        os: [ubuntu-latest, windows-latest]
-        # We have dropped running on macOS due to excessive queue times by github hosted agents.
-        # The publish pipeline will still run on macOS on ADO.
+        os: [ubuntu-latest, windows-latest, macos-latest]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -32,8 +30,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      # Skip this for merge queues (already validated in PR build) and the bump PR.
+      # This is also because there's not a straightforward way to skip the bump PR when it's
+      # in the merge queue.
       - name: Check for change files
-        if: ${{ !contains(github.event.pull_request.title, '***NO_CI***') }}
+        if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.title, '***NO_CI***') }}
         run: yarn checkchange
 
       - name: Build, test & lint

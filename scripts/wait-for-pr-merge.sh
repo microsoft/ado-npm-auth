@@ -2,7 +2,6 @@
 
 # Waits for PR_NUMBER to merge or be closed, then deletes PR_BRANCH.
 # A closed, unmerged PR fails the script.
-# Sets the Azure Pipelines output named by OUTPUT_NAME to "true" when the PR is merged.
 
 set -euo pipefail
 
@@ -19,7 +18,6 @@ log_fail() {
 [[ -z "${PR_BRANCH:-}" ]] && log_fail "PR_BRANCH is required."
 [[ -z "${PR_NUMBER:-}" ]] && log_fail "PR_NUMBER is required."
 [[ -z "${BUILD_REPOSITORY_URI:-}" ]] && log_fail "BUILD_REPOSITORY_URI is required."
-[[ -z "${OUTPUT_NAME:-}" ]] && log_fail "OUTPUT_NAME is required."
 pr_url="${BUILD_REPOSITORY_URI%/}/pull/$PR_NUMBER"
 
 get_pr_state() {
@@ -68,7 +66,6 @@ while true; do
   case "$state" in
     MERGED)
       echo "PR #$PR_NUMBER merged. Cleaning up branch..."
-      echo "##vso[task.setvariable variable=$OUTPUT_NAME;isOutput=true;isReadOnly=true]true"
       delete_release_branch
       break
       ;;

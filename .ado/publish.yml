@@ -2,6 +2,7 @@ name: ado-npm-auth-$(Rev:rrr)
 
 pr: none
 trigger:
+  batch: true
   branches:
     include:
       - main
@@ -19,6 +20,11 @@ variables:
     value: production,externalfacing
   - name: releaseBranch
     value: beachball/rel$(Build.BuildId)
+    readonly: true
+  # Only validate against Node 24 in the release build, since the PR build checked other versions.
+  # (Even running multi-OS in this pipeline is probably overkill.)
+  - name: nodeVersion
+    value: "24.x"
     readonly: true
     # Internal npm feed (with npmjs.org as upstream) for build/publish in 1ES PT
   - name: REGISTRY_URL
@@ -48,12 +54,6 @@ parameters:
       - name: Azure Pipelines
         vmImage: macos-latest
         os: macOS
-  - name: nodeVersions
-    type: object
-    default:
-      - 20.x
-      - 22.x
-      - 24.x
 
 extends:
   template: v1/Office.Official.PipelineTemplate.yml@OfficePipelineTemplates
@@ -76,19 +76,18 @@ extends:
       - stage: Verification
         jobs:
           - ${{ each pool in parameters.pools }}:
-              - ${{ each nodeVersion in parameters.nodeVersions }}:
-                  - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
-                    displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
-                    pool: ${{ pool }}
-                    # Note: since we're releasing packed tgz files, uploading only those files as outputs
-                    # satisfies compliance requirements (it's not necessary to upload the whole repo).
-                    steps:
-                      - template: /.ado/templates/setup.yml@self
-                        parameters:
-                          nodeVersion: ${{ nodeVersion }}
+              - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+                displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
+                pool: ${{ pool }}
+                # Note: since we're releasing packed tgz files, uploading only those files as outputs
+                # satisfies compliance requirements (it's not necessary to upload the whole repo).
+                steps:
+                  - template: /.ado/templates/setup.yml@self
+                    parameters:
+                      nodeVersion: ${{ nodeVersion }}
 
-                      - script: yarn lage build test lint bundle
-                        displayName: Build all
+                  - script: yarn lage build test lint bundle
+                    displayName: Build all
 
       # The Build stage:
       # - Bumps package versions, updates changelogs, and deletes consumed change files,
@@ -97,6 +96,7 @@ extends:
       #
       # Outputs:
       # - BumpAndPack.CommitChanges.hasUpdates: true if changes were pushed (otherwise unset).
+      # - BumpAndPack.PackPackages.hasPackages: true if */*.tgz files were packed; false otherwise.
       # - NpmPackedTarballs: pipeline artifact containing the packed npm packages.
       #
       # NOTE: If the only change files have change type "none", there will be file changes (hasUpdates=true)
@@ -125,23 +125,23 @@ extends:
             steps:
               - template: /.ado/templates/setup.yml@self
                 parameters:
-                  nodeVersion: 24.x
+                  nodeVersion: ${{ nodeVersion }}
                   persistCredentials: true
 
-              - script: yarn lage build bundle
+              - bash: yarn lage build bundle
                 displayName: Build & Bundle
 
               # Bump package versions, update changelog, and delete change files.
               # If there were files with change type "none", there might be file changes without a version bump.
               # (The inverse is not true: if there are no file changes, there will be no version bump.)
-              - script: |
+              - bash: |
                   yarn beachball bump --verbose
                 displayName: 📝 Beachball Bump for GitHub PR
 
               # Commit and push if relevant (set hasUpdates only if there were changes).
               # We could create the PR here too, but separating it has the benefit of ensuring that any
               # post-build compliance checks are successful before PR creation.
-              - script: |
+              - bash: |
                   set -x
                   git status
                   git add --all
@@ -160,22 +160,25 @@ extends:
                 name: CommitChanges
 
               # Revert changes, then use beachball to pack any changed npm packages.
-              - script: |
+              - bash: |
                   set -x
                   rm -rf '$(packagesArtifactPath)'
                   mkdir '$(packagesArtifactPath)'
                   yarn beachball publish --verbose --no-push --pack-to-path '$(packagesArtifactPath)'
-                displayName: 📦 Pack npm packages with Beachball
 
-              - script: ls -R '$(packagesArtifactPath)'
+                  if compgen -G '$(packagesArtifactPath)/*/*.tgz' >/dev/null; then
+                    echo "##vso[task.setvariable variable=hasPackages;isOutput=true;isReadOnly=true]true"
+                  fi
+                displayName: 📦 Pack npm packages with Beachball
+                name: PackPackages
+
+              - bash: ls -R '$(packagesArtifactPath)'
                 displayName: 📦 Show packaged npm artifacts
 
       # The CreateAndMergePR stage:
       # - Creates or locates a pull request for $(releaseBranch), then waits for it to be merged or closed.
       # - Deletes the release branch after the pull request is merged or closed.
-      #
-      # Outputs:
-      # - WaitForPRMerge.WaitForPR.prWasMerged: true if the pull request was merged (otherwise unset).
+      # - Succeeds only after the pull request is merged; a closed or unreadable pull request fails the stage.
       #
       # NOTE: This stage runs only when Build.BumpAndPack.CommitChanges.hasUpdates is true.
       - stage: CreateAndMergePR
@@ -183,7 +186,7 @@ extends:
           - Build
         condition: and(succeeded(), eq(dependencies.Build.outputs['BumpAndPack.CommitChanges.hasUpdates'], 'true'))
         jobs:
-          - job: CreatePullRequest
+          - job: PullRequest
             pool:
               name: Azure-Pipelines-1ESPT-ExDShared
               image: ubuntu-latest
@@ -194,43 +197,29 @@ extends:
                   nodeVersion: ""
                   persistCredentials: true
 
-              # This sets the output prNumber
+              # This sets the read-only job variable prNumber.
               - script: bash scripts/create-release-pr.sh
                 env:
                   GH_TOKEN: $(githubAuthToken)
                   BRANCH: $(releaseBranch)
                   BUILD_NUMBER: $(Build.BuildNumber)
-                  OUTPUT_NAME: prNumber
+                  VARIABLE_NAME: prNumber
                 displayName: Create or locate beachball release PR
-                name: CreatePR
-
-          - job: WaitForPRMerge
-            dependsOn: CreatePullRequest
-            condition: and(succeeded(), ne(dependencies.CreatePullRequest.outputs['CreatePR.prNumber'], ''))
-            pool:
-              name: Azure-Pipelines-1ESPT-ExDShared
-              image: ubuntu-latest
-              os: linux
-            steps:
-              - template: /.ado/templates/setup.yml@self
-                parameters:
-                  nodeVersion: ""
-                  persistCredentials: true
 
               - script: bash scripts/wait-for-pr-merge.sh
                 env:
                   GH_TOKEN: $(githubAuthToken)
-                  PR_NUMBER: $[ dependencies.CreatePullRequest.outputs['CreatePR.prNumber'] ]
+                  PR_NUMBER: $(prNumber)
                   PR_BRANCH: $(releaseBranch)
-                  OUTPUT_NAME: prWasMerged
                 displayName: Wait for beachball PR merge
-                name: WaitForPR
 
       # Publish packages via ESRP. This only runs if a PR was created and merged (otherwise it implies
       # there was a problem or no changes to publish).
       - stage: PublishNpmPackages
-        dependsOn: CreateAndMergePR
-        condition: and(succeeded(), eq(dependencies.CreateAndMergePR.outputs['WaitForPRMerge.WaitForPR.prWasMerged'], 'true'))
+        dependsOn:
+          - Build
+          - CreateAndMergePR
+        condition: and(succeeded(), eq(dependencies.Build.outputs['BumpAndPack.PackPackages.hasPackages'], 'true'))
         jobs:
           - job: PublishNpmPackages
             pool:
