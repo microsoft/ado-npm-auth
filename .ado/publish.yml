@@ -76,15 +76,15 @@ extends:
       - stage: Verification
         jobs:
           - ${{ each pool in parameters.pools }}:
-              - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
-                displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
+              - job: build_${{ pool.os }}_${{ replace(variables.nodeVersion, '.', '_') }}
+                displayName: Build on ${{ pool.os }} - node ${{ variables.nodeVersion }}
                 pool: ${{ pool }}
                 # Note: since we're releasing packed tgz files, uploading only those files as outputs
                 # satisfies compliance requirements (it's not necessary to upload the whole repo).
                 steps:
                   - template: /.ado/templates/setup.yml@self
                     parameters:
-                      nodeVersion: ${{ nodeVersion }}
+                      nodeVersion: ${{ variables.nodeVersion }}
 
                   - script: yarn lage build test lint bundle
                     displayName: Build all
@@ -96,7 +96,7 @@ extends:
       #
       # Outputs:
       # - BumpAndPack.CommitChanges.hasUpdates: true if changes were pushed (otherwise unset).
-      # - BumpAndPack.PackPackages.hasPackages: true if */*.tgz files were packed; false otherwise.
+      # - BumpAndPack.PackPackages.hasPackages: true if */*.tgz files were packed (otherwise unset).
       # - NpmPackedTarballs: pipeline artifact containing the packed npm packages.
       #
       # NOTE: If the only change files have change type "none", there will be file changes (hasUpdates=true)
@@ -125,7 +125,7 @@ extends:
             steps:
               - template: /.ado/templates/setup.yml@self
                 parameters:
-                  nodeVersion: ${{ nodeVersion }}
+                  nodeVersion: ${{ variables.nodeVersion }}
                   persistCredentials: true
 
               - bash: yarn lage build bundle

@@ -179,7 +179,7 @@ yarnPath: .yarn/releases/yarn-4.1.0.cjs
 # Plugin configuration
 plugins:
   - path: .yarn/plugins/@yarnpkg/plugin-ado-auth.cjs
-    spec: "https://github.com/microsoft/ado-npm-auth/releases/download/latest/yarn-plugin-ado-auth.cjs"
+    spec: "https://unpkg.com/@microsoft/yarn-plugin-ado-auth/dist/yarn-plugin-ado-auth.cjs"
 
 # ADO Auth Plugin Settings
 adoNpmAuthFeedPrefix: "https://pkgs.dev.azure.com/"
