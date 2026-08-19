@@ -1,8 +1,16 @@
 # Change Log - @microsoft/ado-npm-auth-lib
 
-<!-- This log was last generated on Mon, 22 Jun 2026 18:16:18 GMT and should not be manually modified. -->
+<!-- This log was last generated on Wed, 19 Aug 2026 01:21:37 GMT and should not be manually modified. -->
 
 <!-- Start content -->
+
+## 0.11.1
+
+Wed, 19 Aug 2026 01:21:37 GMT
+
+### Patches
+
+- Bump js-yaml from 4.2.0 to 5.2.2 (198982749+Copilot@users.noreply.github.com)
 
 ## 0.11.0
 

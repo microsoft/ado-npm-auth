@@ -2,6 +2,21 @@
   "name": "@microsoft/ado-npm-auth-lib",
   "entries": [
     {
+      "date": "Wed, 19 Aug 2026 01:21:37 GMT",
+      "version": "0.11.1",
+      "tag": "@microsoft/ado-npm-auth-lib_v0.11.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "198982749+Copilot@users.noreply.github.com",
+            "package": "@microsoft/ado-npm-auth-lib",
+            "commit": "509bc428ab19296bcdb01cf0ee0f97dbb6bdc2fd",
+            "comment": "Bump js-yaml from 4.2.0 to 5.2.2"
+          }
+        ]
+      }
+    },
+    {
       "date": "Mon, 22 Jun 2026 18:16:18 GMT",
       "version": "0.11.0",
       "tag": "@microsoft/ado-npm-auth-lib_v0.11.0",
