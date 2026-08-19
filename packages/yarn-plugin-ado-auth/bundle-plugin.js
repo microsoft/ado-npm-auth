@@ -57,4 +57,7 @@ console.log(
   `Bundled: dist/${bundleName} (size ${sizeKb} kb) in ${timeTaken}s)`,
 );
 
-fs.writeFileSync(`dist/${bundleName}.meta.json`, JSON.stringify(result.metafile))
+fs.writeFileSync(
+  `dist/${bundleName}.meta.json`,
+  JSON.stringify(result.metafile),
+);

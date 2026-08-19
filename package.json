@@ -1,9 +1,10 @@
 {
-  "name": "root",
+  "name": "@microsoft/ado-npm-auth-repo",
   "version": "0.0.0",
   "private": true,
   "repository": "https://github.com/microsoft/ado-npm-auth",
   "workspaces": [
+    ".",
     "packages/*"
   ],
   "scripts": {
@@ -11,7 +12,8 @@
     "bundle": "lage bundle",
     "lint": "lage lint",
     "test": "lage test",
-    "format": "lage --no-cache lint --write",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "change": "beachball change",
     "checkchange": "beachball check",
     "ci": "lage build test lint bundle"
@@ -25,11 +27,5 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "yarn@4.17.0",
-  "resolutions": {
-    "glob": "^11.1.0"
-  },
-  "resolutions.justifications": {
-    "glob": "Fixes security vulnerability CVE-2025-64756"
-  }
+  "packageManager": "yarn@4.17.0"
 }

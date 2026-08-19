@@ -19,9 +19,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "eslint": "eslint .",
-    "lint": "prettier --check src/**/*.ts",
-    "performance-test": "node lib/tests/performance.test.js",
+    "lint": "eslint .",
     "test": "vitest run src"
   },
   "dependencies": {
@@ -34,14 +32,13 @@
   },
   "devDependencies": {
     "@microsoft/eslint-plugin-sdl": "^1.1.0",
-    "@rnx-kit/eslint-plugin": "^0.9.3",
+    "@rnx-kit/eslint-plugin": "^0.9.9",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.17.28",
     "@types/npmcli__config": "^6.0.3",
     "@types/yargs": "^17.0.33",
     "esbuild": "^0.28.1",
     "eslint": "^9.39.1",
-    "prettier": "^3.5.3",
     "typescript": "^5.8.2",
     "vitest": "^4.1.0"
   }

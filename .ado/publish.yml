@@ -5,14 +5,14 @@ trigger:
   branches:
     include:
       - main
-      - 'release/*'
+      - "release/*"
 
 resources:
   repositories:
-  - repository: OfficePipelineTemplates
-    type: git
-    name: 1ESPipelineTemplates/OfficePipelineTemplates
-    ref: refs/tags/release
+    - repository: OfficePipelineTemplates
+      type: git
+      name: 1ESPipelineTemplates/OfficePipelineTemplates
+      ref: refs/tags/release
 
 variables:
   - name: tags
@@ -58,229 +58,228 @@ extends:
         parser: "@typescript-eslint/parser"
         parserOptions: ""
     stages:
-    - stage: Verification
-      jobs:
-        - ${{ each pool in parameters.pools }}:
-          - ${{ each nodeVersion in parameters.nodeVersions }}:
-            - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
-              displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
-              pool: ${{ pool }}
-              templateContext:
-                outputs:
-                  # declare the outputs for compliance.
-                  - output: pipelineArtifact
-                    targetPath: $(System.DefaultWorkingDirectory)
-                    artifactName: publish-${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
-              steps:
-                - template: /.ado/templates/setup.yml@self
-                  parameters:
-                    nodeVersion: ${{ nodeVersion }}
+      - stage: Verification
+        jobs:
+          - ${{ each pool in parameters.pools }}:
+              - ${{ each nodeVersion in parameters.nodeVersions }}:
+                  - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+                    displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
+                    pool: ${{ pool }}
+                    templateContext:
+                      outputs:
+                        # declare the outputs for compliance.
+                        - output: pipelineArtifact
+                          targetPath: $(System.DefaultWorkingDirectory)
+                          artifactName: publish-${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+                    steps:
+                      - template: /.ado/templates/setup.yml@self
+                        parameters:
+                          nodeVersion: ${{ nodeVersion }}
 
-                - script: yarn install --immutable
-                  displayName: Yarn install (installs package dependencies)
+                      - script: yarn install --immutable
+                        displayName: Yarn install (installs package dependencies)
 
-                - script: yarn lage build test lint bundle --reporter=azureDevOps
-                  displayName: Build all
+                      - script: yarn lage build test lint bundle --reporter=azureDevOps
+                        displayName: Build all
 
-                - task: PowerShell@2
-                  inputs:
-                    targetType: 'inline'
-                    script: |
-                      Get-ChildItem -Recurse -File -Filter 'esbuild.exe' | Remove-Item -Force -ErrorAction SilentlyContinue
-                  displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
-                  condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
+                      - task: PowerShell@2
+                        inputs:
+                          targetType: "inline"
+                          script: |
+                            Get-ChildItem -Recurse -File -Filter 'esbuild.exe' | Remove-Item -Force -ErrorAction SilentlyContinue
+                        displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
+                        condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
 
-    - stage: Build
-      dependsOn:
-       - Verification # Make sure we build and pass tests on all platforms and node versions before publishing
-      jobs:
-        - job: Publish
-          pool:
-            name: Azure-Pipelines-1ESPT-ExDShared
-            image: ubuntu-latest
-            os: linux
-          templateContext:
-            outputs:
-             - output: pipelineArtifact
-               targetPath: $(Pipeline.Workspace)/published-packages
-               artifactName: NpmPackedTarballs
-               displayName: 'Publish npm pack artifacts'
-               condition: succeededOrFailed()
+      - stage: Build
+        dependsOn:
+          - Verification # Make sure we build and pass tests on all platforms and node versions before publishing
+        jobs:
+          - job: Publish
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: ubuntu-latest
+              os: linux
+            templateContext:
+              outputs:
+                - output: pipelineArtifact
+                  targetPath: $(Pipeline.Workspace)/published-packages
+                  artifactName: NpmPackedTarballs
+                  displayName: "Publish npm pack artifacts"
+                  condition: succeededOrFailed()
 
-          steps:
-            - template: /.ado/templates/setup.yml@self
-              parameters:
-                nodeVersion: 24.x
-                persistCredentials: true
+            steps:
+              - template: /.ado/templates/setup.yml@self
+                parameters:
+                  nodeVersion: 24.x
+                  persistCredentials: true
 
-            - script: yarn install --immutable
-              displayName: Yarn Install (Install package dependencies)
+              - script: yarn install --immutable
+                displayName: Yarn Install (Install package dependencies)
 
-            - script: yarn lage build bundle --reporter=azureDevOps
-              displayName: Build & Bundle
+              - script: yarn lage build bundle --reporter=azureDevOps
+                displayName: Build & Bundle
 
-            - script: |
-                yarn beachball bump --verbose --yes
-              displayName: 📝 Beachball Bump for GitHub PR
+              - script: |
+                  yarn beachball bump --verbose --yes
+                displayName: 📝 Beachball Bump for GitHub PR
 
-            - script: git status
-              displayName: 📝 git status
+              - script: git status
+                displayName: 📝 git status
 
-            - script: git add --all
-              displayName: 📝 git add --all
+              - script: git add --all
+                displayName: 📝 git add --all
 
-            - script: git commit -m "📦 Apply beachball changes"
-              displayName: 📝 git commit
+              - script: git commit -m "📦 Apply beachball changes"
+                displayName: 📝 git commit
 
-            - script: git log -10
-              displayName: 📝 git log
+              - script: git log -10
+                displayName: 📝 git log
 
-            - script: |
-                set -x
-                git push origin HEAD:refs/heads/$pr_branch --force-with-lease
-              env:
-                pr_branch: $(ReleaseBranch)
-              displayName: 📝 git push
+              - script: |
+                  set -x
+                  git push origin HEAD:refs/heads/$pr_branch --force-with-lease
+                env:
+                  pr_branch: $(ReleaseBranch)
+                displayName: 📝 git push
 
-            - script: git reset HEAD~ --hard
-              displayName: 📝 git reset HEAD~ --hard
+              - script: git reset HEAD~ --hard
+                displayName: 📝 git reset HEAD~ --hard
 
-            - script: |
-                rm -rf "$(Pipeline.Workspace)/published-packages"
-                mkdir "$(Pipeline.Workspace)/published-packages"
-              displayName: 📦 Clear previous packed up packages.
+              - script: |
+                  rm -rf "$(Pipeline.Workspace)/published-packages"
+                  mkdir "$(Pipeline.Workspace)/published-packages"
+                displayName: 📦 Clear previous packed up packages.
 
-            - script: |
-                yarn beachball publish --verbose --no-push --pack-to-path "$(Pipeline.Workspace)/published-packages"
-              displayName: 📦 Beachball Publish for Npm packages
+              - script: |
+                  yarn beachball publish --verbose --no-push --pack-to-path "$(Pipeline.Workspace)/published-packages"
+                displayName: 📦 Beachball Publish for Npm packages
 
-            - script: ls "$(Pipeline.Workspace)/published-packages"
-              displayName: 📦 Show packaged npm artifacts
+              - script: ls "$(Pipeline.Workspace)/published-packages"
+                displayName: 📦 Show packaged npm artifacts
 
+      - stage: CreatePullRequestAndMerge
+        dependsOn:
+          - Build
+        jobs:
+          - job: CreatePullRequest
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: ubuntu-latest
+              os: linux
+            steps:
+              - template: /.ado/templates/setup.yml@self
+                parameters:
+                  nodeVersion: ""
+                  persistCredentials: true
 
-    - stage: CreatePullRequestAndMerge
-      dependsOn:
-        - Build
-      jobs:
-        - job: CreatePullRequest
-          pool:
-            name: Azure-Pipelines-1ESPT-ExDShared
-            image: ubuntu-latest
-            os: linux
-          steps:
-            - template: /.ado/templates/setup.yml@self
-              parameters:
-                nodeVersion: ''
-                persistCredentials: true
+              - script: |
+                  if [ -z "$branch" ]; then
+                    echo "No beachball release branch recorded; skipping PR creation."
+                    exit 0
+                  fi
 
-            - script: |
-                if [ -z "$branch" ]; then
-                  echo "No beachball release branch recorded; skipping PR creation."
-                  exit 0
-                fi
-
-                pr_title="📦 applying package updates ***NO_CI***"
-                pr_body="Applying package updates for release build $(Build.BuildNumber)"
-                pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
-
-                if [ -z "$pr_number" ]; then
-                  gh pr create --head "$branch" --base main --title "$pr_title" --body "$pr_body"
-                  echo "Created PR for $branch"
+                  pr_title="📦 applying package updates ***NO_CI***"
+                  pr_body="Applying package updates for release build $(Build.BuildNumber)"
                   pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
-                else
-                  echo "PR #$pr_number already exists for $branch"
-                fi
-                if [ -n "$pr_number" ]; then
-                  echo "##vso[task.setvariable variable=BeachballPRNumber;isOutput=true]$pr_number"
-                  echo "Recorded PR number $pr_number"
-                fi
-              env:
-                GH_TOKEN: $(githubAuthToken)
-                GH_REPO: microsoft/ado-npm-auth
-                branch: $(releaseBranch)
 
-              displayName: Create or locate beachball release PR
-              name: RecordBeachballPR
+                  if [ -z "$pr_number" ]; then
+                    gh pr create --head "$branch" --base main --title "$pr_title" --body "$pr_body"
+                    echo "Created PR for $branch"
+                    pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
+                  else
+                    echo "PR #$pr_number already exists for $branch"
+                  fi
+                  if [ -n "$pr_number" ]; then
+                    echo "##vso[task.setvariable variable=BeachballPRNumber;isOutput=true]$pr_number"
+                    echo "Recorded PR number $pr_number"
+                  fi
+                env:
+                  GH_TOKEN: $(githubAuthToken)
+                  GH_REPO: microsoft/ado-npm-auth
+                  branch: $(releaseBranch)
 
-        - job: WaitForPRMerge
-          dependsOn: CreatePullRequest
-          pool:
-            name: Azure-Pipelines-1ESPT-ExDShared
-            image: ubuntu-latest
-            os: linux
-          variables:
-            BeachballPRNumber: $[ dependencies.CreatePullRequest.outputs['RecordBeachballPR.BeachballPRNumber'] ]
-          steps:
-            - template: /.ado/templates/setup.yml@self
-              parameters:
-                nodeVersion: ''
-                persistCredentials: true
+                displayName: Create or locate beachball release PR
+                name: RecordBeachballPR
 
-            - script: |
-                if [ -z "$pr_branch" ]; then
-                  echo "No beachball release branch recorded; skipping PR wait."
-                  exit 0
-                fi
-                if [ -z "$pr_number" ]; then
-                  pr_number=$(gh pr list --head "$pr_branch" --json number --jq '.[0].number' || true)
-                fi
-                if [ -z "$pr_number" ]; then
-                  echo "No PR found for $pr_branch; nothing to wait on."
-                  exit 0
-                fi
-                echo "Waiting for PR #$pr_number to merge at https://github.com/microsoft/ado-npm-auth/pull/$pr_number ..."
-                while true; do
-                  state=$(gh pr view "$pr_number" --json state --jq '.state' || true)
-                  case "$state" in
-                    MERGED)
-                      echo "PR #$pr_number merged."
-                      break
-                      ;;
-                    CLOSED)
-                      echo "PR #$pr_number closed without merge." >&2
-                      exit 1
-                      ;;
-                    *)
-                      echo "[$(date +"%H:%M:%S")] PR #$pr_number still open. Please merge: https://github.com/microsoft/ado-npm-auth/pull/$pr_number ; sleeping 2 minutes."
-                      sleep 120
-                      ;;
-                  esac
-                done
-              env:
-                GH_TOKEN: $(githubAuthToken)
-                GH_REPO: microsoft/ado-npm-auth
-                pr_number: $(BeachballPRNumber)
-                pr_branch: $(releaseBranch)
+          - job: WaitForPRMerge
+            dependsOn: CreatePullRequest
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: ubuntu-latest
+              os: linux
+            variables:
+              BeachballPRNumber: $[ dependencies.CreatePullRequest.outputs['RecordBeachballPR.BeachballPRNumber'] ]
+            steps:
+              - template: /.ado/templates/setup.yml@self
+                parameters:
+                  nodeVersion: ""
+                  persistCredentials: true
 
-              displayName: Wait for beachball PR merge
+              - script: |
+                  if [ -z "$pr_branch" ]; then
+                    echo "No beachball release branch recorded; skipping PR wait."
+                    exit 0
+                  fi
+                  if [ -z "$pr_number" ]; then
+                    pr_number=$(gh pr list --head "$pr_branch" --json number --jq '.[0].number' || true)
+                  fi
+                  if [ -z "$pr_number" ]; then
+                    echo "No PR found for $pr_branch; nothing to wait on."
+                    exit 0
+                  fi
+                  echo "Waiting for PR #$pr_number to merge at https://github.com/microsoft/ado-npm-auth/pull/$pr_number ..."
+                  while true; do
+                    state=$(gh pr view "$pr_number" --json state --jq '.state' || true)
+                    case "$state" in
+                      MERGED)
+                        echo "PR #$pr_number merged."
+                        break
+                        ;;
+                      CLOSED)
+                        echo "PR #$pr_number closed without merge." >&2
+                        exit 1
+                        ;;
+                      *)
+                        echo "[$(date +"%H:%M:%S")] PR #$pr_number still open. Please merge: https://github.com/microsoft/ado-npm-auth/pull/$pr_number ; sleeping 2 minutes."
+                        sleep 120
+                        ;;
+                    esac
+                  done
+                env:
+                  GH_TOKEN: $(githubAuthToken)
+                  GH_REPO: microsoft/ado-npm-auth
+                  pr_number: $(BeachballPRNumber)
+                  pr_branch: $(releaseBranch)
 
-    - stage: PublishNpmPackages
-      dependsOn: CreatePullRequestAndMerge # Make sure we build and pass tests on all platforms and node versions before publishing
-      jobs:
-        - job: PublishNpmPackages
-          pool:
-            name: Azure-Pipelines-1ESPT-ExDShared
-            image: windows-latest
-            os: windows
-          steps:
-            - task: DownloadPipelineArtifact@2
-              displayName: 'Download packaged npm artifacts'
-              inputs:
-                buildType: 'current'
-                artifact: 'NpmPackedTarballs'
-                path: '$(Pipeline.Workspace)\published-packages'
+                displayName: Wait for beachball PR merge
 
-            - task: 'SFP.release-tasks.custom-build-release-task.EsrpRelease@9'
-              displayName: 'ESRP Release to npmjs.com'
-              inputs:
-                connectedservicename: 'ESRP-JSHost3'
-                usemanagedidentity: false
-                keyvaultname: 'OGX-JSHost-KV'
-                authcertname: 'OGX-JSHost-Auth4'
-                signcertname: 'OGX-JSHost-Sign3'
-                clientid: '0a35e01f-eadf-420a-a2bf-def002ba898d'
-                domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
-                contenttype: npm
-                folderlocation: $(Pipeline.Workspace)\published-packages
-                owners: 'vmorozov@microsoft.com'
-                approvers: 'khosany@microsoft.com'
+      - stage: PublishNpmPackages
+        dependsOn: CreatePullRequestAndMerge # Make sure we build and pass tests on all platforms and node versions before publishing
+        jobs:
+          - job: PublishNpmPackages
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: windows-latest
+              os: windows
+            steps:
+              - task: DownloadPipelineArtifact@2
+                displayName: "Download packaged npm artifacts"
+                inputs:
+                  buildType: "current"
+                  artifact: "NpmPackedTarballs"
+                  path: '$(Pipeline.Workspace)\published-packages'
+
+              - task: "SFP.release-tasks.custom-build-release-task.EsrpRelease@9"
+                displayName: "ESRP Release to npmjs.com"
+                inputs:
+                  connectedservicename: "ESRP-JSHost3"
+                  usemanagedidentity: false
+                  keyvaultname: "OGX-JSHost-KV"
+                  authcertname: "OGX-JSHost-Auth4"
+                  signcertname: "OGX-JSHost-Sign3"
+                  clientid: "0a35e01f-eadf-420a-a2bf-def002ba898d"
+                  domaintenantid: "cdc5aeea-15c5-4db6-b079-fcadd2505dc2"
+                  contenttype: npm
+                  folderlocation: $(Pipeline.Workspace)\published-packages
+                  owners: "vmorozov@microsoft.com"
+                  approvers: "khosany@microsoft.com"

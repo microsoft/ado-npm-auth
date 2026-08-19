@@ -16,9 +16,7 @@
   "scripts": {
     "build": "tsc",
     "bundle": "node ./bundle-plugin.js",
-    "lint": "prettier --check src/**/*.ts",
-    "lint:fix": "prettier --write src/**/*.ts",
-    "eslint": "eslint ."
+    "lint": "eslint ."
   },
   "dependencies": {
     "@microsoft/ado-npm-auth-lib": "workspace:^"
@@ -32,7 +30,6 @@
     "@yarnpkg/core": "^4.5.0",
     "esbuild": "^0.28.1",
     "eslint": "^9.39.1",
-    "prettier": "^3.5.3",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
