@@ -17,8 +17,23 @@ resources:
 variables:
   - name: tags
     value: production,externalfacing
-  - name: ReleaseBranch
-    value: rnbot/beachball/rel$(Build.BuildId)
+  - name: releaseBranch
+    value: beachball/rel$(Build.BuildId)
+    readonly: true
+    # Internal npm feed (with npmjs.org as upstream) for build/publish in 1ES PT
+  - name: REGISTRY_URL
+    value: https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/
+    readonly: true
+    # Yarn v4 doesn't respect .npmrc, so set config with YARN_* env
+  - name: YARN_NPM_REGISTRY_SERVER
+    value: $(REGISTRY_URL)
+    readonly: true
+  - name: YARN_NPM_ALWAYS_AUTH
+    value: 1
+    readonly: true
+  - name: YARN_NPMRC_AUTH_ENABLED
+    value: 1
+    readonly: true
 
 parameters:
   - name: pools
@@ -76,10 +91,7 @@ extends:
                   parameters:
                     nodeVersion: ${{ nodeVersion }}
 
-                - script: yarn install --immutable
-                  displayName: Yarn install (installs package dependencies)
-
-                - script: yarn lage build test lint bundle --reporter=azureDevOps
+                - script: yarn lage build test lint bundle
                   displayName: Build all
 
                 - task: PowerShell@2
@@ -113,14 +125,11 @@ extends:
                 nodeVersion: 24.x
                 persistCredentials: true
 
-            - script: yarn install --immutable
-              displayName: Yarn Install (Install package dependencies)
-
-            - script: yarn lage build bundle --reporter=azureDevOps
+            - script: yarn lage build bundle
               displayName: Build & Bundle
 
             - script: |
-                yarn beachball bump --verbose --yes
+                yarn beachball bump --verbose
               displayName: 📝 Beachball Bump for GitHub PR
 
             - script: git status
@@ -137,9 +146,7 @@ extends:
 
             - script: |
                 set -x
-                git push origin HEAD:refs/heads/$pr_branch --force-with-lease
-              env:
-                pr_branch: $(ReleaseBranch)
+                git push origin 'HEAD:refs/heads/$(releaseBranch)' --force-with-lease
               displayName: 📝 git push
 
             - script: git reset HEAD~ --hard
@@ -191,7 +198,7 @@ extends:
                   echo "PR #$pr_number already exists for $branch"
                 fi
                 if [ -n "$pr_number" ]; then
-                  echo "##vso[task.setvariable variable=BeachballPRNumber;isOutput=true]$pr_number"
+                  echo "##vso[task.setvariable variable=BeachballPRNumber;isOutput=true;isReadOnly=true]$pr_number"
                   echo "Recorded PR number $pr_number"
                 fi
               env:
@@ -222,7 +229,7 @@ extends:
                   exit 0
                 fi
                 if [ -z "$pr_number" ]; then
-                  pr_number=$(gh pr list --head "$pr_branch" --json number --jq '.[0].number' || true)
+                  pr_number=$(gh pr list --head "$pr_branch" --state all --json number --jq '.[0].number')
                 fi
                 if [ -z "$pr_number" ]; then
                   echo "No PR found for $pr_branch; nothing to wait on."
@@ -238,7 +245,7 @@ extends:
                       ;;
                     CLOSED)
                       echo "PR #$pr_number closed without merge." >&2
-                      exit 1
+                      break
                       ;;
                     *)
                       echo "[$(date +"%H:%M:%S")] PR #$pr_number still open. Please merge: https://github.com/microsoft/ado-npm-auth/pull/$pr_number ; sleeping 2 minutes."
@@ -246,6 +253,15 @@ extends:
                       ;;
                   esac
                 done
+                if git ls-remote --exit-code --heads origin "refs/heads/$pr_branch" >/dev/null 2>&1; then
+                  git push origin --delete "$pr_branch"
+                  echo "Deleted release branch $pr_branch."
+                else
+                  echo "Release branch $pr_branch was already deleted."
+                fi
+                if [ "$state" = "CLOSED" ]; then
+                  exit 1
+                fi
               env:
                 GH_TOKEN: $(githubAuthToken)
                 GH_REPO: microsoft/ado-npm-auth
@@ -260,16 +276,14 @@ extends:
         - job: PublishNpmPackages
           pool:
             name: Azure-Pipelines-1ESPT-ExDShared
-            image: windows-latest
-            os: windows
+            image: ubuntu-latest
+            os: linux
+          templateContext:
+            inputs:
+              - input: pipelineArtifact
+                artifactName: published-packages
+                targetPath: '$(Pipeline.Workspace)/published-packages'
           steps:
-            - task: DownloadPipelineArtifact@2
-              displayName: 'Download packaged npm artifacts'
-              inputs:
-                buildType: 'current'
-                artifact: 'NpmPackedTarballs'
-                path: '$(Pipeline.Workspace)\published-packages'
-
             - task: 'SFP.release-tasks.custom-build-release-task.EsrpRelease@9'
               displayName: 'ESRP Release to npmjs.com'
               inputs:
@@ -281,6 +295,6 @@ extends:
                 clientid: '0a35e01f-eadf-420a-a2bf-def002ba898d'
                 domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
                 contenttype: npm
-                folderlocation: $(Pipeline.Workspace)\published-packages
+                folderlocation: '$(Pipeline.Workspace)/published-packages'
                 owners: 'vmorozov@microsoft.com'
                 approvers: 'khosany@microsoft.com'
