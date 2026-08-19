@@ -16,7 +16,7 @@ steps:
   # https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
   # The options below include ADO defaults (braceexpand:hashall:interactive-comments) plus
   # errexit:errtrace for better error behavior.
-  - script: |
+  - bash: |
       echo "##vso[task.setvariable variable=shellopts]braceexpand:hashall:interactive-comments:errexit:errtrace"
     displayName: Force exit on error (bash)
 
@@ -36,7 +36,7 @@ steps:
         echo "##vso[task.setvariable variable=githubAuthToken;issecret=true]$token"
       displayName: Extract GitHub OAuth token
 
-    - script: |
+    - bash: |
         git config user.name "azure-pipelines[bot]"
         git config user.email "azure-pipelines[bot]@users.noreply.github.com"
       displayName: Configure git user
