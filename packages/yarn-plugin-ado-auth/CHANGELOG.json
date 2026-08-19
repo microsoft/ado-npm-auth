@@ -2,6 +2,29 @@
   "name": "@microsoft/yarn-plugin-ado-auth",
   "entries": [
     {
+      "date": "Wed, 19 Aug 2026 22:16:42 GMT",
+      "version": "0.3.1",
+      "tag": "@microsoft/yarn-plugin-ado-auth_v0.3.1",
+      "comments": {
+        "none": [
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "@microsoft/yarn-plugin-ado-auth",
+            "commit": "bcefafaab8dba77287918cfc0611501535198353",
+            "comment": "Update lint/format scripts"
+          }
+        ],
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "@microsoft/yarn-plugin-ado-auth",
+            "comment": "Bump @microsoft/ado-npm-auth-lib to v0.11.1",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
       "date": "Mon, 22 Jun 2026 18:16:18 GMT",
       "version": "0.3.0",
       "tag": "@microsoft/yarn-plugin-ado-auth_v0.3.0",
