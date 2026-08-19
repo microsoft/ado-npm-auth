@@ -17,8 +17,23 @@ resources:
 variables:
   - name: tags
     value: production,externalfacing
-  - name: ReleaseBranch
-    value: rnbot/beachball/rel$(Build.BuildId)
+  - name: releaseBranch
+    value: beachball/rel$(Build.BuildId)
+    readonly: true
+    # Internal npm feed (with npmjs.org as upstream) for build/publish in 1ES PT
+  - name: REGISTRY_URL
+    value: https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/
+    readonly: true
+    # Yarn v4 doesn't respect .npmrc, so set config with YARN_* env
+  - name: YARN_NPM_REGISTRY_SERVER
+    value: $(REGISTRY_URL)
+    readonly: true
+  - name: YARN_NPM_ALWAYS_AUTH
+    value: 1
+    readonly: true
+  - name: YARN_NPMRC_AUTH_ENABLED
+    value: 1
+    readonly: true
 
 parameters:
   - name: pools
@@ -65,47 +80,47 @@ extends:
                   - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
                     displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
                     pool: ${{ pool }}
-                    templateContext:
-                      outputs:
-                        # declare the outputs for compliance.
-                        - output: pipelineArtifact
-                          targetPath: $(System.DefaultWorkingDirectory)
-                          artifactName: publish-${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+                    # Note: since we're releasing packed tgz files, uploading only those files as outputs
+                    # satisfies compliance requirements (it's not necessary to upload the whole repo).
                     steps:
                       - template: /.ado/templates/setup.yml@self
                         parameters:
                           nodeVersion: ${{ nodeVersion }}
 
-                      - script: yarn install --immutable
-                        displayName: Yarn install (installs package dependencies)
-
-                      - script: yarn lage build test lint bundle --reporter=azureDevOps
+                      - script: yarn lage build test lint bundle
                         displayName: Build all
 
-                      - task: PowerShell@2
-                        inputs:
-                          targetType: "inline"
-                          script: |
-                            Get-ChildItem -Recurse -File -Filter 'esbuild.exe' | Remove-Item -Force -ErrorAction SilentlyContinue
-                        displayName: Remove esbuild binaries due to false positives in compliance checks of binskim
-                        condition: and(succeeded(), eq('${{ pool.os }}', 'windows'))
-
+      # The Build stage:
+      # - Bumps package versions, updates changelogs, and deletes consumed change files,
+      #   and pushes resulting changes to $(releaseBranch).
+      # - Packs changed npm packages as an artifact.
+      #
+      # Outputs:
+      # - BumpAndPack.CommitChanges.hasUpdates: true if changes were pushed (otherwise unset).
+      # - NpmPackedTarballs: pipeline artifact containing the packed npm packages.
+      #
+      # NOTE: If the only change files have change type "none", there will be file changes (hasUpdates=true)
+      # but no version bumps.
       - stage: Build
         dependsOn:
           - Verification # Make sure we build and pass tests on all platforms and node versions before publishing
         jobs:
-          - job: Publish
+          - job: BumpAndPack
+            displayName: Bump and pack npm packages
             pool:
               name: Azure-Pipelines-1ESPT-ExDShared
               image: ubuntu-latest
               os: linux
+            variables:
+              - name: packagesArtifactPath
+                value: $(Build.StagingDirectory)/published-packages
+                readonly: true
             templateContext:
               outputs:
                 - output: pipelineArtifact
-                  targetPath: $(Pipeline.Workspace)/published-packages
+                  targetPath: $(packagesArtifactPath)
                   artifactName: NpmPackedTarballs
-                  displayName: "Publish npm pack artifacts"
-                  condition: succeededOrFailed()
+                  displayName: Packed npm packages
 
             steps:
               - template: /.ado/templates/setup.yml@self
@@ -113,53 +128,60 @@ extends:
                   nodeVersion: 24.x
                   persistCredentials: true
 
-              - script: yarn install --immutable
-                displayName: Yarn Install (Install package dependencies)
-
-              - script: yarn lage build bundle --reporter=azureDevOps
+              - script: yarn lage build bundle
                 displayName: Build & Bundle
 
+              # Bump package versions, update changelog, and delete change files.
+              # If there were files with change type "none", there might be file changes without a version bump.
+              # (The inverse is not true: if there are no file changes, there will be no version bump.)
               - script: |
-                  yarn beachball bump --verbose --yes
+                  yarn beachball bump --verbose
                 displayName: 📝 Beachball Bump for GitHub PR
 
-              - script: git status
-                displayName: 📝 git status
-
-              - script: git add --all
-                displayName: 📝 git add --all
-
-              - script: git commit -m "📦 Apply beachball changes"
-                displayName: 📝 git commit
-
-              - script: git log -10
-                displayName: 📝 git log
-
+              # Commit and push if relevant (set hasUpdates only if there were changes).
+              # We could create the PR here too, but separating it has the benefit of ensuring that any
+              # post-build compliance checks are successful before PR creation.
               - script: |
                   set -x
-                  git push origin HEAD:refs/heads/$pr_branch --force-with-lease
-                env:
-                  pr_branch: $(ReleaseBranch)
-                displayName: 📝 git push
+                  git status
+                  git add --all
+                  if git diff --cached --quiet; then
+                    echo "No changes to commit"
+                  else
+                    git commit -m "📦 Apply beachball changes"
+                    git log -10
+                    git push origin 'HEAD:refs/heads/$(releaseBranch)' --force-with-lease
+                    echo "##vso[task.setvariable variable=hasUpdates;isOutput=true;isReadOnly=true]true"
 
-              - script: git reset HEAD~ --hard
-                displayName: 📝 git reset HEAD~ --hard
+                    echo "Reverting changes for subsequent steps"
+                    git reset HEAD~ --hard
+                  fi
+                displayName: 📝 Commit and push changes
+                name: CommitChanges
 
+              # Revert changes, then use beachball to pack any changed npm packages.
               - script: |
-                  rm -rf "$(Pipeline.Workspace)/published-packages"
-                  mkdir "$(Pipeline.Workspace)/published-packages"
-                displayName: 📦 Clear previous packed up packages.
+                  set -x
+                  rm -rf '$(packagesArtifactPath)'
+                  mkdir '$(packagesArtifactPath)'
+                  yarn beachball publish --verbose --no-push --pack-to-path '$(packagesArtifactPath)'
+                displayName: 📦 Pack npm packages with Beachball
 
-              - script: |
-                  yarn beachball publish --verbose --no-push --pack-to-path "$(Pipeline.Workspace)/published-packages"
-                displayName: 📦 Beachball Publish for Npm packages
-
-              - script: ls "$(Pipeline.Workspace)/published-packages"
+              - script: ls -R '$(packagesArtifactPath)'
                 displayName: 📦 Show packaged npm artifacts
 
-      - stage: CreatePullRequestAndMerge
+      # The CreateAndMergePR stage:
+      # - Creates or locates a pull request for $(releaseBranch), then waits for it to be merged or closed.
+      # - Deletes the release branch after the pull request is merged or closed.
+      #
+      # Outputs:
+      # - WaitForPRMerge.WaitForPR.prWasMerged: true if the pull request was merged (otherwise unset).
+      #
+      # NOTE: This stage runs only when Build.BumpAndPack.CommitChanges.hasUpdates is true.
+      - stage: CreateAndMergePR
         dependsOn:
           - Build
+        condition: and(succeeded(), eq(dependencies.Build.outputs['BumpAndPack.CommitChanges.hasUpdates'], 'true'))
         jobs:
           - job: CreatePullRequest
             pool:
@@ -172,103 +194,55 @@ extends:
                   nodeVersion: ""
                   persistCredentials: true
 
-              - script: |
-                  if [ -z "$branch" ]; then
-                    echo "No beachball release branch recorded; skipping PR creation."
-                    exit 0
-                  fi
-
-                  pr_title="📦 applying package updates ***NO_CI***"
-                  pr_body="Applying package updates for release build $(Build.BuildNumber)"
-                  pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
-
-                  if [ -z "$pr_number" ]; then
-                    gh pr create --head "$branch" --base main --title "$pr_title" --body "$pr_body"
-                    echo "Created PR for $branch"
-                    pr_number=$(gh pr list --head "$branch" --json number --jq '.[0].number' || true)
-                  else
-                    echo "PR #$pr_number already exists for $branch"
-                  fi
-                  if [ -n "$pr_number" ]; then
-                    echo "##vso[task.setvariable variable=BeachballPRNumber;isOutput=true]$pr_number"
-                    echo "Recorded PR number $pr_number"
-                  fi
+              # This sets the output prNumber
+              - script: bash scripts/create-release-pr.sh
                 env:
                   GH_TOKEN: $(githubAuthToken)
-                  GH_REPO: microsoft/ado-npm-auth
-                  branch: $(releaseBranch)
-
+                  BRANCH: $(releaseBranch)
+                  BUILD_NUMBER: $(Build.BuildNumber)
+                  OUTPUT_NAME: prNumber
                 displayName: Create or locate beachball release PR
-                name: RecordBeachballPR
+                name: CreatePR
 
           - job: WaitForPRMerge
             dependsOn: CreatePullRequest
+            condition: and(succeeded(), ne(dependencies.CreatePullRequest.outputs['CreatePR.prNumber'], ''))
             pool:
               name: Azure-Pipelines-1ESPT-ExDShared
               image: ubuntu-latest
               os: linux
-            variables:
-              BeachballPRNumber: $[ dependencies.CreatePullRequest.outputs['RecordBeachballPR.BeachballPRNumber'] ]
             steps:
               - template: /.ado/templates/setup.yml@self
                 parameters:
                   nodeVersion: ""
                   persistCredentials: true
 
-              - script: |
-                  if [ -z "$pr_branch" ]; then
-                    echo "No beachball release branch recorded; skipping PR wait."
-                    exit 0
-                  fi
-                  if [ -z "$pr_number" ]; then
-                    pr_number=$(gh pr list --head "$pr_branch" --json number --jq '.[0].number' || true)
-                  fi
-                  if [ -z "$pr_number" ]; then
-                    echo "No PR found for $pr_branch; nothing to wait on."
-                    exit 0
-                  fi
-                  echo "Waiting for PR #$pr_number to merge at https://github.com/microsoft/ado-npm-auth/pull/$pr_number ..."
-                  while true; do
-                    state=$(gh pr view "$pr_number" --json state --jq '.state' || true)
-                    case "$state" in
-                      MERGED)
-                        echo "PR #$pr_number merged."
-                        break
-                        ;;
-                      CLOSED)
-                        echo "PR #$pr_number closed without merge." >&2
-                        exit 1
-                        ;;
-                      *)
-                        echo "[$(date +"%H:%M:%S")] PR #$pr_number still open. Please merge: https://github.com/microsoft/ado-npm-auth/pull/$pr_number ; sleeping 2 minutes."
-                        sleep 120
-                        ;;
-                    esac
-                  done
+              - script: bash scripts/wait-for-pr-merge.sh
                 env:
                   GH_TOKEN: $(githubAuthToken)
-                  GH_REPO: microsoft/ado-npm-auth
-                  pr_number: $(BeachballPRNumber)
-                  pr_branch: $(releaseBranch)
-
+                  PR_NUMBER: $[ dependencies.CreatePullRequest.outputs['CreatePR.prNumber'] ]
+                  PR_BRANCH: $(releaseBranch)
+                  OUTPUT_NAME: prWasMerged
                 displayName: Wait for beachball PR merge
+                name: WaitForPR
 
+      # Publish packages via ESRP. This only runs if a PR was created and merged (otherwise it implies
+      # there was a problem or no changes to publish).
       - stage: PublishNpmPackages
-        dependsOn: CreatePullRequestAndMerge # Make sure we build and pass tests on all platforms and node versions before publishing
+        dependsOn: CreateAndMergePR
+        condition: and(succeeded(), eq(dependencies.CreateAndMergePR.outputs['WaitForPRMerge.WaitForPR.prWasMerged'], 'true'))
         jobs:
           - job: PublishNpmPackages
             pool:
               name: Azure-Pipelines-1ESPT-ExDShared
-              image: windows-latest
-              os: windows
+              image: ubuntu-latest
+              os: linux
+            templateContext:
+              inputs:
+                - input: pipelineArtifact
+                  artifactName: NpmPackedTarballs
+                  targetPath: "$(Pipeline.Workspace)/published-packages"
             steps:
-              - task: DownloadPipelineArtifact@2
-                displayName: "Download packaged npm artifacts"
-                inputs:
-                  buildType: "current"
-                  artifact: "NpmPackedTarballs"
-                  path: '$(Pipeline.Workspace)\published-packages'
-
               - task: "SFP.release-tasks.custom-build-release-task.EsrpRelease@9"
                 displayName: "ESRP Release to npmjs.com"
                 inputs:
@@ -280,6 +254,6 @@ extends:
                   clientid: "0a35e01f-eadf-420a-a2bf-def002ba898d"
                   domaintenantid: "cdc5aeea-15c5-4db6-b079-fcadd2505dc2"
                   contenttype: npm
-                  folderlocation: $(Pipeline.Workspace)\published-packages
+                  folderlocation: "$(Pipeline.Workspace)/published-packages"
                   owners: "vmorozov@microsoft.com"
                   approvers: "khosany@microsoft.com"
