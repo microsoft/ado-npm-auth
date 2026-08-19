@@ -19,7 +19,7 @@ This approach provides a frictionless developer experience - you never need to m
 Add the plugin to your Yarn project:
 
 ```bash
-yarn plugin import https://github.com/microsoft/ado-npm-auth/releases/download/latest/yarn-plugin-ado-auth.cjs
+yarn plugin import https://unpkg.com/@microsoft/yarn-plugin-ado-auth/dist/yarn-plugin-ado-auth.cjs
 ```
 
 Or install from a local build:
@@ -34,7 +34,7 @@ The plugin supports two configuration options in your `.yarnrc.yml` file:
 
 ### `adoNpmAuthFeedPrefix`
 
-**Type:** `string`  
+**Type:** `string`
 **Default:** `"https://pkgs.dev.azure.com/"`
 
 The URL prefix used to identify Azure DevOps npm feeds. The plugin only attempts authentication for registries that start with this prefix.
@@ -45,7 +45,7 @@ adoNpmAuthFeedPrefix: "https://pkgs.dev.azure.com/"
 
 ### `adoNpmAuthToolPath`
 
-**Type:** `string` (optional)  
+**Type:** `string` (optional)
 **Default:** `null` (uses `azureauth` from PATH)
 
 The absolute path to the `azureauth` CLI tool. If not specified, the plugin will search for `azureauth` in your system PATH. Note that yarn has a pattern where environment variables starting with YARN\_ will override .yarnrc.yml settings. So setting YARN_ADO_NPM_AUTH_TOOL_PATH can be used to override this value on the fly.
@@ -179,7 +179,7 @@ yarnPath: .yarn/releases/yarn-4.1.0.cjs
 # Plugin configuration
 plugins:
   - path: .yarn/plugins/@yarnpkg/plugin-ado-auth.cjs
-    spec: "https://github.com/microsoft/ado-npm-auth/releases/download/latest/yarn-plugin-ado-auth.cjs"
+    spec: "https://unpkg.com/@microsoft/yarn-plugin-ado-auth/dist/yarn-plugin-ado-auth.cjs"
 
 # ADO Auth Plugin Settings
 adoNpmAuthFeedPrefix: "https://pkgs.dev.azure.com/"

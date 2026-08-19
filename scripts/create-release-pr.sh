@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # Finds or creates the release PR for BRANCH using GH_TOKEN.
-# Requires BUILD_NUMBER and sets the read-only Azure Pipelines output named by OUTPUT_NAME.
+# Requires BUILD_NUMBER and sets the read-only Azure Pipelines variable named by VARIABLE_NAME.
 
 set -euo pipefail
 
-if [[ -z "${OUTPUT_NAME:-}" ]]; then
-  echo "##vso[task.logissue type=error]OUTPUT_NAME is required."
+if [[ -z "${VARIABLE_NAME:-}" ]]; then
+  echo "##vso[task.logissue type=error]VARIABLE_NAME is required."
   exit 1
 fi
 
@@ -23,6 +23,6 @@ else
 fi
 
 if [[ -n "$pr_number" ]]; then
-  echo "##vso[task.setvariable variable=$OUTPUT_NAME;isOutput=true;isReadOnly=true]$pr_number"
+  echo "##vso[task.setvariable variable=$VARIABLE_NAME;isReadOnly=true]$pr_number"
   echo "Recorded PR number $pr_number"
 fi
