@@ -5,14 +5,14 @@ trigger:
   branches:
     include:
       - main
-      - 'release/*'
+      - "release/*"
 
 resources:
   repositories:
-  - repository: OfficePipelineTemplates
-    type: git
-    name: 1ESPipelineTemplates/OfficePipelineTemplates
-    ref: refs/tags/release
+    - repository: OfficePipelineTemplates
+      type: git
+      name: 1ESPipelineTemplates/OfficePipelineTemplates
+      ref: refs/tags/release
 
 variables:
   - name: tags
@@ -73,187 +73,187 @@ extends:
         parser: "@typescript-eslint/parser"
         parserOptions: ""
     stages:
-    - stage: Verification
-      jobs:
-        - ${{ each pool in parameters.pools }}:
-          - ${{ each nodeVersion in parameters.nodeVersions }}:
-            - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
-              displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
-              pool: ${{ pool }}
-              # Note: since we're releasing packed tgz files, uploading only those files as outputs
-              # satisfies compliance requirements (it's not necessary to upload the whole repo).
-              steps:
-                - template: /.ado/templates/setup.yml@self
-                  parameters:
-                    nodeVersion: ${{ nodeVersion }}
+      - stage: Verification
+        jobs:
+          - ${{ each pool in parameters.pools }}:
+              - ${{ each nodeVersion in parameters.nodeVersions }}:
+                  - job: build_${{ pool.os }}_${{ replace(nodeVersion, '.', '_') }}
+                    displayName: Build on ${{ pool.os }} - node ${{ nodeVersion }}
+                    pool: ${{ pool }}
+                    # Note: since we're releasing packed tgz files, uploading only those files as outputs
+                    # satisfies compliance requirements (it's not necessary to upload the whole repo).
+                    steps:
+                      - template: /.ado/templates/setup.yml@self
+                        parameters:
+                          nodeVersion: ${{ nodeVersion }}
 
-                - script: yarn lage build test lint bundle
-                  displayName: Build all
+                      - script: yarn lage build test lint bundle
+                        displayName: Build all
 
-    # The Build stage:
-    # - Bumps package versions, updates changelogs, and deletes consumed change files,
-    #   and pushes resulting changes to $(releaseBranch).
-    # - Packs changed npm packages as an artifact.
-    #
-    # Outputs:
-    # - BumpAndPack.CommitChanges.hasUpdates: true if changes were pushed (otherwise unset).
-    # - NpmPackedTarballs: pipeline artifact containing the packed npm packages.
-    #
-    # NOTE: If the only change files have change type "none", there will be file changes (hasUpdates=true)
-    # but no version bumps.
-    - stage: Build
-      dependsOn:
-       - Verification # Make sure we build and pass tests on all platforms and node versions before publishing
-      jobs:
-        - job: BumpAndPack
-          displayName: Bump and pack npm packages
-          pool:
-            name: Azure-Pipelines-1ESPT-ExDShared
-            image: ubuntu-latest
-            os: linux
-          variables:
-            - name: packagesArtifactPath
-              value: $(Build.StagingDirectory)/published-packages
-              readonly: true
-          templateContext:
-            outputs:
-             - output: pipelineArtifact
-               targetPath: $(packagesArtifactPath)
-               artifactName: NpmPackedTarballs
-               displayName: Packed npm packages
+      # The Build stage:
+      # - Bumps package versions, updates changelogs, and deletes consumed change files,
+      #   and pushes resulting changes to $(releaseBranch).
+      # - Packs changed npm packages as an artifact.
+      #
+      # Outputs:
+      # - BumpAndPack.CommitChanges.hasUpdates: true if changes were pushed (otherwise unset).
+      # - NpmPackedTarballs: pipeline artifact containing the packed npm packages.
+      #
+      # NOTE: If the only change files have change type "none", there will be file changes (hasUpdates=true)
+      # but no version bumps.
+      - stage: Build
+        dependsOn:
+          - Verification # Make sure we build and pass tests on all platforms and node versions before publishing
+        jobs:
+          - job: BumpAndPack
+            displayName: Bump and pack npm packages
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: ubuntu-latest
+              os: linux
+            variables:
+              - name: packagesArtifactPath
+                value: $(Build.StagingDirectory)/published-packages
+                readonly: true
+            templateContext:
+              outputs:
+                - output: pipelineArtifact
+                  targetPath: $(packagesArtifactPath)
+                  artifactName: NpmPackedTarballs
+                  displayName: Packed npm packages
 
-          steps:
-            - template: /.ado/templates/setup.yml@self
-              parameters:
-                nodeVersion: 24.x
-                persistCredentials: true
+            steps:
+              - template: /.ado/templates/setup.yml@self
+                parameters:
+                  nodeVersion: 24.x
+                  persistCredentials: true
 
-            - script: yarn lage build bundle
-              displayName: Build & Bundle
+              - script: yarn lage build bundle
+                displayName: Build & Bundle
 
-            # Bump package versions, update changelog, and delete change files.
-            # If there were files with change type "none", there might be file changes without a version bump.
-            # (The inverse is not true: if there are no file changes, there will be no version bump.)
-            - script: |
-                yarn beachball bump --verbose
-              displayName: 📝 Beachball Bump for GitHub PR
+              # Bump package versions, update changelog, and delete change files.
+              # If there were files with change type "none", there might be file changes without a version bump.
+              # (The inverse is not true: if there are no file changes, there will be no version bump.)
+              - script: |
+                  yarn beachball bump --verbose
+                displayName: 📝 Beachball Bump for GitHub PR
 
-            # Commit and push if relevant (set hasUpdates only if there were changes).
-            # We could create the PR here too, but separating it has the benefit of ensuring that any
-            # post-build compliance checks are successful before PR creation.
-            - script: |
-                set -x
-                git status
-                git add --all
-                if git diff --cached --quiet; then
-                  echo "No changes to commit"
-                else
-                  git commit -m "📦 Apply beachball changes"
-                  git log -10
-                  git push origin 'HEAD:refs/heads/$(releaseBranch)' --force-with-lease
-                  echo "##vso[task.setvariable variable=hasUpdates;isOutput=true;isReadOnly=true]true"
+              # Commit and push if relevant (set hasUpdates only if there were changes).
+              # We could create the PR here too, but separating it has the benefit of ensuring that any
+              # post-build compliance checks are successful before PR creation.
+              - script: |
+                  set -x
+                  git status
+                  git add --all
+                  if git diff --cached --quiet; then
+                    echo "No changes to commit"
+                  else
+                    git commit -m "📦 Apply beachball changes"
+                    git log -10
+                    git push origin 'HEAD:refs/heads/$(releaseBranch)' --force-with-lease
+                    echo "##vso[task.setvariable variable=hasUpdates;isOutput=true;isReadOnly=true]true"
 
-                  echo "Reverting changes for subsequent steps"
-                  git reset HEAD~ --hard
-                fi
-              displayName: 📝 Commit and push changes
-              name: CommitChanges
+                    echo "Reverting changes for subsequent steps"
+                    git reset HEAD~ --hard
+                  fi
+                displayName: 📝 Commit and push changes
+                name: CommitChanges
 
-            # Revert changes, then use beachball to pack any changed npm packages.
-            - script: |
-                set -x
-                rm -rf '$(packagesArtifactPath)'
-                mkdir '$(packagesArtifactPath)'
-                yarn beachball publish --verbose --no-push --pack-to-path '$(packagesArtifactPath)'
-              displayName: 📦 Pack npm packages with Beachball
+              # Revert changes, then use beachball to pack any changed npm packages.
+              - script: |
+                  set -x
+                  rm -rf '$(packagesArtifactPath)'
+                  mkdir '$(packagesArtifactPath)'
+                  yarn beachball publish --verbose --no-push --pack-to-path '$(packagesArtifactPath)'
+                displayName: 📦 Pack npm packages with Beachball
 
-            - script: ls -R '$(packagesArtifactPath)'
-              displayName: 📦 Show packaged npm artifacts
+              - script: ls -R '$(packagesArtifactPath)'
+                displayName: 📦 Show packaged npm artifacts
 
-    # The CreateAndMergePR stage:
-    # - Creates or locates a pull request for $(releaseBranch), then waits for it to be merged or closed.
-    # - Deletes the release branch after the pull request is merged or closed.
-    #
-    # Outputs:
-    # - WaitForPRMerge.WaitForPR.prWasMerged: true if the pull request was merged (otherwise unset).
-    #
-    # NOTE: This stage runs only when Build.BumpAndPack.CommitChanges.hasUpdates is true.
-    - stage: CreateAndMergePR
-      dependsOn:
-        - Build
-      condition: and(succeeded(), eq(dependencies.Build.outputs['BumpAndPack.CommitChanges.hasUpdates'], 'true'))
-      jobs:
-        - job: CreatePullRequest
-          pool:
-            name: Azure-Pipelines-1ESPT-ExDShared
-            image: ubuntu-latest
-            os: linux
-          steps:
-            - template: /.ado/templates/setup.yml@self
-              parameters:
-                nodeVersion: ''
-                persistCredentials: true
+      # The CreateAndMergePR stage:
+      # - Creates or locates a pull request for $(releaseBranch), then waits for it to be merged or closed.
+      # - Deletes the release branch after the pull request is merged or closed.
+      #
+      # Outputs:
+      # - WaitForPRMerge.WaitForPR.prWasMerged: true if the pull request was merged (otherwise unset).
+      #
+      # NOTE: This stage runs only when Build.BumpAndPack.CommitChanges.hasUpdates is true.
+      - stage: CreateAndMergePR
+        dependsOn:
+          - Build
+        condition: and(succeeded(), eq(dependencies.Build.outputs['BumpAndPack.CommitChanges.hasUpdates'], 'true'))
+        jobs:
+          - job: CreatePullRequest
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: ubuntu-latest
+              os: linux
+            steps:
+              - template: /.ado/templates/setup.yml@self
+                parameters:
+                  nodeVersion: ""
+                  persistCredentials: true
 
-            # This sets the output prNumber
-            - script: bash scripts/create-release-pr.sh
-              env:
-                GH_TOKEN: $(githubAuthToken)
-                BRANCH: $(releaseBranch)
-                BUILD_NUMBER: $(Build.BuildNumber)
-                OUTPUT_NAME: prNumber
-              displayName: Create or locate beachball release PR
-              name: CreatePR
+              # This sets the output prNumber
+              - script: bash scripts/create-release-pr.sh
+                env:
+                  GH_TOKEN: $(githubAuthToken)
+                  BRANCH: $(releaseBranch)
+                  BUILD_NUMBER: $(Build.BuildNumber)
+                  OUTPUT_NAME: prNumber
+                displayName: Create or locate beachball release PR
+                name: CreatePR
 
-        - job: WaitForPRMerge
-          dependsOn: CreatePullRequest
-          condition: and(succeeded(), ne(dependencies.CreatePullRequest.outputs['CreatePR.prNumber'], ''))
-          pool:
-            name: Azure-Pipelines-1ESPT-ExDShared
-            image: ubuntu-latest
-            os: linux
-          steps:
-            - template: /.ado/templates/setup.yml@self
-              parameters:
-                nodeVersion: ''
-                persistCredentials: true
+          - job: WaitForPRMerge
+            dependsOn: CreatePullRequest
+            condition: and(succeeded(), ne(dependencies.CreatePullRequest.outputs['CreatePR.prNumber'], ''))
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: ubuntu-latest
+              os: linux
+            steps:
+              - template: /.ado/templates/setup.yml@self
+                parameters:
+                  nodeVersion: ""
+                  persistCredentials: true
 
-            - script: bash scripts/wait-for-pr-merge.sh
-              env:
-                GH_TOKEN: $(githubAuthToken)
-                PR_NUMBER: $[ dependencies.CreatePullRequest.outputs['CreatePR.prNumber'] ]
-                PR_BRANCH: $(releaseBranch)
-                OUTPUT_NAME: prWasMerged
-              displayName: Wait for beachball PR merge
-              name: WaitForPR
+              - script: bash scripts/wait-for-pr-merge.sh
+                env:
+                  GH_TOKEN: $(githubAuthToken)
+                  PR_NUMBER: $[ dependencies.CreatePullRequest.outputs['CreatePR.prNumber'] ]
+                  PR_BRANCH: $(releaseBranch)
+                  OUTPUT_NAME: prWasMerged
+                displayName: Wait for beachball PR merge
+                name: WaitForPR
 
-    # Publish packages via ESRP. This only runs if a PR was created and merged (otherwise it implies
-    # there was a problem or no changes to publish).
-    - stage: PublishNpmPackages
-      dependsOn: CreateAndMergePR
-      condition: and(succeeded(), eq(dependencies.CreateAndMergePR.outputs['WaitForPRMerge.WaitForPR.prWasMerged'], 'true'))
-      jobs:
-        - job: PublishNpmPackages
-          pool:
-            name: Azure-Pipelines-1ESPT-ExDShared
-            image: ubuntu-latest
-            os: linux
-          templateContext:
-            inputs:
-              - input: pipelineArtifact
-                artifactName: NpmPackedTarballs
-                targetPath: '$(Pipeline.Workspace)/published-packages'
-          steps:
-            - task: 'SFP.release-tasks.custom-build-release-task.EsrpRelease@9'
-              displayName: 'ESRP Release to npmjs.com'
+      # Publish packages via ESRP. This only runs if a PR was created and merged (otherwise it implies
+      # there was a problem or no changes to publish).
+      - stage: PublishNpmPackages
+        dependsOn: CreateAndMergePR
+        condition: and(succeeded(), eq(dependencies.CreateAndMergePR.outputs['WaitForPRMerge.WaitForPR.prWasMerged'], 'true'))
+        jobs:
+          - job: PublishNpmPackages
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: ubuntu-latest
+              os: linux
+            templateContext:
               inputs:
-                connectedservicename: 'ESRP-JSHost3'
-                usemanagedidentity: false
-                keyvaultname: 'OGX-JSHost-KV'
-                authcertname: 'OGX-JSHost-Auth4'
-                signcertname: 'OGX-JSHost-Sign3'
-                clientid: '0a35e01f-eadf-420a-a2bf-def002ba898d'
-                domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
-                contenttype: npm
-                folderlocation: '$(Pipeline.Workspace)/published-packages'
-                owners: 'vmorozov@microsoft.com'
-                approvers: 'khosany@microsoft.com'
+                - input: pipelineArtifact
+                  artifactName: NpmPackedTarballs
+                  targetPath: "$(Pipeline.Workspace)/published-packages"
+            steps:
+              - task: "SFP.release-tasks.custom-build-release-task.EsrpRelease@9"
+                displayName: "ESRP Release to npmjs.com"
+                inputs:
+                  connectedservicename: "ESRP-JSHost3"
+                  usemanagedidentity: false
+                  keyvaultname: "OGX-JSHost-KV"
+                  authcertname: "OGX-JSHost-Auth4"
+                  signcertname: "OGX-JSHost-Sign3"
+                  clientid: "0a35e01f-eadf-420a-a2bf-def002ba898d"
+                  domaintenantid: "cdc5aeea-15c5-4db6-b079-fcadd2505dc2"
+                  contenttype: npm
+                  folderlocation: "$(Pipeline.Workspace)/published-packages"
+                  owners: "vmorozov@microsoft.com"
+                  approvers: "khosany@microsoft.com"

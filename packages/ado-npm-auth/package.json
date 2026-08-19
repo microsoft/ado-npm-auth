@@ -17,8 +17,7 @@
   "scripts": {
     "build": "tsc",
     "bundle": "esbuild --sourcemap=external --bundle --minify --platform=node src/cli.ts --outfile=dist/ado-npm-auth.cjs --metafile=dist/ado-npm-auth.meta.json ",
-    "eslint": "eslint .",
-    "lint": "prettier --check src/**/*.ts"
+    "lint": "eslint ."
   },
   "dependencies": {
     "azureauth": "workspace:^"
@@ -26,10 +25,10 @@
   "devDependencies": {
     "@microsoft/ado-npm-auth-lib": "workspace:^",
     "@microsoft/eslint-plugin-sdl": "^1.1.0",
+    "@rnx-kit/eslint-plugin": "^0.9.9",
     "@types/node": "^20.17.28",
     "esbuild": "^0.28.1",
     "eslint": "^9.39.1",
-    "prettier": "^3.5.3",
     "typescript": "^5.8.2",
     "yargs": "^17.7.2"
   }

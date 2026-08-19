@@ -2,7 +2,7 @@ parameters:
   # Node version to install. Set to empty to skip node installation, npm auth, and yarn install.
   - name: nodeVersion
     type: string
-    default: ''
+    default: ""
   - name: persistCredentials
     type: boolean
     default: false
@@ -22,41 +22,41 @@ steps:
     displayName: Force exit on error (bash)
 
   - ${{ if eq(parameters.persistCredentials, true) }}:
-    - bash: |
-        set -o pipefail
+      - bash: |
+          set -o pipefail
 
-        header_line="$(git config --get-regexp 'http.*\.extraheader' 2>/dev/null | head -n 1)"
-        if [[ -z "$header_line" ]]; then
-          echo "##[error]No HTTP extraheader found. persistCredentials may not be working."
-          exit 1
-        fi
+          header_line="$(git config --get-regexp 'http.*\.extraheader' 2>/dev/null | head -n 1)"
+          if [[ -z "$header_line" ]]; then
+            echo "##[error]No HTTP extraheader found. persistCredentials may not be working."
+            exit 1
+          fi
 
-        encoded="${header_line##* }"
-        decoded="$(printf '%s' "$encoded" | base64 --decode)"
-        token="${decoded##*:}"
+          encoded="${header_line##* }"
+          decoded="$(printf '%s' "$encoded" | base64 --decode)"
+          token="${decoded##*:}"
 
-        echo "Extracted GitHub OAuth token (length=${#token})"
-        echo "##vso[task.setvariable variable=githubAuthToken;issecret=true]$token"
-      displayName: Extract GitHub OAuth token
+          echo "Extracted GitHub OAuth token (length=${#token})"
+          echo "##vso[task.setvariable variable=githubAuthToken;issecret=true]$token"
+        displayName: Extract GitHub OAuth token
 
-    - bash: |
-        git config user.name "azure-pipelines[bot]"
-        git config user.email "azure-pipelines[bot]@users.noreply.github.com"
-      displayName: Configure git user
+      - bash: |
+          git config user.name "azure-pipelines[bot]"
+          git config user.email "azure-pipelines[bot]@users.noreply.github.com"
+        displayName: Configure git user
 
   - ${{ if ne(parameters.nodeVersion, '') }}:
-    - task: UseNode@1
-      displayName: Install Node ${{ parameters.nodeVersion }}
-      inputs:
-        version: ${{ parameters.nodeVersion }}
+      - task: UseNode@1
+        displayName: Install Node ${{ parameters.nodeVersion }}
+        inputs:
+          version: ${{ parameters.nodeVersion }}
 
-    # Configure npm to use the internal feed from REGISTRY_URL.
-    - bash: echo 'registry=$(REGISTRY_URL)' >> .npmrc
-      displayName: Configure npm to use CFS
+      # Configure npm to use the internal feed from REGISTRY_URL.
+      - bash: echo 'registry=$(REGISTRY_URL)' >> .npmrc
+        displayName: Configure npm to use CFS
 
-    - task: npmAuthenticate@0
-      inputs:
-        workingFile: .npmrc
+      - task: npmAuthenticate@0
+        inputs:
+          workingFile: .npmrc
 
-    - script: yarn install --immutable
-      displayName: Install dependencies
+      - script: yarn install --immutable
+        displayName: Install dependencies
