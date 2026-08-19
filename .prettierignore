@@ -1,0 +1,6 @@
+.nvmrc
+.yarn/
+change/
+CHANGELOG.md
+SECURITY.md
+guardian_baselines.gdnbaselines

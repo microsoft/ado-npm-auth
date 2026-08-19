@@ -10,7 +10,7 @@ const config = {
   disallowedChangeTypes: [
     "prerelease",
     // If a major release is needed, temporarily remove this line.
-    "major"
-  ]
+    "major",
+  ],
 };
 module.exports = config;

@@ -5,5 +5,7 @@ const installScript = path.join(__dirname, "..", "dist", "install.cjs");
 if (fs.existsSync(installScript)) {
   require(installScript);
 } else {
-  console.log(`Skipping downloading of azureauth tool. This package is incomplete.`);
+  console.log(
+    `Skipping downloading of azureauth tool. This package is incomplete.`,
+  );
 }
