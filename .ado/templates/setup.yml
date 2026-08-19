@@ -1,0 +1,60 @@
+parameters:
+  # Node version to install. Set to empty to skip node installation and npm auth.
+  - name: nodeVersion
+    type: string
+    default: 20
+  - name: persistCredentials
+    type: boolean
+    default: false
+
+steps:
+  - checkout: self
+    persistCredentials: ${{ parameters.persistCredentials }}
+
+  # For multiline scripts, we want the whole task to fail if any line of the script fails.
+  # ADO doesn't have bash configured this way by default. To fix we override the SHELLOPTS built-in variable.
+  # https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+  # The options below include ADO defaults (braceexpand:hashall:interactive-comments) plus
+  # errexit:errtrace for better error behavior.
+  - bash: |
+      echo "##vso[task.setvariable variable=shellopts]braceexpand:hashall:interactive-comments:errexit:errtrace"
+    displayName: Force exit on error (bash)
+
+  - ${{ if eq(parameters.persistCredentials, true) }}:
+    - bash: |
+        header_line="$(git config --get-regexp 'http.*\.extraheader' 2>/dev/null | head -n 1)"
+        if [[ -z "$header_line" ]]; then
+          echo "##[error]No HTTP extraheader found. persistCredentials may not be working."
+          exit 1
+        fi
+
+        encoded="${header_line##* }"
+        decoded="$(printf '%s' "$encoded" | base64 --decode)"
+        token="${decoded##*:}"
+
+        echo "Extracted GitHub OAuth token (length=${#token})"
+        echo "##vso[task.setvariable variable=githubAuthToken;issecret=true]$token"
+      displayName: Extract GitHub OAuth token
+
+    - bash: |
+        git config user.name "azure-pipelines[bot]"
+        git config user.email "azure-pipelines[bot]@users.noreply.github.com"
+      displayName: Configure git user
+
+  - ${{ if ne(parameters.nodeVersion, '') }}:
+    - task: UseNode@1
+      displayName: Install Node ${{ parameters.nodeVersion }}
+      inputs:
+        version: ${{ parameters.nodeVersion }}
+
+    - bash: |
+        cp publish.npmrc .npmrc
+      displayName: Configure .npmrc to use CFS
+
+    - task: npmAuthenticate@0
+      inputs:
+        workingFile: .npmrc
+
+    - bash: |
+        cp publish.yarnrc.yml .yarnrc.yml
+      displayName: Configure .yarnrc.yml to use CFS
