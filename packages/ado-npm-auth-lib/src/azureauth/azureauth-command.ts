@@ -2,6 +2,7 @@ import { isWsl } from "../utils/is-wsl.js";
 
 let memo: string[] | undefined = undefined;
 
+/** @internal Test-only helper for resetting memoized command detection. */
 export const clearMemo = () => {
   memo = void 0;
 };

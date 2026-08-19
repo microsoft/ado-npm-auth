@@ -1,0 +1,18 @@
+{
+  "changes": [
+    {
+      "type": "minor",
+      "comment": "Forward tenant/domain options to azureauth; supports non-Microsoft tenants (fixes #138)",
+      "packageName": "@microsoft/ado-npm-auth-lib",
+      "email": "26187677+Bafff@users.noreply.github.com",
+      "dependentChangeType": "patch"
+    },
+    {
+      "type": "minor",
+      "comment": "Forward tenant/domain options to azureauth; supports non-Microsoft tenants (fixes #138)",
+      "packageName": "@microsoft/yarn-plugin-ado-auth",
+      "email": "26187677+Bafff@users.noreply.github.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}

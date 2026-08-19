@@ -5,6 +5,7 @@ export { NpmrcFileProvider } from "./npmrc/npmrcFileProvider.js";
 export type { Feed, ValidatedFeed } from "./fileProvider.js";
 export { defaultUser, defaultEmail, FileProvider } from "./fileProvider.js";
 
+export type { GenerateNpmrcPatOptions } from "./npmrc/generate-npmrc-pat.js";
 export { generateNpmrcPat } from "./npmrc/generate-npmrc-pat.js";
 
 export { getOrganizationFromFeedUrl } from "./utils/get-organization-from-feed-url.js";

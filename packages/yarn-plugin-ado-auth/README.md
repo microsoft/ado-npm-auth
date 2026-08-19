@@ -30,7 +30,7 @@ yarn plugin import /path/to/yarn-plugin-ado-auth/dist/yarn-plugin-ado-auth.cjs
 
 ## Configuration
 
-The plugin supports two configuration options in your `.yarnrc.yml` file:
+The plugin supports the following configuration options in your `.yarnrc.yml` file:
 
 ### `adoNpmAuthFeedPrefix`
 
@@ -52,6 +52,32 @@ The absolute path to the `azureauth` CLI tool. If not specified, the plugin will
 
 ```yaml
 adoNpmAuthToolPath: "/usr/local/bin/azureauth"
+```
+
+### `adoNpmAuthTenantId`
+
+**Type:** `string` (optional)
+**Default:** `null` (azureauth defaults to the Microsoft tenant)
+
+The Azure AD tenant ID forwarded to `azureauth ado pat --tenant <id>`. When unset, `azureauth` targets the Microsoft tenant (`72f988bf-86f1-41af-91ab-2d7cd011db47`), which is correct for Microsoft employees but fails for any other corporate tenant using Azure DevOps Artifacts. Set this to your own tenant ID to authenticate against your organization's Azure DevOps.
+
+This override is supported when the plugin authenticates through `azureauth` directly: Windows, macOS, and WSL. Native Linux continues to use `CredentialProvider.Microsoft`, so this setting is not supported there.
+
+```yaml
+adoNpmAuthTenantId: "00000000-0000-0000-0000-000000000000"
+```
+
+### `adoNpmAuthDomain`
+
+**Type:** `string` (optional)
+**Default:** `null` (azureauth defaults to `microsoft.com`)
+
+The preferred account domain forwarded to `azureauth ado pat --domain <domain>`. Used to filter cached MSAL accounts when the same machine has signed-in accounts in multiple tenants (for example, a home account in your corporate tenant plus guest access in the Microsoft tenant). Set this to your own email domain to make `azureauth` prefer the right cached account.
+
+As with `adoNpmAuthTenantId`, this override is only supported on Windows, macOS, and WSL. Native Linux does not support this setting.
+
+```yaml
+adoNpmAuthDomain: "contoso.com"
 ```
 
 ## The azureauth Command Line Tool
@@ -184,6 +210,8 @@ plugins:
 # ADO Auth Plugin Settings
 adoNpmAuthFeedPrefix: "https://pkgs.dev.azure.com/"
 adoNpmAuthToolPath: null # Use azureauth from PATH
+adoNpmAuthTenantId: "00000000-0000-0000-0000-000000000000" # Your Azure AD tenant ID
+adoNpmAuthDomain: "contoso.com" # Your corporate email domain
 
 # Registry Configuration
 npmScopes:
@@ -227,6 +255,21 @@ Here's what happens when you run `yarn install`:
 - Ensure the `ADO_NPM_TOKEN` (or your chosen environment variable) is set in your pipeline
 - Verify the token has appropriate permissions for the ADO feed
 - Check that the token hasn't expired (ADO PATs have configurable expiration dates)
+
+### `VS30063: You are not authorized to access https://dev.azure.com`
+
+This error surfaces when `azureauth` obtains a token against the wrong tenant. The most common case: your Azure DevOps organization lives in a non-Microsoft tenant, but `azureauth` defaults to the Microsoft tenant and grabs a cached guest account that has no access to your org.
+
+Fix it by setting both `adoNpmAuthTenantId` and `adoNpmAuthDomain` in `.yarnrc.yml` on Windows, macOS, or WSL:
+
+```yaml
+adoNpmAuthTenantId: "<your-tenant-id>"
+adoNpmAuthDomain: "<your-email-domain>"
+```
+
+Find your tenant ID in the Azure portal under **Microsoft Entra ID → Overview → Tenant ID**.
+
+On native Linux, these overrides are not supported because the plugin uses `CredentialProvider.Microsoft` instead of `azureauth`.
 
 ### Token caching issues
 
