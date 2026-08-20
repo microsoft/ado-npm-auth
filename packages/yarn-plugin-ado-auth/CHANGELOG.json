@@ -2,6 +2,21 @@
   "name": "@microsoft/yarn-plugin-ado-auth",
   "entries": [
     {
+      "date": "Thu, 20 Aug 2026 17:08:11 GMT",
+      "version": "0.3.2",
+      "tag": "@microsoft/yarn-plugin-ado-auth_v0.3.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "elcraig@microsoft.com",
+            "package": "@microsoft/yarn-plugin-ado-auth",
+            "commit": "fcc72dfbc987b5e7c606fda150dc2bde38c27352",
+            "comment": "Fix import URL in readme"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 19 Aug 2026 22:16:56 GMT",
       "version": "0.3.1",
       "tag": "@microsoft/yarn-plugin-ado-auth_v0.3.1",
