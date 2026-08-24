@@ -4,6 +4,7 @@ import { exec } from "../utils/exec.js";
 import * as utils from "../utils/is-wsl.js";
 import type { AdoPatResponse } from "./ado.js";
 import { adoPat } from "./ado.js";
+import { clearMemo as clearAuthCommandMemo } from "./azureauth-command.js";
 
 vi.mock("child_process", async () => {
   return {
@@ -28,7 +29,7 @@ vi.mock("../utils/exec.js", async () => {
 
 vi.mock("../utils/is-wsl.js", async () => {
   return {
-    isWsl: vi.fn(),
+    isLinux: vi.fn(),
   };
 });
 
@@ -40,10 +41,11 @@ vi.mock("./is-supported-platform-and-architecture.js", async () => {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  clearAuthCommandMemo();
 });
 
 test("it should spawn azureauth", async () => {
-  vi.mocked(utils.isWsl).mockReturnValue(false);
+  vi.mocked(utils.isLinux).mockReturnValue(false);
   vi.mocked(exec).mockReturnValue(
     Promise.resolve({
       stdout: '{ "token": "foobarabc123" }',
@@ -68,12 +70,12 @@ test("it should spawn azureauth", async () => {
   expect(results.token).toBe("foobarabc123");
 });
 
-test("it should spawnSync azureauth on wsl", async () => {
+test("it should spawnSync azureauth on linux", async () => {
   vi.mocked(spawnSync).mockReturnValue({
     status: 0,
     stdout: '{ "token": "foobarabc123" }',
   } as any);
-  vi.mocked(utils.isWsl).mockReturnValue(true);
+  vi.mocked(utils.isLinux).mockReturnValue(true);
 
   const results = (await adoPat({
     promptHint: "hint",
@@ -86,13 +88,8 @@ test("it should spawnSync azureauth on wsl", async () => {
   })) as AdoPatResponse;
 
   expect(spawnSync).toHaveBeenCalledWith(
-    "npm",
+    "azureauth",
     [
-      "exec",
-      "--silent",
-      "--yes",
-      "azureauth",
-      "--",
       "ado",
       "pat",
       "--prompt-hint hint",
@@ -108,8 +105,8 @@ test("it should spawnSync azureauth on wsl", async () => {
   expect(results.token).toBe("foobarabc123");
 });
 
-test("it should handle errors on wsl if azureauth exit code is not 0", async () => {
-  vi.mocked(utils.isWsl).mockReturnValue(true);
+test("it should handle errors on linux if azureauth exit code is not 0", async () => {
+  vi.mocked(utils.isLinux).mockReturnValue(true);
   vi.mocked(spawnSync).mockReturnValue({
     status: 1,
     stdout: "",
@@ -131,8 +128,8 @@ test("it should handle errors on wsl if azureauth exit code is not 0", async () 
   );
 });
 
-test("it should handle errors on wsl if azureauth has stderr output", async () => {
-  vi.mocked(utils.isWsl).mockReturnValue(true);
+test("it should handle errors on linux if azureauth has stderr output", async () => {
+  vi.mocked(utils.isLinux).mockReturnValue(true);
   vi.mocked(spawnSync).mockReturnValue({
     status: 0,
     stdout: "",
@@ -155,7 +152,7 @@ test("it should handle errors on wsl if azureauth has stderr output", async () =
 });
 
 test("it should handle json errors", async () => {
-  vi.mocked(utils.isWsl).mockReturnValue(false);
+  vi.mocked(utils.isLinux).mockReturnValue(false);
   vi.mocked(exec).mockReturnValue(
     Promise.resolve({
       stdout: "an error",
@@ -177,7 +174,7 @@ test("it should handle json errors", async () => {
 });
 
 test("it should handle errors from azureauth-cli", async () => {
-  vi.mocked(utils.isWsl).mockReturnValue(false);
+  vi.mocked(utils.isLinux).mockReturnValue(false);
   vi.mocked(exec).mockReturnValue(
     Promise.resolve({
       stdout: "",
