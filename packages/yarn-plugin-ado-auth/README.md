@@ -87,6 +87,12 @@ When authentication is needed, the plugin executes the `azureauth` CLI with para
 
 The `azureauth` tool supports multiple platforms (Windows, macOS, Linux) and architectures (x64, ARM64).
 
+On macOS, AzureAuth supports brokered authentication through the Microsoft Enterprise SSO Extension. Broker auth is opt-in; set `AZUREAUTH_MODE=broker` before running Yarn to use it.
+
+```bash
+AZUREAUTH_MODE=broker yarn install
+```
+
 ## Using npmAuthToken in .yarnrc.yml
 
 The plugin respects Yarn's standard npm authentication configuration. You can pre-configure tokens in your `.yarnrc.yml` file, and the plugin will use them instead of triggering authentication.

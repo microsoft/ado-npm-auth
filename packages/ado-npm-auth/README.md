@@ -22,6 +22,12 @@ The main difference between the two is how they function, and where they can run
 
 Since the `azureauth-cli` is cross-platform, `ado-npm-auth` will also run cross-platform as well!
 
+On macOS, the bundled `azureauth` CLI supports brokered authentication through the Microsoft Enterprise SSO Extension. Broker auth is opt-in; set `AZUREAUTH_MODE=broker` before running `ado-npm-auth` to use it.
+
+```bash
+AZUREAUTH_MODE=broker npm exec ado-npm-auth
+```
+
 One of the easiest ways to use the tool is to add it to your `"preinstall"` script in your repo like this...
 
 ```json

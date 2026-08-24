@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Update AzureAuth to 0.9.6 for macOS broker auth",
+      "packageName": "azureauth",
+      "email": "kyle@rubenok.ca",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
