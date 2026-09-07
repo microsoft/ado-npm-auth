@@ -11,14 +11,17 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "bundle": "yarn bundleInstall && yarn bundleCli && yarn bundleIndex",
+    "bundle": "yarn bundleInstall && yarn bundleCli && yarn bundleIndex && yarn bundlePublish",
     "bundleInstall": "esbuild --sourcemap --bundle --minify --platform=node --outfile=dist/install.cjs src/install.ts",
     "bundleCli": "esbuild --sourcemap --bundle --minify --platform=node cli.js --outfile=dist/cli.cjs",
     "bundleIndex": "esbuild --sourcemap --bundle --minify --platform=node --format=esm src/index.ts --outfile=dist/index.js",
+    "bundlePublish": "esbuild --sourcemap --bundle --minify --platform=node --outfile=dist/publish-all.cjs src/publish-all.ts",
     "lint": "prettier --check src/**/*.ts ./cli.js ",
     "start": "tsc --watch",
     "test": "vitest run src",
-    "postinstall": "node ./scripts/install.cjs"
+    "postinstall": "node ./scripts/install.cjs",
+    "publish-all": "node ./dist/publish-all.cjs",
+    "publish-all:dry-run": "node ./dist/publish-all.cjs --dry-run"
   },
   "files": [
     "dist/install.cjs",
