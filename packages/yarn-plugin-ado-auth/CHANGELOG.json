@@ -2,6 +2,21 @@
   "name": "@microsoft/yarn-plugin-ado-auth",
   "entries": [
     {
+      "date": "Wed, 28 Oct 2026 18:09:39 GMT",
+      "version": "0.3.3",
+      "tag": "@microsoft/yarn-plugin-ado-auth_v0.3.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "@microsoft/yarn-plugin-ado-auth",
+            "comment": "Bump @microsoft/ado-npm-auth-lib to v0.11.2",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
       "date": "Thu, 20 Aug 2026 17:08:11 GMT",
       "version": "0.3.2",
       "tag": "@microsoft/yarn-plugin-ado-auth_v0.3.2",
