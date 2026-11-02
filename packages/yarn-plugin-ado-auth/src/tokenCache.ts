@@ -21,6 +21,8 @@ export class TokenCache {
   private configuration: Configuration;
   private prefix: string;
   private azureAuthPath?: string;
+  private tenantId?: string;
+  private domain?: string;
   private cache: Record<string, string | Promise<string>> = {};
 
   constructor(
@@ -31,6 +33,8 @@ export class TokenCache {
     const settings = loadConfig(configuration);
     this.prefix = settings.adoNpmAuthFeedPrefix ?? "";
     this.azureAuthPath = settings.adoNpmAuthToolPath || findAzureAuthPath();
+    this.tenantId = settings.adoNpmAuthTenantId;
+    this.domain = settings.adoNpmAuthDomain;
   }
 
   /**
@@ -93,6 +97,7 @@ export class TokenCache {
           registry,
           false,
           this.azureAuthPath,
+          { tenant: this.tenantId, domain: this.domain },
         );
         token = pat;
         this.cache[registry] = pat;
