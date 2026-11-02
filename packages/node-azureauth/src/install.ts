@@ -4,7 +4,7 @@ import fs from "node:fs";
 import { DownloaderHelper } from "node-downloader-helper";
 import decompress from "decompress";
 
-const AZURE_AUTH_VERSION = "0.8.4";
+const AZURE_AUTH_VERSION = "0.9.6";
 
 async function download(url: string, saveDirectory: string): Promise<void> {
   const downloader = new DownloaderHelper(url, saveDirectory);
@@ -29,7 +29,8 @@ const AZUREAUTH_INFO = {
   name: "azureauth",
   // https://github.com/AzureAD/microsoft-authentication-cli/releases/download/${AZUREAUTH_INFO.version}/azureauth-${AZUREAUTH_INFO.version}-osx-arm64.tar.gz
   // https://github.com/AzureAD/microsoft-authentication-cli/releases/download/${AZUREAUTH_INFO.version}/azureauth-${AZUREAUTH_INFO.version}-osx-x64.tar.gz
-  // https://github.com/AzureAD/microsoft-authentication-cli/releases/download/${AZUREAUTH_INFO.version}/azureauth-${AZUREAUTH_INFO.version}-win10-x64.zip
+  // https://github.com/AzureAD/microsoft-authentication-cli/releases/download/${AZUREAUTH_INFO.version}/azureauth-${AZUREAUTH_INFO.version}-win-arm64.zip
+  // https://github.com/AzureAD/microsoft-authentication-cli/releases/download/${AZUREAUTH_INFO.version}/azureauth-${AZUREAUTH_INFO.version}-win-x64.zip
   url: "https://github.com/AzureAD/microsoft-authentication-cli/releases/download/",
   version: AZURE_AUTH_VERSION,
 };
@@ -67,16 +68,17 @@ export const install = async () => {
   // if platform is missing, download source instead of executable
   const DOWNLOAD_MAP: any = {
     win32: {
-      x64: `azureauth-${AZUREAUTH_INFO.version}-win10-x64.zip`,
+      arm64: `azureauth-${AZUREAUTH_INFO.version}-win-arm64.zip`,
+      x64: `azureauth-${AZUREAUTH_INFO.version}-win-x64.zip`,
     },
     darwin: {
       x64: `azureauth-${AZUREAUTH_INFO.version}-osx-x64.tar.gz`,
       arm64: `azureauth-${AZUREAUTH_INFO.version}-osx-arm64.tar.gz`,
     },
-    // TODO: support linux when the binaries are available
+    // TODO: support installing linux .deb packages
     // linux: {
-    //   def: "azureauth.exe",
-    //   x64: "azureauth-${AZUREAUTH_INFO.version}-win10-x64.zip",
+    //   x64: `azureauth-${AZUREAUTH_INFO.version}-linux-x64.deb`,
+    //   arm64: `azureauth-${AZUREAUTH_INFO.version}-linux-arm64.deb`,
     // },
   };
   if (platform in DOWNLOAD_MAP) {
