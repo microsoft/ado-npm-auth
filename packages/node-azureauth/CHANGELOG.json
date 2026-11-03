@@ -2,6 +2,29 @@
   "name": "azureauth",
   "entries": [
     {
+      "date": "Tue, 03 Nov 2026 19:17:28 GMT",
+      "version": "0.15.1",
+      "tag": "azureauth_v0.15.1",
+      "comments": {
+        "none": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "azureauth",
+            "commit": "3ba4e79e0d41c5a80d896d56e505fd6aef9f4b6c",
+            "comment": "Bump vitest from 4.1.8 to 4.1.11 (development dependency only)."
+          }
+        ],
+        "patch": [
+          {
+            "author": "198982749+Copilot@users.noreply.github.com",
+            "package": "azureauth",
+            "commit": "0b03220ba23fd477d2ecc6a1ea26ceca81ceaa86",
+            "comment": "Bump vite to 6.4.4"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 19 Aug 2026 22:16:56 GMT",
       "version": "0.15.0",
       "tag": "azureauth_v0.15.0",

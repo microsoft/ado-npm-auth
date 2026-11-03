@@ -2,6 +2,29 @@
   "name": "@microsoft/ado-npm-auth-lib",
   "entries": [
     {
+      "date": "Tue, 03 Nov 2026 19:17:28 GMT",
+      "version": "0.11.2",
+      "tag": "@microsoft/ado-npm-auth-lib_v0.11.2",
+      "comments": {
+        "none": [
+          {
+            "author": "dannyvv@microsoft.com",
+            "package": "@microsoft/ado-npm-auth-lib",
+            "commit": "3ba4e79e0d41c5a80d896d56e505fd6aef9f4b6c",
+            "comment": "Bump vitest from 4.1.8 to 4.1.11 (development dependency only)."
+          }
+        ],
+        "patch": [
+          {
+            "author": "beachball",
+            "package": "@microsoft/ado-npm-auth-lib",
+            "comment": "Bump azureauth to v0.15.1",
+            "commit": "not available"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 19 Aug 2026 22:16:56 GMT",
       "version": "0.11.1",
       "tag": "@microsoft/ado-npm-auth-lib_v0.11.1",
