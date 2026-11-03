@@ -1,0 +1,18 @@
+{
+  "changes": [
+    {
+      "type": "none",
+      "comment": "Bump vitest from 4.1.8 to 4.1.11 (development dependency only).",
+      "packageName": "@microsoft/ado-npm-auth-lib",
+      "email": "dannyvv@microsoft.com",
+      "dependentChangeType": "none"
+    },
+    {
+      "type": "none",
+      "comment": "Bump vitest from 4.1.8 to 4.1.11 (development dependency only).",
+      "packageName": "azureauth",
+      "email": "dannyvv@microsoft.com",
+      "dependentChangeType": "none"
+    }
+  ]
+}

@@ -40,6 +40,6 @@
     "esbuild": "^0.28.1",
     "eslint": "^9.39.1",
     "typescript": "^5.8.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.11"
   }
 }
