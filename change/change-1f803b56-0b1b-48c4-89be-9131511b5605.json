@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "type": "patch",
+      "comment": "Replace decompress with the patched @xhmikosr/decompress 10.2.2 fork to prevent symlink-chain path traversal (GHSA-hrh2-vp3x-79xf).",
+      "packageName": "azureauth",
+      "email": "198982749+Copilot@users.noreply.github.com",
+      "dependentChangeType": "patch"
+    }
+  ]
+}
